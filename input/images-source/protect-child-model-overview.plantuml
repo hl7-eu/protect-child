@@ -1,0 +1,139 @@
+@startuml
+scale 0.75
+' PROTECT-CHILD – DataModel Object Diagram (Logical Models)
+hide methods
+hide stereotypes
+skinparam shadowing false
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+
+' Helper: clickable class labels use [[url label]]
+
+package "Core" {
+  class "[[StructureDefinition-pc-patient-lm.html Patient]]\npatient" as patient
+  class "[[StructureDefinition-pc-donor-lm.html Donor]]\ndonor" as donor
+  class "[[StructureDefinition-pc-transplant-lm.html Transplant]]\ntransplant" as transplant
+  class "[[StructureDefinition-pc-visit-lm.html Visit]]\nvisit" as visit
+}
+
+package "Samples & Lab" {
+  class "[[StructureDefinition-pc-bio-sample-lm.html BioSample]]\nbio_sample" as biosample
+  class "[[StructureDefinition-pc-lab-result-lm.html LabResult]]\nlab_result" as labResult
+  class "[[StructureDefinition-pc-lab-test-lm.html LabTest]]\nlab_test" as labTest
+  class "[[StructureDefinition-pc-unit-lm.html Unit]]\nunit" as unit
+  class "[[StructureDefinition-pc-microbiology-lm.html Microbiology]]\nmicrobiology" as microbiology
+  class "[[StructureDefinition-pc-mark-imm-func-lm.html MarkImmFunc]]\nmark_imm_func" as markImmFunc
+}
+
+package "Events & Outcomes" {
+  class "[[StructureDefinition-pc-post-event-lm.html PostEvent]]\npost_event" as postEvent
+  class "[[StructureDefinition-pc-post-event-type-lm.html PostEventType]]\npost_event_type" as postEventType
+  class "[[StructureDefinition-pc-outcome-lm.html Outcome]]\noutcome" as outcome
+  class "[[StructureDefinition-pc-outcome-type-lm.html OutcomeType]]\noutcome_type" as outcomeType
+}
+
+package "Therapies & Concomitants" {
+  class "[[StructureDefinition-pc-pre-medication-lm.html PreMedication]]\npre_medication" as preMed
+  class "[[StructureDefinition-pc-clinical-variable-lm.html ClinicalVariable]]\nclinical_variable" as clinVar
+
+  class "[[StructureDefinition-pc-concomitant-episode-lm.html ConcomitantEpisode]]\nconcomitant_episode" as concomEp
+  class "[[StructureDefinition-pc-concomitant-disease-lm.html ConcomitantDisease]]\nconcomitant_disease" as concomDis
+  class "[[StructureDefinition-pc-concomitant-medication-lm.html ConcomitantMedication]]\nconcomitant_medication" as concomMed
+
+  class "[[StructureDefinition-pc-immunosuppressant-lm.html Immunosuppressant]]\nimmunosuppressant" as immunosuppressant
+  class "[[StructureDefinition-pc-imm-ind-pat-lm.html ImmIndPat]]\nimm_ind_pat" as immInd
+  class "[[StructureDefinition-pc-imm-main-pat-lm.html ImmMainPat]]\nimm_main_pat" as immMain
+}
+
+package "Instrumental" {
+  class "[[StructureDefinition-pc-instrumental-investigation-lm.html InstrumentalInvestigation]]\ninstrumental_investigation" as instInv
+  class "[[StructureDefinition-pc-pat-inst-inv-lm.html PatInstInv]]\npat_inst_inv" as patInstInv
+}
+
+package "Genomics / Omics" {
+  class "[[StructureDefinition-pc-reference-genome-lm.html ReferenceGenome]]\nreference_genome" as refGenome
+  class "[[StructureDefinition-pc-target-region-lm.html TargetRegion]]\ntarget_region" as targetRegion
+  class "[[StructureDefinition-pc-genomic-test-lm.html GenomicTest]]\ngenomic_test" as genomicTest
+  class "[[StructureDefinition-pc-variant-occurrence-lm.html VariantOccurrence]]\nvariant_occurrence" as varOcc
+  class "[[StructureDefinition-pc-variant-annotation-lm.html VariantAnnotation]]\nvariant_annotation" as varAnn
+  class "[[StructureDefinition-pc-epigenome-study-lm.html EpigenomeStudy]]\nepigenome_study" as epiStudy
+  class "[[StructureDefinition-pc-methylomic-study-lm.html MethylomicStudy]]\nmethylomic_study" as methylStudy
+}
+
+' -------------------------
+' Relationships (minimal)
+' -------------------------
+
+' Core event links
+transplant --> patient
+transplant --> donor
+
+visit --> patient
+visit --> transplant
+
+' Samples
+biosample --> patient
+
+' Lab
+labResult --> patient
+labResult --> biosample
+labResult --> labTest
+labResult --> unit
+
+labTest --> unit
+
+microbiology --> patient
+microbiology --> donor
+
+markImmFunc --> patient
+markImmFunc --> visit
+
+' Outcomes / post events
+postEvent --> postEventType
+outcome   --> outcomeType
+
+postEvent --> patient
+outcome   --> patient
+postEvent --> visit
+outcome   --> visit
+
+' Therapies / concomitants
+preMed --> patient
+preMed --> visit
+
+clinVar --> patient
+clinVar --> visit
+
+concomEp --> patient
+concomEp --> visit
+concomEp --> concomDis
+concomEp --> concomMed
+
+immInd  --> patient
+immInd  --> visit
+immInd  --> immunosuppressant
+
+immMain --> patient
+immMain --> visit
+immMain --> immunosuppressant
+
+' Instrumental
+patInstInv --> patient
+patInstInv --> visit
+patInstInv --> instInv
+
+' Omics
+genomicTest --> biosample
+genomicTest --> refGenome
+
+epiStudy --> biosample
+epiStudy --> refGenome
+
+methylStudy --> biosample
+methylStudy --> refGenome
+
+varOcc --> targetRegion
+varOcc --> genomicTest
+varAnn --> varOcc
+
+@enduml

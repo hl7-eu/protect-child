@@ -1,0 +1,37 @@
+id: hl7.eu.fhir.protect-child
+canonical: https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child
+name: ProtectChildIG
+title: "PROTECT-CHILD Pediatric Transplant Data Implementation Guide"
+status: draft
+version: 0.1.0-ci-build
+packageId: pc.ig
+fhirVersion:
+  - 4.0.1
+
+copyrightYear: 2025
+releaseLabel: ci-build
+
+description: >
+  FHIR Implementation Guide for the PROTECT-CHILD project, defining a
+  common pediatric transplant data model (recipient, donor, transplant
+  events, follow-up, labs, microbiology, biospecimens, omics and outcomes)
+  for use in local data space capsules and federated analytics.
+
+publisher:
+  name: "Protect Child"
+  url: "https://protect-child.eu/"
+
+pages:
+  index.md:
+    title: "Home"
+  #project-overview.md:
+  #  title: "Project & scope"
+  mapping.md:
+    title: "Mapping"
+  logical-models.md:
+    title: "Logical Models"
+  data-model-erd.md:
+    title: "Data Model (ERD)"
+dependencies:
+  hl7.fhir.eu.base:
+    version: 0.1.0-ballot

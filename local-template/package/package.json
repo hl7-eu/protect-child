@@ -1,0 +1,11 @@
+{
+  "name": "hl7.eu.fhir.protect-child.ig",
+  "version": "0.1.0",
+  "type": "fhir.template",
+  "license": "CC0-1.0",
+  "description": "PROTECT-CHILD transplant template (logos and minor tweaks).",
+  "base": "fhir.base.template",
+  "dependencies": {
+    "fhir.base.template": "current"
+  }
+}

@@ -1,0 +1,27 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     id="pc-header"
+     style="display:flex;align-items:center;justify-content:space-between;">
+
+  <!-- Left -->
+  <a id="pc-logo-left" no-external="true"
+     href="https://protect-child.eu" target="_blank">
+    <img src="assets/images/pc_logo.png"
+         alt="hl7-eu-logo"
+         style="height:60px;"/>
+  </a>
+
+  <!-- Center: IG title + version -->
+  <div id="pc-title-block"
+       style="flex:1;text-align:center;margin:0 16px;">
+    <div id="ig-title"
+         style="font-size:1.6em;font-weight:bold;margin:0;">
+      {{ site.data.fhir.ig.title }}
+    </div>
+    <div id="ig-version"
+         style="font-size:0.9em;margin-top:2px;">
+      {{ site.data.fhir.ig.version }} - {{ site.data.fhir.ig.status-text }}
+    </div>
+  </div>
+
+
+</div>

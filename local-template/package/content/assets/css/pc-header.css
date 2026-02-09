@@ -1,0 +1,4 @@
+/* Hide the standard status/title block, since we render it in our header */
+#ig-status {
+  display: none;
+}
