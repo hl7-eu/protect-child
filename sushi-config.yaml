@@ -4,7 +4,7 @@ name: ProtectChildIG
 title: "PROTECT-CHILD Pediatric Transplant Data Implementation Guide"
 status: draft
 version: 0.1.0-ci-build
-packageId: pc.ig
+packageId: hl7.eu.fhir.protect-child
 fhirVersion:
   - 4.0.1
 
@@ -24,14 +24,44 @@ publisher:
 pages:
   index.md:
     title: "Home"
-  #project-overview.md:
-  #  title: "Project & scope"
-  mapping.md:
-    title: "Mapping"
   logical-models.md:
     title: "Logical Models"
   data-model-erd.md:
     title: "Data Model (ERD)"
+  mapping.md:
+    title: "Model Maps"
+    patient-map.md:
+      title: "Patient"
+    donor-map.md:
+      title: "Donor"
+    visit-map.md:
+      title: "Visit"
+    transplant-map.md:
+      title: "Transplant"
+    immunological-data-map.md:
+      title: "Immunological Data"
+    vital-sign-map.md:
+      title: "Vital Sign"
+    biosample-map.md:
+      title: "BioSample"
+    pre-medication-map.md:
+      title: "Pre-Medication"
+    clinical-variable-map.md:
+      title: "Clinical Variable"
+    concomitant-medication-map.md:
+      title: "Concomitant Medication"
+    microbiology-map.md:
+      title: "Microbiology"
+    instrumental-investigation-map.md:
+      title: "Instrumental Investigation"
+    immunosuppressant-map.md:
+      title: "Immunosuppressant"
+    lab-map.md:
+      title: "Laboratory"
+    clinical-event-type-map.md:
+      title: "Clinical Event Type"
+    clinical-event-map.md:
+      title: "Clinical Event"
 dependencies:
   hl7.fhir.eu.base:
     version: 0.1.0-ballot

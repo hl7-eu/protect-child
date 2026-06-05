@@ -8,11 +8,13 @@ Title: "Immunosuppressant Drug Type"
 Description: "Types of immunosuppressive drugs used in the transplant setting."
 * ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/immunosuppressant-drug-type"
 * ^content = #complete
+* ^caseSensitive = false
+* ^experimental = true
 
-* #1506270 "Steroid (methylprednisolone)"
-* #1551099 "Steroid (prednisone)"
+* #1506270  "Steroid (methylprednisolone)"
+* #1551099  "Steroid (prednisone)"
 * #cni-fk506 "CNI (FK506)"
-* #cni-csa "CNI (CsA)"
+* #cni-csa  "CNI (CsA)"
 * #19003999 "MMF"
 * #19038440 "Basiliximab"
 * #35806359 "ATG"
@@ -28,71 +30,40 @@ Description: "ValueSet of immunosuppressive drug types."
 
 
 // ================================================
-// Immunosuppressant – extensions
-// ================================================
-
-// name – Code (CodeableConcept) from the above ValueSet
-Extension: ImmunosuppressantName
-Id: immunosuppressant-name
-Title: "Immunosuppressant name"
-Description: "Name/type of the immunosuppressant drug."
-* value[x] only CodeableConcept
-* valueCodeableConcept 1..1
-* valueCodeableConcept from ImmunosuppressantDrugTypeVS (required)
-
-
-// ================================================
-// Immunosuppressant profile (using Basic)
-// ================================================
+// Immunosuppressant profile — immunosuppressant table
+// Medication
 
 Profile: Immunosuppressant
-Parent: Basic
+Parent: Medication
 Id: immunosuppressant
 Title: "Immunosuppressant"
-Description: "Immunosuppressive drug definition used in initial or maintenance therapy."
+Description: "Immunosuppressive drug catalogue entry. imm_id is carried as an identifier; the drug name maps to Medication.code."
 
-// imm_id → Basic.identifier
+// imm_id → Medication.identifier
 * identifier 1..1 MS
-* identifier ^short = "Immunosuppressant ID"
 * identifier.system 1..1
 * identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/immunosuppressant-id" (exactly)
 * identifier.value 1..1
 
-// Basic.code is required.
+// name → Medication.code
 * code 1..1 MS
-* code ^short = "Immunosuppressant record category"
-* code.coding 1..1
-* code.coding.system 1..1
-* code.coding.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/immunosuppressant-type" (exactly)
-* code.coding.code 1..1
-* code.coding.display 0..1
+* code from ImmunosuppressantDrugTypeVS (required)
+* code ^short = "Immunosuppressant drug name (imm_id.name from the data model)"
 
-// Attach Immunosuppressant-specific extensions
-* extension contains
-    ImmunosuppressantName named name 0..1 MS
-
-* extension[name] ^short = "Name of the immunosuppressant drug (coded)"
+* status 1..1 MS
 
 
 // ================================================
-// Example Immunosuppressant instance
+// Example
 // ================================================
 
 Instance: ImmunosuppressantExample1
 InstanceOf: Immunosuppressant
 Usage: #example
 Title: "Example Immunosuppressant"
-Description: "Example immunosuppressant drug definition."
+Description: "Methylprednisolone as an immunosuppressant catalogue entry."
 
-* id = "immunosuppressant-example-1"
-
-// imm_id
 * identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/immunosuppressant-id"
 * identifier.value = "IMM0001"
-
-// REQUIRED: Basic.code
-* code = https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/immunosuppressant-type#drug "Immunosuppressive drug"
-
-// name (example: Steroid – methylprednisolone)
-* extension[name].valueCodeableConcept =
-    https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/immunosuppressant-drug-type#1506270 "Steroid (methylprednisolone)"
+* status = #active
+* code = ImmunosuppressantDrugTypeCS#1506270 "Steroid (methylprednisolone)"

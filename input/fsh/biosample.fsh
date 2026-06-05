@@ -1,85 +1,43 @@
 // ================================================
-// BioSample – profile & extensions
+// BioSample – profile & terminology
 // ================================================
 
 // ================================================
-// Invariants
+// Terminology — analysis type
+// genomic_sample and epigenomic_sample DM booleans are represented as
+// BioSampleAnalysisRequest (ServiceRequest) resources with specimen = Reference(BioSample).
 // ================================================
 
-Invariant: biosample-dna-concentration-nonnegative
-Description: "DNA concentration must be zero or positive."
-Severity: #error
-Expression: "valueDecimal >= 0"
-
-// ================================================
-// Tissue type terminology (tissue_type)
-// ================================================
-
-CodeSystem: BioSampleTissueTypeCS
-Id: biosample-tissue-type-cs
-Title: "BioSample Tissue Type CodeSystem"
-Description: "Tissue types for biological samples (from the bio_sample table)."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/biosample-tissue-type"
+CodeSystem: BioSampleAnalysisTypeCS
+Id: biosample-analysis-type-cs
+Title: "Biological Sample Analysis Type"
+Description: "Intended omics analysis type for a biological sample. Used as the ServiceRequest.code on BioSampleAnalysisRequest resources."
+* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/biosample-analysis-type"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #blood        "Blood"
-* #saliva       "Saliva"
-* #other-tissue "Other tissues"
+* #genomic    "Genomic analysis"
+* #epigenomic "Epigenomic analysis"
 
-ValueSet: BioSampleTissueTypeVS
-Id: biosample-tissue-type-vs
-Title: "BioSample Tissue Type ValueSet"
-Description: "Allowed tissue types for BioSample.tissue_type."
-* BioSampleTissueTypeCS#blood
-* BioSampleTissueTypeCS#saliva
-* BioSampleTissueTypeCS#other-tissue
+ValueSet: BioSampleAnalysisTypeVS
+Id: biosample-analysis-type-vs
+Title: "Biological Sample Analysis Type ValueSet"
+Description: "Allowed analysis type codes for BioSampleAnalysisRequest.code."
+* BioSampleAnalysisTypeCS#genomic
+* BioSampleAnalysisTypeCS#epigenomic
 
 // ================================================
-// Extensions
+// Extension — visit_id only
 // ================================================
 
-// genomic_test_id (O)
-Extension: BioSampleGenomicTestRef
-Id: biosample-genomic-test-ref
-Title: "Genomic Test ID Relationship"
-Description: "genomic_test_id – reference to the genomic test configuration used for this sample."
-* value[x] only Reference(GenomicTest)
+Extension: BioSampleVisitRef
+Id: biosample-visit-ref
+Title: "Visit reference"
+Description: "visit_id – reference to the Visit during which this sample was collected."
+* value[x] only Reference(Visit)
 * valueReference 1..1
-
-// epigenome_study_id (O)
-Extension: BioSampleEpigenomeStudyRef
-Id: biosample-epigenome-study-ref
-Title: "Epigenome Study ID Relationship"
-Description: "epigenome_study_id – reference to epigenome study linked to this sample."
-* value[x] only Reference(EpigenomeStudy)
-* valueReference 1..1
-
-// methylomic_study_id (O)
-Extension: BioSampleMethylomicStudyRef
-Id: biosample-methylomic-study-ref
-Title: "Methylomic Study ID Relationship"
-Description: "methylomic_study_id – reference to methylomic study linked to this sample."
-* value[x] only Reference(MethylomicStudy)
-* valueReference 1..1
-
-// send_ingemm_date (R)
-Extension: BioSampleSendIngemmDate
-Id: biosample-send-ingemm-date
-Title: "Sample send to INGEMM date"
-Description: "send_ingemm_date – date when the sample was sent to INGEMM."
-* value[x] only date
-* valueDate 1..1
-
-// dna_concentration (optional, Float ≥ 0)
-// Note: FHIR uses decimal; semantically this is a float.
-Extension: BioSampleDNAConcentration
-Id: biosample-dna-concentration
-Title: "DNA concentration"
-Description: "dna_concentration – DNA concentration for the sample (float)."
-* value[x] only decimal
-* valueDecimal 1..1
-* obeys biosample-dna-concentration-nonnegative
+* ^context[0].type = #element
+* ^context[0].expression = "Specimen"
 
 // ================================================
 // BioSample profile (Specimen)
@@ -89,7 +47,7 @@ Profile: BioSample
 Parent: Specimen
 Id: biosample
 Title: "Biological Sample"
-Description: "Biological sample linked to transplant patients and omics studies, aligned with the bio_sample table."
+Description: "Biological sample linked to a transplant visit, aligned with the DMv1.2 bio_sample table. Patient navigable via Specimen.subject. Visit linked via extension[visit_id]. Analysis intent (genomic_sample / epigenomic_sample) is represented as BioSampleAnalysisRequest (ServiceRequest) resources with specimen = Reference(BioSample). send_ingemm_date maps to the native Specimen.receivedTime."
 
 // bio_sample_id → Specimen.identifier (M)
 * identifier 1..1 MS
@@ -99,37 +57,32 @@ Description: "Biological sample linked to transplant patients and omics studies,
 * identifier.value 1..1
 
 // patient_id → Specimen.subject (M)
+// Direct link to the recipient — enables Specimen?patient={id} queries without
+// a two-hop traversal through the Visit extension.
 * subject 1..1 MS
 * subject only Reference(PatientTransplant)
-* subject ^short = "patient_id – reference to the transplant recipient"
+* subject ^short = "patient_id – transplant recipient who provided this sample"
 
 // collection_date → Specimen.collection.collectedDateTime (R)
-* collection 1..1 MS
+* collection 0..1 MS
 * collection ^short = "Sample collection details"
-* collection.collected[x] 1..1
+* collection.collected[x] 0..1
 * collection.collected[x] only dateTime
 * collection.collectedDateTime ^short = "collection_date – sample collection date"
 
-// tissue_type → Specimen.type (R)
-* type 1..1 MS
-* type ^short = "tissue_type – type of tissue sampled"
-* type ^binding.strength = #required
-* type ^binding.valueSet = Canonical(BioSampleTissueTypeVS)
-* type.text 1..1
+// send_ingemm_date → Specimen.receivedTime (R)
+// Native R4 field for the date/time a specimen was received at the processing facility.
+* receivedTime 0..1 MS
+* receivedTime ^short = "send_ingemm_date – date the sample was received at INGEMM"
 
-// Attach BioSample-specific extensions, with DM variable names as slice names
-* extension contains
-    BioSampleGenomicTestRef named genomic_test_id 0..1 MS and
-    BioSampleEpigenomeStudyRef named epigenome_study_id 0..1 MS and
-    BioSampleMethylomicStudyRef named methylomic_study_id 0..1 MS and
-    BioSampleSendIngemmDate named send_ingemm_date 1..1 MS and
-    BioSampleDNAConcentration named dna_concentration 0..1 MS
+// Specimen.type — free for actual specimen material (blood, tissue, urine, etc.)
+// Analysis intent (genomic_sample / epigenomic_sample) is in BioSampleAnalysisRequest.
+* type 0..1 MS
+* type ^short = "Specimen material type (blood, tissue, urine, etc.) — NOT analysis intent"
 
-* extension[genomic_test_id] ^short = "genomic_test_id – Reference to GenomicTest"
-* extension[epigenome_study_id] ^short = "epigenome_study_id – Reference to EpigenomeStudy"
-* extension[methylomic_study_id] ^short = "methylomic_study_id – Reference to MethylomicStudy"
-* extension[send_ingemm_date] ^short = "send_ingemm_date – date sample sent to INGEMM"
-* extension[dna_concentration] ^short = "dna_concentration – DNA concentration (float, ≥ 0)"
+// visit_id → extension (no native encounter reference on Specimen in R4)
+* extension contains BioSampleVisitRef named visit_id 1..1 MS
+* extension[visit_id] ^short = "visit_id – Visit during which this sample was collected"
 
 // ================================================
 // Example BioSample instance
@@ -139,7 +92,7 @@ Instance: BioSampleExample1
 InstanceOf: BioSample
 Usage: #example
 Title: "Example Biological Sample"
-Description: "Example biological sample used in Visit example."
+Description: "Example biological sample aligned with DMv1.2. genomic_sample=true, epigenomic_sample=false."
 
 * id = "biosample-example-1"
 
@@ -147,29 +100,73 @@ Description: "Example biological sample used in Visit example."
 * identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/biosample-id"
 * identifier.value = "BS0001"
 
-// patient_id
-* subject = Reference(ExamplePatientTransplant1)
+// visit_id
+* extension[visit_id].valueReference = Reference(VisitExample1)
 
 // collection_date
 * collection.collectedDateTime = "2025-01-15"
 
-// tissue_type
-* type.coding[0].system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/biosample-tissue-type"
-* type.coding[0].code = #blood
-* type.coding[0].display = "Blood"
-* type.text = "Peripheral blood"
+// send_ingemm_date → receivedTime
+* receivedTime = "2025-01-20"
 
-// genomic_test_id
-* extension[genomic_test_id].valueReference = Reference(GenomicTestExample1)
+// specimen material type (free-text or coded — no fixed binding)
+* subject = Reference(ExamplePatientTransplant1)
 
-// epigenome_study_id
-* extension[epigenome_study_id].valueReference = Reference(EpigenomeStudyExample1)
+// ================================================
+// BioSampleAnalysisRequest profile (ServiceRequest)
+// Represents genomic_sample and epigenomic_sample boolean flags as explicit
+// work-order resources. One ServiceRequest per analysis type per BioSample.
+// genomic_sample = true  → ServiceRequest with code = BioSampleAnalysisTypeCS#genomic
+// epigenomic_sample = true → ServiceRequest with code = BioSampleAnalysisTypeCS#epigenomic
+// ================================================
 
-// methylomic_study_id
-* extension[methylomic_study_id].valueReference = Reference(MethylomicStudyExample1)
+Profile: BioSampleAnalysisRequest
+Parent: ServiceRequest
+Id: biosample-analysis-request
+Title: "Biological Sample Analysis Request"
+Description: "A work order representing the intent to perform omics analysis (genomic or epigenomic) on a BioSample. One instance per analysis type per sample. Analysis intent (genomic_sample / epigenomic_sample) is carried here as ServiceRequest.code; Specimen.type remains free for specimen material type. specimen = Reference(BioSample)."
 
-// send_ingemm_date
-* extension[send_ingemm_date].valueDate = "2025-01-20"
+* status 1..1 MS
+* status ^short = "Use #active for samples awaiting analysis, #completed for processed samples"
 
-// dna_concentration (float/decimal)
-* extension[dna_concentration].valueDecimal = 35.2
+* intent 1..1 MS
+* intent = #order (exactly)
+* intent ^short = "Fixed to #order — each request is an analysis work order"
+
+// Analysis type — which omics pipeline is requested
+* code 1..1 MS
+* code from BioSampleAnalysisTypeVS (required)
+* code ^short = "genomic_sample / epigenomic_sample — analysis type (BioSampleAnalysisTypeVS)"
+
+// Patient link
+* subject 1..1 MS
+* subject only Reference(PatientTransplant)
+* subject ^short = "Transplant recipient who provided the sample"
+
+// Sample link
+* specimen 1..1 MS
+* specimen only Reference(BioSample)
+* specimen ^short = "The BioSample to be analysed"
+
+// Visit link (optional — for direct searchability)
+* encounter 0..1 MS
+* encounter only Reference(Visit)
+* encounter ^short = "Visit at which this sample was collected (navigable via specimen → BioSample extension)"
+
+
+// ================================================
+// Example — genomic analysis request
+// ================================================
+
+Instance: BioSampleGenomicRequest1
+InstanceOf: BioSampleAnalysisRequest
+Usage: #example
+Title: "Example genomic analysis request"
+Description: "ServiceRequest representing genomic_sample = true for BioSampleExample1."
+
+* status = #active
+* intent = #order
+* code = BioSampleAnalysisTypeCS#genomic "Genomic analysis"
+* subject = Reference(ExamplePatientTransplant1)
+* specimen = Reference(BioSampleExample1)
+* encounter = Reference(VisitExample1)

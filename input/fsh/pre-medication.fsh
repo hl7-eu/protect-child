@@ -1,29 +1,12 @@
 // ================================================
-// Pre-medication – terminology, extensions & profile
+// Pre-medication — pre_medication table
+// MedicationStatement
 // ================================================
 
-// --------------------------------
-// Type of pre-medication record (for Basic.code)
-// --------------------------------
-CodeSystem: PreMedicationTypeCS
-Id: pre-medication-type-cs
-Title: "Pre-medication Type CodeSystem"
-Description: "Type of pre-transplant medication record."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/pre-medication-type"
-* ^content = #complete
-* ^caseSensitive = false
-* ^experimental = true
-* #pre-medication "Pre-transplant medication record"
+// ------------------------------------------------
+// Terminology — antihypertensive drugs
+// ------------------------------------------------
 
-ValueSet: PreMedicationTypeVS
-Id: pre-medication-type-vs
-Title: "Pre-medication Type ValueSet"
-Description: "Allowed type(s) for pre-medication records."
-* PreMedicationTypeCS#pre-medication
-
-// --------------------------------
-// Antihypertensive treatment drugs
-// --------------------------------
 CodeSystem: PreMedicationAntihypertensiveDrugCS
 Id: pre-medication-antihypertensive-drug-cs
 Title: "Pre-medication Antihypertensive Drug CodeSystem"
@@ -56,114 +39,128 @@ Description: "Allowed antihypertensive drugs for antihypertensive_treatment."
 * PreMedicationAntihypertensiveDrugCS#1398937
 * PreMedicationAntihypertensiveDrugCS#1363053
 
-// ================================================
-// Extensions
-// ================================================
 
-// patient_id – Reference(PatientTransplant)
-Extension: PreMedicationPatientRef
-Id: pre-medication-patient-ref
-Title: "Pre-medication patient reference"
-Description: "patient_id – reference to the transplant recipient for whom the pre-medication is recorded."
-* value[x] only Reference(PatientTransplant)
-* valueReference 1..1
+// rituximab, date_last_rituximab, antiviral_prophylaxis are carried as separate
+// MedicationStatement resources that reference the parent PreMedication via partOf:
+//
+//   rituximab given     → MedicationStatement { medication = Rituximab,
+//                           status = #completed, effectiveDateTime = date_last_rituximab,
+//                           partOf = Reference(PreMedication) }
+//   rituximab not given → MedicationStatement { medication = Rituximab,
+//                           status = #not-taken,
+//                           partOf = Reference(PreMedication) }
+//
+//   antiviral given     → MedicationStatement { medication = AntiviralProphylaxis,
+//                           status = #completed,
+//                           partOf = Reference(PreMedication) }
+//   antiviral not given → MedicationStatement { medication = AntiviralProphylaxis,
+//                           status = #not-taken,
+//                           partOf = Reference(PreMedication) }
+//
+// partOf explicitly groups child records under the parent PreMedication.
+// Reverse lookup: MedicationStatement?part-of={pre-medication-id}
+// MedicationStatement.status #not-taken is the native R4 way to record "explicitly not given".
+//
+// other_medications is carried via MedicationStatement.note (native Annotation field).
 
-// antihypertensive_treatment – Code (drug from VS)
-Extension: PreMedicationAntihypertensiveTreatment
-Id: pre-medication-antihypertensive-treatment
-Title: "Antihypertensive treatment"
-Description: "antihypertensive_treatment – blood-pressure–lowering drug(s) used pre-transplant."
-* value[x] only CodeableConcept
-* valueCodeableConcept from PreMedicationAntihypertensiveDrugVS (required)
-
-// rituximab – Boolean
-Extension: PreMedicationRituximab
-Id: pre-medication-rituximab
-Title: "Rituximab pre-medication"
-Description: "rituximab – any rituximab given pre-transplant."
-* value[x] only boolean
-
-// antiviral_phrophylaxis – Boolean (Kidney only)
-Extension: PreMedicationAntiviralPhrophylaxis
-Id: pre-medication-antiviral-phrophylaxis
-Title: "Antiviral prophylaxis pre-medication"
-Description: "antiviral_phrophylaxis – preventive antiviral medication(s) given to reduce risk of viral infection or reactivation (Kidney only)."
-* value[x] only boolean
-
-// other_medications – String
-Extension: PreMedicationOtherMedications
-Id: pre-medication-other-medications
-Title: "Other pre-transplant medications"
-Description: "other_medications – any other relevant pre-transplant medications."
-* value[x] only string
 
 // ================================================
-// PreMedication profile (Basic)
+// PreMedication profile — MedicationStatement
 // ================================================
 
 Profile: PreMedication
-Parent: Basic
+Parent: MedicationStatement
 Id: pre-medication
 Title: "Pre-transplant Medication"
 Description: "Pre-transplant medication record aligned with the pre_medication table."
 
-// pre_medication_id → Basic.identifier (Mandatory)
+// pre_medication_id → MedicationStatement.identifier
 * identifier 1..1 MS
-* identifier ^short = "pre_medication_id – identifier for this pre-medication record"
 * identifier.system 1..1
 * identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/pre-medication-id" (exactly)
 * identifier.value 1..1
 
-// Basic.code – type of Basic
-* code 1..1 MS
-* code ^short = "Type of pre-medication record"
-* code ^binding.strength = #required
-* code ^binding.valueSet = Canonical(PreMedicationTypeVS)
+// patient_id → MedicationStatement.subject
+* subject 1..1 MS
+* subject only Reference(PatientTransplant)
+* subject ^short = "patient_id — transplant recipient"
 
-// Attach extensions using DM variable names as slice names
-* extension contains PreMedicationPatientRef named patient_id 1..1 MS and
-    PreMedicationAntihypertensiveTreatment named antihypertensive_treatment 1..1 MS and
-    PreMedicationRituximab named rituximab 1..1 MS and
-    PreMedicationAntiviralPhrophylaxis named antiviral_phrophylaxis 0..1 MS and
-    PreMedicationOtherMedications named other_medications 1..1 MS
+// antihypertensive_treatment → MedicationStatement.medication[x]
+* medication[x] only CodeableConcept
+* medicationCodeableConcept 1..1 MS
+* medicationCodeableConcept from PreMedicationAntihypertensiveDrugVS (required)
+* medicationCodeableConcept ^short = "antihypertensive_treatment — coded antihypertensive drug"
 
-* extension[patient_id] ^short = "patient_id – reference to PatientTransplant (recipient)"
-* extension[antihypertensive_treatment] ^short = "antihypertensive_treatment – antihypertensive drug used pre-transplant"
-* extension[rituximab] ^short = "rituximab – any rituximab given pre-transplant (Yes/No)"
-* extension[antiviral_phrophylaxis] ^short = "antiviral_phrophylaxis – antiviral prophylaxis given (Kidney only)"
-* extension[other_medications] ^short = "other_medications – other relevant pre-transplant medications (free text)"
+* status 1..1 MS
+* status ^short = "Use #completed for pre-transplant medications"
+
+// visit_id → MedicationStatement.context
+* context 1..1 MS
+* context only Reference(Visit)
+* context ^short = "visit_id — Visit at which pre-transplant medications were recorded"
+
+// other_medications → MedicationStatement.note (native Annotation field)
+* note 0..* MS
+* note ^short = "other_medications — other relevant pre-transplant medications (free text)"
+
 
 // ================================================
-// Example Pre-medication instance
+// PreMedicationChild profile — MedicationStatement
+// Covers rituximab desensitisation and antiviral prophylaxis.
+// Each child links back to its parent PreMedication via partOf.
+// status #completed = given; #not-taken = not given (native R4 pattern).
+// ================================================
+
+Profile: PreMedicationChild
+Parent: MedicationStatement
+Id: pre-medication-child
+Title: "Pre-transplant Medication — Child Record"
+Description: "A subsidiary pre-transplant medication record (rituximab desensitisation or antiviral prophylaxis) linked to its parent PreMedication via MedicationStatement.partOf. status #completed = given; status #not-taken = explicitly not given."
+
+// Link to parent PreMedication (M)
+* partOf 1..1 MS
+* partOf only Reference(PreMedication)
+* partOf ^short = "Reference to the parent PreMedication record"
+
+* subject 1..1 MS
+* subject only Reference(PatientTransplant)
+* subject ^short = "Transplant recipient"
+
+* status 1..1 MS
+* status ^short = "#completed = given; #not-taken = not given"
+
+// visit_id — navigable via partOf → PreMedication.context
+* context 0..1 MS
+* context only Reference(Visit)
+* context ^short = "visit_id — inherited from parent PreMedication; populate for direct searchability"
+
+// medication — coded (RxNorm or NationalMedicationCode preferred)
+* medication[x] 1..1 MS
+* medication[x] only CodeableConcept
+* medicationCodeableConcept ^short = "Drug code — use RxNorm (e.g. 121191 for rituximab) or local code"
+
+// date of last dose
+* effective[x] 0..1 MS
+* effective[x] only dateTime
+* effectiveDateTime ^short = "date_last_rituximab — date of last dose (populate on rituximab record)"
+
+
+// ================================================
+// Example
 // ================================================
 
 Instance: PreMedicationExample1
 InstanceOf: PreMedication
 Usage: #example
 Title: "Example Pre-medication"
-Description: "Example record of pre-transplant medications."
+Description: "Example record of pre-transplant medications for a liver transplant recipient."
 
-* id = "pre-medication-example-1"
-
-// pre_medication_id
 * identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/pre-medication-id"
 * identifier.value = "PM0001"
-
-// Basic.code – type
-* code = https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/pre-medication-type#pre-medication "Pre-transplant medication record"
-
-// patient_id
-* extension[patient_id].valueReference = Reference(ExamplePatientTransplant1)
-
-// antihypertensive_treatment (example: Amlodipine)
-* extension[antihypertensive_treatment].valueCodeableConcept = 
-    PreMedicationAntihypertensiveDrugCS#1332418 "Amlodipine"
-
-// rituximab
-* extension[rituximab].valueBoolean = true
-
-// antiviral_phrophylaxis (example: none given)
-* extension[antiviral_phrophylaxis].valueBoolean = false
-
-// other_medications
-* extension[other_medications].valueString = "Low-dose aspirin"
+* status = #completed
+* subject = Reference(ExamplePatientTransplant1)
+* context = Reference(VisitExample1)
+* medicationCodeableConcept = PreMedicationAntihypertensiveDrugCS#1332418 "Amlodipine"
+* note[0].text = "Low-dose aspirin"
+// rituximab and antiviral prophylaxis are separate MedicationStatement resources
+// with status = #completed or #not-taken, linked via context = Reference(VisitExample1)

@@ -1,116 +1,78 @@
 // ================================================
-// Concomitant Medication – CodeSystem, ValueSet, extensions & profile
+// Concomitant Medication — concomitant_medication table
+// MedicationStatement
 // ================================================
 
-// --------------------------------
-// CodeSystem for medication field
-// --------------------------------
-CodeSystem: ConcomitantMedicationCategory
-Id: concomitant-medication-category
-Title: "Concomitant Medication Category"
-Description: "Categories of concomitant medications."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/concomitant-medication-category"
-* ^content = #complete
-
-* #antihypertensive "Antihypertensive treatment"
-* #antiviral-prophylaxis "Antiviral prophylaxis"
-* #antibiotic-prophylaxis "Antibiotic prophylaxis"
-* #heparin-therapy-prophylaxis "Heparin therapy/prophylaxis"
-* #aspirin-therapy-prophylaxis "Aspirin therapy/prophylaxis"
-* #ursodeoxycholic-acid "Ursodeoxycholic acid"
-
-
-// --------------------------------
-// ValueSet for medication field
-// --------------------------------
-ValueSet: ConcomitantMedicationCategoryVS
-Id: concomitant-medication-category-vs
-Title: "Concomitant Medication Category ValueSet"
-Description: "ValueSet of concomitant medication categories."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/ValueSet/concomitant-medication-category"
-* include codes from system ConcomitantMedicationCategory
-
-
 // ================================================
-// Extensions
-// ================================================
-
-// concomitant_episode_id – ElementReference(ConcomitantEpisode)
-Extension: ConcomitantMedicationEpisodeRef
-Id: concomitant-medication-episode-ref
-Title: "Concomitant episode ID relationship"
-Description: "Reference to the concomitant episode this medication belongs to."
-* value[x] only Reference(ConcomitantEpisode)
-* valueReference 1..1
-
-// medication – Code (CodeableConcept), from ConcomitantMedicationCategory
-Extension: ConcomitantMedicationCode
-Id: concomitant-medication-code
-Title: "Medication"
-Description: "Type of concomitant medication applied."
-* value[x] only CodeableConcept
-* valueCodeableConcept 1..1
-* valueCodeableConcept from ConcomitantMedicationCategoryVS (preferred)
-
-
-// ================================================
-// Concomitant Medication profile (using Basic)
+// ConcomitantMedication profile — MedicationStatement
 // ================================================
 
 Profile: ConcomitantMedication
-Parent: Basic
+Parent: MedicationStatement
 Id: concomitant-medication
 Title: "Concomitant Medication"
-Description: "Concomitant medication records associated with a concomitant episode."
+Description: "Concomitant medication record for a transplant patient at a visit, aligned with the DMv1.2 concomitant_medication table."
 
-// concomitant_medication_id → Basic.identifier
+// concomitant_medication_id → MedicationStatement.identifier
 * identifier 1..1 MS
-* identifier ^short = "Concomitant medication ID"
 * identifier.system 1..1
 * identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/concomitant-medication-id" (exactly)
 * identifier.value 1..1
+* identifier ^short = "concomitant_medication_id"
 
-// Basic.code is required.
-// Use as a simple category for concomitant meds.
-* code 1..1 MS
-* code ^short = "Concomitant medication category"
-* code.coding 1..1
-* code.coding.system 1..1
-* code.coding.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/concomitant-medication-type" (exactly)
-* code.coding.code 1..1
-* code.coding.display 0..1
+// medication_name → MedicationStatement.medicationCodeableConcept
+* medication[x] only CodeableConcept
+* medicationCodeableConcept 1..1 MS
+* medicationCodeableConcept.text 1..1
+* medicationCodeableConcept ^short = "medication_name — medication name (free text in DMv1.2)"
 
-// Attach Concomitant Medication–specific extensions
-* extension contains
-    ConcomitantMedicationEpisodeRef named concomitantEpisodeId 0..1 MS and
-    ConcomitantMedicationCode named medication 0..1 MS
+// status (End / Ongoing) → MedicationStatement.status (native FHIR)
+//   DM status = Ongoing → #active
+//   DM status = End     → #completed  (or #stopped if discontinued early)
+* status 1..1 MS
+* status ^short = "status — Ongoing → #active; End → #completed"
 
-* extension[concomitantEpisodeId] ^short = "Concomitant episode ID relationship"
-* extension[medication] ^short = "Concomitant medication (coded; see ConcomitantMedicationCategory)"
+// visit_id → MedicationStatement.context
+* context 1..1 MS
+* context only Reference(Visit)
+* context ^short = "visit_id — Visit at which this medication was recorded"
+
+* subject 1..1 MS
+* subject only Reference(PatientTransplant)
+* subject ^short = "Transplant recipient"
+
+// start_date / end_date → MedicationStatement.effectivePeriod
+* effective[x] 0..1 MS
+* effectivePeriod.start 0..1
+* effectivePeriod.start ^short = "start_date — date medication started"
+* effectivePeriod.end 0..1
+* effectivePeriod.end ^short = "end_date — date medication ended"
+
+// dose → MedicationStatement.dosage.doseAndRate.doseQuantity
+* dosage 0..1 MS
+* dosage.doseAndRate 0..1 MS
+* dosage.doseAndRate.doseQuantity 0..1 MS
+* dosage.doseAndRate.doseQuantity ^short = "dose — medication dose"
 
 
 // ================================================
-// Example Concomitant Medication instance
+// Example
 // ================================================
 
 Instance: ConcomitantMedicationExample1
 InstanceOf: ConcomitantMedication
 Usage: #example
 Title: "Example Concomitant Medication"
-Description: "Example concomitant medication for a concomitant episode."
+Description: "Example ongoing concomitant antihypertensive medication (DMv1.2)."
 
-* id = "concomitant-medication-example-1"
-
-// concomitant_medication_id
 * identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/concomitant-medication-id"
 * identifier.value = "CM0001"
-
-// REQUIRED: Basic.code
-* code = https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/concomitant-medication-type#concomitant "Concomitant medication"
-
-// concomitant_episode_id
-* extension[concomitantEpisodeId].valueReference = Reference(ConcomitantEpisodeExample1)
-
-// medication
-* extension[medication].valueCodeableConcept =
-    https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/concomitant-medication-category#antihypertensive "Antihypertensive treatment"
+* status = #active
+* subject = Reference(ExamplePatientTransplant1)
+* context = Reference(VisitExample1)
+* medicationCodeableConcept.text = "Amlodipine"
+* effectivePeriod.start = "2024-01-10"
+* dosage.doseAndRate.doseQuantity.value = 5.0
+* dosage.doseAndRate.doseQuantity.system = "http://unitsofmeasure.org"
+* dosage.doseAndRate.doseQuantity.code = #mg
+* dosage.doseAndRate.doseQuantity.unit = "mg"

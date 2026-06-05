@@ -1,0 +1,192 @@
+<svg width="240" height="670" viewBox="0 0 240 670" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,sans-serif">
+  <title>ClinicalEvent profile</title>
+  <style>a:hover rect{opacity:.85;}a rect,a text{cursor:pointer;}</style>
+  <rect x="0" y="0" width="240" height="670" rx="5" fill="white" stroke="#ddd" stroke-width="1"/>
+  <a href="StructureDefinition-clinical-event.html">
+    <path d="M5,0 H235 A5,5 0 0 1 240,5 V48 H0 V5 A5,5 0 0 1 5,0 Z" fill="#7f8c8d"/>
+    <text x="120" y="19" fill="white" font-weight="600" font-size="13" text-anchor="middle">ClinicalEvent</text>
+    <text x="120" y="36" fill="#e0e8e8" font-size="11" text-anchor="middle">Condition</text>
+  </a>
+  <rect x="1" y="48" width="238" height="18" fill="#f5f6f6"/>
+  <line x1="1" y1="48" x2="239" y2="48" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="10" y="60" fill="#7f8c8d" font-size="9" font-weight="600" letter-spacing="0.3">CORE FIELDS</text>
+  <rect x="1" y="66" width="238" height="22" fill="white"/>
+  <line x1="1" y1="88" x2="239" y2="88" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="78" r="3" fill="#c53030" opacity="0.85"/>
+  <a href="http://hl7.org/fhir/R4/condition.html">
+    <text x="21" y="83" fill="#374151" font-size="13">Clinical Event ID</text>
+    <text x="234" y="83" fill="#c53030" font-size="11" font-weight="700" text-anchor="end">M</text>
+  </a>
+  <rect x="1" y="88" width="238" height="22" fill="#f8fafc"/>
+  <line x1="1" y1="110" x2="239" y2="110" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="100" r="3" fill="#c53030" opacity="0.85"/>
+  <a href="ValueSet-clinical-event-type-vs.html">
+    <text x="21" y="105" fill="#374151" font-size="13">Event Type</text>
+    <text x="234" y="105" fill="#c53030" font-size="11" font-weight="700" text-anchor="end">M</text>
+  </a>
+  <rect x="1" y="110" width="238" height="22" fill="white"/>
+  <line x1="1" y1="132" x2="239" y2="132" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="122" r="3" fill="#c53030" opacity="0.85"/>
+  <a href="StructureDefinition-visit.html">
+    <text x="21" y="127" fill="#374151" font-size="13">Visit ID</text>
+    <text x="234" y="127" fill="#c53030" font-size="11" font-weight="700" text-anchor="end">M</text>
+  </a>
+  <rect x="1" y="132" width="238" height="22" fill="#f8fafc"/>
+  <line x1="1" y1="154" x2="239" y2="154" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="144" r="3" fill="#c05621" opacity="0.85"/>
+  <a href="http://hl7.org/fhir/R4/condition.html">
+    <text x="21" y="149" fill="#374151" font-size="13">Event Phase (START)</text>
+    <text x="234" y="149" fill="#c05621" font-size="11" font-weight="700" text-anchor="end">R</text>
+  </a>
+  <rect x="1" y="154" width="238" height="22" fill="white"/>
+  <line x1="1" y1="176" x2="239" y2="176" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="166" r="3" fill="#c05621" opacity="0.85"/>
+  <a href="http://hl7.org/fhir/R4/condition.html">
+    <text x="21" y="171" fill="#374151" font-size="13">Event Phase (END)</text>
+    <text x="234" y="171" fill="#c05621" font-size="11" font-weight="700" text-anchor="end">R</text>
+  </a>
+  <rect x="1" y="176" width="238" height="22" fill="#f8fafc"/>
+  <line x1="1" y1="198" x2="239" y2="198" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="188" r="3" fill="#c05621" opacity="0.85"/>
+  <a href="http://hl7.org/fhir/R4/condition.html">
+    <text x="21" y="193" fill="#374151" font-size="13">Event Number</text>
+    <text x="234" y="193" fill="#c05621" font-size="11" font-weight="700" text-anchor="end">R</text>
+  </a>
+  <rect x="1" y="198" width="238" height="18" fill="#f5f6f6"/>
+  <line x1="1" y1="198" x2="239" y2="198" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="10" y="210" fill="#7f8c8d" font-size="9" font-weight="600" letter-spacing="0.3">KIDNEY-SPECIFIC</text>
+  <rect x="1" y="216" width="238" height="22" fill="white"/>
+  <line x1="1" y1="238" x2="239" y2="238" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="228" r="3" fill="#718096" opacity="0.85"/>
+  <a href="StructureDefinition-clinical-event-kidney-rejection-spec.html">
+    <text x="21" y="233" fill="#374151" font-size="13">Kidney Rejection Spec.</text>
+    <text x="234" y="233" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
+  </a>
+  <rect x="1" y="238" width="238" height="22" fill="#f8fafc"/>
+  <line x1="1" y1="260" x2="239" y2="260" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="250" r="3" fill="#718096" opacity="0.85"/>
+  <a href="StructureDefinition-clinical-event-dgf.html">
+    <text x="21" y="255" fill="#374151" font-size="13">Delayed Graft Function</text>
+    <text x="234" y="255" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
+  </a>
+  <rect x="1" y="260" width="238" height="22" fill="white"/>
+  <line x1="1" y1="282" x2="239" y2="282" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="272" r="3" fill="#718096" opacity="0.85"/>
+  <a href="StructureDefinition-clinical-event-previous-urological-intervention.html">
+    <text x="21" y="277" fill="#374151" font-size="13">Previous Urol. Intervention</text>
+    <text x="234" y="277" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
+  </a>
+  <rect x="1" y="282" width="238" height="22" fill="#f8fafc"/>
+  <line x1="1" y1="304" x2="239" y2="304" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="294" r="3" fill="#718096" opacity="0.85"/>
+  <a href="ValueSet-vascular-complication-type-vs.html">
+    <text x="21" y="299" fill="#374151" font-size="13">Vascular Complication</text>
+    <text x="234" y="299" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
+  </a>
+  <rect x="1" y="304" width="238" height="22" fill="white"/>
+  <line x1="1" y1="326" x2="239" y2="326" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="316" r="3" fill="#718096" opacity="0.85"/>
+  <a href="http://hl7.org/fhir/R4/condition.html">
+    <text x="21" y="321" fill="#374151" font-size="13">AKI Episodes (post-LTX)</text>
+    <text x="234" y="321" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
+  </a>
+  <rect x="1" y="326" width="238" height="18" fill="#f5f6f6"/>
+  <line x1="1" y1="326" x2="239" y2="326" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="10" y="338" fill="#7f8c8d" font-size="9" font-weight="600" letter-spacing="0.3">LIVER-SPECIFIC</text>
+  <rect x="1" y="344" width="238" height="22" fill="#f8fafc"/>
+  <line x1="1" y1="366" x2="239" y2="366" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="356" r="3" fill="#718096" opacity="0.85"/>
+  <a href="http://hl7.org/fhir/R4/condition.html">
+    <text x="21" y="361" fill="#374151" font-size="13">CNI Toxicity (histologic)</text>
+    <text x="234" y="361" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
+  </a>
+  <rect x="1" y="366" width="238" height="22" fill="white"/>
+  <line x1="1" y1="388" x2="239" y2="388" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="378" r="3" fill="#718096" opacity="0.85"/>
+  <a href="http://hl7.org/fhir/R4/condition.html">
+    <text x="21" y="383" fill="#374151" font-size="13">Hypoxic-Ischaemic Event</text>
+    <text x="234" y="383" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
+  </a>
+  <rect x="1" y="388" width="238" height="18" fill="#f5f6f6"/>
+  <line x1="1" y1="388" x2="239" y2="388" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="10" y="400" fill="#7f8c8d" font-size="9" font-weight="600" letter-spacing="0.3">DIALYSIS</text>
+  <rect x="1" y="406" width="238" height="22" fill="#f8fafc"/>
+  <line x1="1" y1="428" x2="239" y2="428" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="418" r="3" fill="#718096" opacity="0.85"/>
+  <a href="ValueSet-clinical-event-dialysis-type-vs.html">
+    <text x="21" y="423" fill="#374151" font-size="13">Dialysis Type</text>
+    <text x="234" y="423" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
+  </a>
+  <rect x="1" y="428" width="238" height="22" fill="white"/>
+  <line x1="1" y1="450" x2="239" y2="450" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="440" r="3" fill="#718096" opacity="0.85"/>
+  <a href="StructureDefinition-clinical-event-dialysis-start-date.html">
+    <text x="21" y="445" fill="#374151" font-size="13">Dialysis Start Date</text>
+    <text x="234" y="445" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
+  </a>
+  <rect x="1" y="450" width="238" height="22" fill="#f8fafc"/>
+  <line x1="1" y1="472" x2="239" y2="472" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="462" r="3" fill="#718096" opacity="0.85"/>
+  <a href="StructureDefinition-clinical-event-dialysis-end-date.html">
+    <text x="21" y="467" fill="#374151" font-size="13">Dialysis End Date</text>
+    <text x="234" y="467" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
+  </a>
+  <rect x="1" y="472" width="238" height="18" fill="#f5f6f6"/>
+  <line x1="1" y1="472" x2="239" y2="472" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="10" y="484" fill="#7f8c8d" font-size="9" font-weight="600" letter-spacing="0.3">OTHER</text>
+  <rect x="1" y="490" width="238" height="22" fill="white"/>
+  <line x1="1" y1="512" x2="239" y2="512" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="502" r="3" fill="#718096" opacity="0.85"/>
+  <a href="http://hl7.org/fhir/R4/condition.html">
+    <text x="21" y="507" fill="#374151" font-size="13">Cause of Death</text>
+    <text x="234" y="507" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
+  </a>
+  <rect x="1" y="512" width="238" height="22" fill="#f8fafc"/>
+  <line x1="1" y1="534" x2="239" y2="534" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="524" r="3" fill="#718096" opacity="0.85"/>
+  <a href="http://hl7.org/fhir/R4/condition.html">
+    <text x="21" y="529" fill="#374151" font-size="13">Concomitant Medications</text>
+    <text x="234" y="529" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
+  </a>
+  <rect x="1" y="534" width="238" height="22" fill="white"/>
+  <line x1="1" y1="556" x2="239" y2="556" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="546" r="3" fill="#718096" opacity="0.85"/>
+  <a href="StructureDefinition-clinical-event-retransplantation.html">
+    <text x="21" y="551" fill="#374151" font-size="13">Retransplantation</text>
+    <text x="234" y="551" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
+  </a>
+  <rect x="1" y="556" width="238" height="22" fill="#f8fafc"/>
+  <line x1="1" y1="578" x2="239" y2="578" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="568" r="3" fill="#718096" opacity="0.85"/>
+  <a href="StructureDefinition-clinical-event-retransplantation-date.html">
+    <text x="21" y="573" fill="#374151" font-size="13">Retransplantation Date</text>
+    <text x="234" y="573" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
+  </a>
+  <rect x="1" y="578" width="238" height="22" fill="white"/>
+  <line x1="1" y1="600" x2="239" y2="600" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="590" r="3" fill="#718096" opacity="0.85"/>
+  <a href="http://hl7.org/fhir/R4/condition.html">
+    <text x="21" y="595" fill="#374151" font-size="13">Treatment Adherence</text>
+    <text x="234" y="595" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
+  </a>
+  <rect x="1" y="600" width="238" height="22" fill="#f8fafc"/>
+  <line x1="1" y1="622" x2="239" y2="622" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="612" r="3" fill="#718096" opacity="0.85"/>
+  <a href="StructureDefinition-clinical-event-date-entry-transplant-list.html">
+    <text x="21" y="617" fill="#374151" font-size="13">Entry to Transplant List</text>
+    <text x="234" y="617" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
+  </a>
+  <rect x="1" y="622" width="238" height="22" fill="white"/>
+  <line x1="1" y1="644" x2="239" y2="644" stroke="#f0f4f8" stroke-width="1"/>
+  <circle cx="12" cy="634" r="3" fill="#718096" opacity="0.85"/>
+  <a href="http://hl7.org/fhir/R4/condition.html">
+    <text x="21" y="639" fill="#374151" font-size="13">Prothrombotic Disorders</text>
+    <text x="234" y="639" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
+  </a>
+  <rect x="1" y="644" width="238" height="22" fill="#f8fafc"/>
+  <circle cx="12" cy="656" r="3" fill="#718096" opacity="0.85"/>
+  <a href="http://hl7.org/fhir/R4/condition.html">
+    <text x="21" y="661" fill="#374151" font-size="13">Kidney Biopsy</text>
+    <text x="234" y="661" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
+  </a>
+</svg>

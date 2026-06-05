@@ -1,42 +1,12 @@
 // transplant-donor.fsh
 //
-// NOTE:
-// - Donor-level lab / typing facts are modeled as Observation resources (see patient-observations.fsh).
-// - Those Observations are linked to the donor using Observation.subject = Reference(Donor).
-// - Donor type (living vs deceased) is represented as an extension on the donor Patient.
+// donor facts (blood group, Rh, HLA) → ImmunologicalData (immunological-data.fsh)
+// age_years / age_months → PatientDemographicsObservation with subject = Reference(Donor)
 
 
-// ------------------------------------------------------
-// Terminology – donor-type (Living / Deceased)
-// ------------------------------------------------------
-
-CodeSystem: DonorTypeCS
-Id: donor-type
-Title: "Donor type"
-Description: "Living vs deceased donor classification."
-* ^caseSensitive = true
-* ^content = #complete
-* #living  "Living donor"
-* #deceased "Deceased donor"
-
-ValueSet: DonorTypeVS
-Id: donor-type
-Title: "Donor type value set"
-Description: "Allowed values for donor type (Living, Deceased)."
-* include codes from system DonorTypeCS
-
-
-// ------------------------------------------------------
-// Extension – donorType
-// ------------------------------------------------------
-
-Extension: DonorType
-Id: donor-type-ext
-Title: "Donor type"
-Description: "Whether the donor is living or deceased."
-* value[x] 1..1
-* value[x] only CodeableConcept
-* valueCodeableConcept from DonorTypeVS (required)
+// donor type (living vs deceased) is carried via Patient.deceased[x] (native R4 field):
+//   deceased donor → Patient.deceasedBoolean = true
+//   living donor   → Patient.deceasedBoolean = false  (or element absent)
 
 
 // ------------------------------------------------------
@@ -57,9 +27,10 @@ Description: "Transplant donor profile based on the FHIR Patient resource, align
 * identifier.value 1..1 MS
 * identifier.value ^short = "Donor ID (donor_id from the data model)"
 
-// Donor type (living vs deceased) → donor.type (DM) as extension
-* extension contains DonorType named donorType 0..1 MS
-* extension[donorType] ^short = "Donor type (living vs deceased)"
+// type → Patient.deceased[x]: true = deceased donor, false/absent = living donor
+* deceased[x] 0..1 MS
+* deceased[x] only boolean
+* deceasedBoolean ^short = "type — true if deceased donor, false if living donor"
 
 // Basic donor demographics (if available)
 * gender 0..1 MS
@@ -80,6 +51,6 @@ Description: "Example Patient instance conforming to Donor."
 
 * identifier[0].system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/ids/donor"
 * identifier[0].value = "DON-001"
-* extension[donorType].valueCodeableConcept = DonorTypeCS#deceased "Deceased donor"
+* deceasedBoolean = true
 * gender = #male
 * birthDate = "2000-01-20"

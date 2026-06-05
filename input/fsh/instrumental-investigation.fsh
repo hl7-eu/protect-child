@@ -1,30 +1,46 @@
 // ================================================
-// Instrumental Investigation – terminology
+// Instrumental Investigation — instrumental_investigation table (catalogue)
+// ObservationDefinition
 // ================================================
+
+// ------------------------------------------------
+// Terminology
+// ------------------------------------------------
 
 CodeSystem: InstrumentalInvestigationNameCS
 Id: instrumental-investigation-name-cs
 Title: "Instrumental Investigation Name"
-Description: "Types of instrumental investigation tests conducted."
+Description: "Types of instrumental investigation tests conducted (expanded for DMv1.2)."
 * ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/instrumental-investigation-name"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
 
-* #718078008 "Liver doppler ultrasound"
-* #4061009 "Abdominal CT scan"
-* #4083230 "Abdominal MRI"
-* #4194588 "MRCP"
-* #37311324 "Brain MRI"
-* #4169785 "AngioTC"
-* #4299523 "Angiography"
-* #4181917 "EEG"
-* #36308175 "ECG"
-* #4167052 "Kidney doppler ultrasound"
-* #36713614 "Total body CT scan"
+* #718078008   "Liver doppler ultrasound"
+* #4061009     "Abdominal CT scan"
+* #4083230     "Abdominal MRI"
+* #4194588     "MRCP"
+* #37311324    "Brain MRI"
+* #4169785     "AngioTC"
+* #4299523     "Angiography"
+* #4181917     "EEG"
+* #36308175    "ECG"
+* #4167052     "Kidney doppler ultrasound"
+* #36713614    "Total body CT scan"
 * #scintigraphy "Scintigraphy"
-* #mcug "Micturating Cystourethrogram (MCUG)"
-* #pet "PET"
+* #mcug        "Micturating Cystourethrogram (MCUG)"
+* #pet         "PET"
+* #dmsa-renal-scan       "DMSA Renal Scan"
+* #dynamic-renal-scan    "Dynamic renal scan"
+* #ecocardiogram         "Ecocardiogram"
+* #kidney-biopsy         "Kidney Biopsy"
+* #kidney-histology      "Kidney Histology"
+* #kidney-ultrasound     "Kidney Ultrasound"
+* #liver-biopsy          "Liver Biopsy"
+* #liver-histology       "Liver Histology"
+* #mag3-renal-scan       "MAG3 Renal Scan"
+* #ultrasonography       "Ultrasonography"
+* #liver-elastography    "Ultrasound (liver elastography [kPa])"
 
 ValueSet: InstrumentalInvestigationNameVS
 Id: instrumental-investigation-name-vs
@@ -35,65 +51,38 @@ Description: "ValueSet of instrumental investigation tests conducted."
 
 
 // ================================================
-// Instrumental Investigation – extensions
-// ================================================
-
-// name – Code (CodeableConcept)
-Extension: InstrumentalInvestigationName
-Id: instrumental-investigation-name-ext
-Title: "Instrumental investigation name"
-Description: "Name of the instrumental investigation test conducted."
-* value[x] only CodeableConcept
-* valueCodeableConcept 1..1
-* valueCodeableConcept from InstrumentalInvestigationNameVS (required)
-
-
-// ================================================
-// Instrumental Investigation profile (using Basic)
+// InstrumentalInvestigation profile — ObservationDefinition
 // ================================================
 
 Profile: InstrumentalInvestigation
-Parent: Basic
+Parent: ObservationDefinition
 Id: instrumental-investigation
 Title: "Instrumental Investigation"
-Description: "Catalogue of instrumental investigation tests, aligned with the instrumental_investigation table."
+Description: "Catalogue entry for an instrumental investigation test type, aligned with the instrumental_investigation table."
 
-// instrumental_investigation_id → Basic.identifier (Mandatory)
+// instrumental_investigation_id → ObservationDefinition.identifier
 * identifier 1..1 MS
-* identifier ^short = "instrumental_investigation_id – identifier of the instrumental investigation test"
 * identifier.system 1..1
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/instrumental-investigation-id" 
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/instrumental-investigation-id" (exactly)
 * identifier.value 1..1
+* identifier ^short = "instrumental_investigation_id — investigation type identifier"
 
-// Basic.code is required but not part of DM: use a fixed text label
+// name → ObservationDefinition.code (required binding)
 * code 1..1 MS
-* code ^short = "Kind of Basic resource (instrumental investigation definition)"
-* code.text 1..1
-* code.text = "Instrumental investigation test definition"
-
-// Attach the 'name' extension with DM variable name as slice name
-* extension contains InstrumentalInvestigationName named name 1..1 MS
-* extension[name] ^short = "name – Name of the instrumental investigation test conducted"
+* code from InstrumentalInvestigationNameVS (required)
+* code ^short = "name — type of instrumental investigation"
 
 
 // ================================================
-// Example Instrumental Investigation instance
+// Example
 // ================================================
 
 Instance: InstrumentalInvestigationExample1
 InstanceOf: InstrumentalInvestigation
 Usage: #example
 Title: "Example Instrumental Investigation"
-Description: "Example imaging/instrumental investigation for a transplant patient."
+Description: "Example instrumental investigation catalogue entry — Liver doppler ultrasound."
 
-* id = "instrumental-investigation-example-1"
-
-// instrumental_investigation_id
 * identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/instrumental-investigation-id"
 * identifier.value = "INST0001"
-
-// code (kind of Basic resource)
-* code.text = "Instrumental investigation test definition"
-
-// name (example: Liver doppler ultrasound)
-* extension[name].valueCodeableConcept = InstrumentalInvestigationNameCS#718078008 "Liver doppler ultrasound"
+* code = InstrumentalInvestigationNameCS#718078008 "Liver doppler ultrasound"

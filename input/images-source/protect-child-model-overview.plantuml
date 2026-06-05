@@ -78,7 +78,6 @@ biosample --> patient
 labResult --> patient
 labResult --> biosample
 labResult --> labTest
-labResult --> unit
 
 labTest --> unit
 

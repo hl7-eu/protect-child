@@ -1,71 +1,51 @@
 // lab-result.fsh
-// Lab results modeled with Observation + DiagnosticReport
+// Lab results — lab_result table
+// Observation + DiagnosticReport
 
-// ---------------------------------------
-// Unit terminology for lab results (unit)
-// ---------------------------------------
+// gfr_formula and gfr_cyst_formula are carried via Observation.method (native R4 field).
+// method.text holds the free-text formula name (e.g. "CKD-EPI", "Schwartz", "MDRD").
 
-// ---------------------------------------
-// Unit terminology for lab results (UCUM)
-// ---------------------------------------
-
-// Use UCUM for Observation.valueQuantity
-// system: http://unitsofmeasure.org
-// code: UCUM code (e.g., "mg/dL")
-
+// Unit terminology — UCUM codes for Observation.valueQuantity
 ValueSet: LabResultUnitVS
 Id: lab-result-unit-vs
 Title: "Lab Result Unit ValueSet"
-Description: "Allowed UCUM units of measurement for lab result values (unit column)."
+Description: "Allowed UCUM units of measurement for lab result values (DMv1.2 unit field)."
 * ^experimental = true
 
-* http://unitsofmeasure.org#"mg/dL" "mg/dL"
-* http://unitsofmeasure.org#"umol/L" "µmol/L"
-* http://unitsofmeasure.org#"mL/min/{1.73_m2}" "mL/min/1.73 m2"
-* http://unitsofmeasure.org#"meq/L" "mEq/L"
-* http://unitsofmeasure.org#"g/dL" "g/dL"
-* http://unitsofmeasure.org#"g/L" "g/L"
-* http://unitsofmeasure.org#"[IU]/L" "IU/L"
-* http://unitsofmeasure.org#"%" "%"
-* http://unitsofmeasure.org#"mmol/L" "mmol/L"
-* http://unitsofmeasure.org#"10*3/uL" "10^3/µL"
-* http://unitsofmeasure.org#"10*9/L" "10^9/L"
-* http://unitsofmeasure.org#"10*3/mm3" "10^3/mm3"
-* http://unitsofmeasure.org#"s" "s"
+* http://unitsofmeasure.org#"mg/dL"           "mg/dL"
+* http://unitsofmeasure.org#"umol/L"          "µmol/L"
+* http://unitsofmeasure.org#"mL/min/{1.73_m2}" "mL/min/1.73 m²"
+* http://unitsofmeasure.org#"mg/L"            "mg/L"
+* http://unitsofmeasure.org#"meq/L"           "mEq/L"
+* http://unitsofmeasure.org#"mmol/L"          "mmol/L"
+* http://unitsofmeasure.org#"ng/L"            "ng/L"
+* http://unitsofmeasure.org#"nmol/L"          "nmol/L"
+* http://unitsofmeasure.org#"[IU]/L"          "U/L"
+* http://unitsofmeasure.org#"%"               "%"
+* http://unitsofmeasure.org#"g/L"             "g/L"
+* http://unitsofmeasure.org#"1"               "ratio"
+* http://unitsofmeasure.org#"g/dL"            "g/dL"
+* http://unitsofmeasure.org#"10*12/L"         "10^12/L"
+* http://unitsofmeasure.org#"10*6/L"          "10^6/L"
+* http://unitsofmeasure.org#"10*9/L"          "10^9/L"
+* http://unitsofmeasure.org#"10*3/uL"         "10^3/µL"
+* http://unitsofmeasure.org#"s"               "s"
+* http://unitsofmeasure.org#"el/uL"           "el/µL"
+* http://unitsofmeasure.org#"mg/d"            "mg(protein)/day"
+* http://unitsofmeasure.org#"mg/mg"           "mg/mg"
+* http://unitsofmeasure.org#"mg/mmol"         "mg/mmol"
+* http://unitsofmeasure.org#"mg/g"            "mg/g"
+
 
 
 // ---------------------------------------
-// Extensions
+// Invariants
 // ---------------------------------------
 
-// ---------------------------------------
-
-// Link to LabTest catalog row (lab_test_id)
-Extension: LabResultLabTestRef
-Id: lab-result-labtest-ref
-Title: "Lab test reference"
-Description: "lab_test_id – reference to the lab test definition (LabTest catalog row) associated with this lab result."
-* value[x] only Reference(LabTest)
-* valueReference 1..1
-* valueReference ^short = "Lab test definition (catalog row)"
-
-// Limit context to Observation
-* ^context[0].type = #element
-* ^context[0].expression = "Observation"
-
-// patient_id – ElementReference to PatientTransplant
-Extension: LabResultPatientRef
-Id: lab-result-patient-ref
-Title: "Lab result patient reference"
-Description: "patient_id – reference to the transplant recipient for whom this lab result is recorded."
-* value[x] only Reference(PatientTransplant)
-* valueReference 1..1
-
-// Limit context to Observation
-* ^context[0].type = #element
-* ^context[0].expression = "Observation"
-
-
+Invariant: pc-lab-1
+Description: "A lab result SHALL have either a value[x] or a dataAbsentReason, but not both."
+Severity: #error
+Expression: "value.exists() xor dataAbsentReason.exists()"
 
 // ---------------------------------------
 // LabResultObservation profile (Observation)
@@ -97,32 +77,48 @@ Description: "Individual laboratory result for a transplant recipient, aligned w
 * category.coding.code = #laboratory (exactly)
 * category.coding.display = "Laboratory"
 
-// Test code
+// lab_test_id → Observation.code (required binding to LabTestNameVS)
+// The code value is the OMOP concept_id, matching LabTest.code — no reference extension needed.
 * code 1..1 MS
-* code ^short = "Lab test code (e.g. creatinine, ALT, etc.)"
+* code from LabTestNameVS (required)
+* code ^short = "lab_test_id — lab test name (from LabTestNameVS / LabTest.code)"
 
-// Recipient link 
-* subject 0..1 MS
+// patient_id → Observation.subject
+* subject 1..1 MS
 * subject only Reference(PatientTransplant)
-* subject ^short = "Optional subject; DM patient_id is captured in extension[patient_id]"
+* subject ^short = "patient_id — transplant recipient"
+
+// visit_id → Observation.encounter
+* encounter 1..1 MS
+* encounter only Reference(Visit)
+* encounter ^short = "visit_id – visit during which this lab result was obtained"
 
 // Timing – date of the lab test
 * effective[x] 1..1 MS
 * effective[x] only dateTime
 * effectiveDateTime ^short = "date – date (and time) when the lab test was performed"
 
+// lab_test_id → LabTest (ObservationDefinition) link is implicit via shared code.
+// R4 Observation.basedOn does not allow Reference(ObservationDefinition); the link is
+// established by matching Observation.code against LabTest.code (both bound to LabTestNameVS).
+
 // Specimen (BioSample)
 * specimen 0..1 MS
 * specimen only Reference(BioSample)
 * specimen ^short = "Specimen (bio_sample) from which the lab result was obtained"
 
-// Numerical result – value (Float) and unit
-* value[x] 1..1 MS
+// Numerical result – value (Float) and unit.
+// DM v1.2 marks 'value' as R (Recommended), so value[x] is 0..1.
+// When a result is unavailable (not collected, below detection limit, etc.)
+// value[x] SHALL be absent and dataAbsentReason SHALL be populated instead.
+// Invariant pc-lab-1 enforces that exactly one of the two is present.
+* obeys pc-lab-1
+* value[x] 0..1 MS
 * value[x] only Quantity
-* valueQuantity ^short = "value – value of the test as a numeric quantity with unit"
+* valueQuantity ^short = "value – numeric result with UCUM unit"
 
-// Bind Quantity fields to DM unit and value
-* valueQuantity.value 1..1
+// Quantity sub-elements
+* valueQuantity.value 0..1
 * valueQuantity.value ^short = "Numeric result (float) – maps the 'value' column"
 * valueQuantity.system 1..1
 * valueQuantity.system = "http://unitsofmeasure.org" (exactly)
@@ -132,16 +128,17 @@ Description: "Individual laboratory result for a transplant recipient, aligned w
 * valueQuantity.unit 0..1
 * valueQuantity.unit ^short = "Human-readable unit label (e.g. mg/dL, µmol/L)"
 
+// dataAbsentReason – required when value[x] is absent
+* dataAbsentReason 0..1 MS
+* dataAbsentReason ^short = "Reason value is missing (e.g. not-performed, error, below-detection-limit)"
+
 // Interpretation (e.g. high/low/normal)
 * interpretation 0..*
 * interpretation ^short = "Clinical interpretation (e.g. high, low, normal)"
 
-// Attach DM ElementReferences as extensions
-* extension contains LabResultLabTestRef named lab_test_id 1..1 MS
-* extension contains LabResultPatientRef named patient_id 1..1 MS
-
-* extension[lab_test_id] ^short = "lab_test_id – reference to LabTest catalog row"
-* extension[patient_id] ^short = "patient_id – reference to PatientTransplant"
+// gfr_formula / gfr_cyst_formula → Observation.method (native field for measurement technique)
+* method 0..1 MS
+* method ^short = "gfr_formula / gfr_cyst_formula — formula used to calculate GFR (e.g. CKD-EPI, Schwartz, MDRD). Use method.text for free-text formula name."
 
 
 
@@ -219,14 +216,14 @@ Description: "Example creatinine result for a transplant recipient."
 * category.coding.code = #laboratory
 * category.coding.display = "Laboratory"
 
-// Test code – example: serum creatinine (LOINC 2160-0)
-* code.coding[0].system = "http://loinc.org"
-* code.coding[0].code = #2160-0
-* code.coding[0].display = "Creatinine [Mass/volume] in Serum or Plasma"
+// lab_test_id → Observation.code (LOINC 2160-0 = Creatinine in Serum or Plasma)
+* code = http://loinc.org#2160-0 "Creatinine [Mass/volume] in Serum or Plasma"
 
-// DM ElementReferences
-* extension[lab_test_id].valueReference = Reference(LabTestExample1)
-* extension[patient_id].valueReference = Reference(ExamplePatientTransplant1)
+// patient_id → Observation.subject (native)
+* subject = Reference(ExamplePatientTransplant1)
+
+// visit_id (link back to Visit)
+* encounter = Reference(VisitExample1)
 
 // Timing (date of lab test)
 * effectiveDateTime = "2023-09-02T09:15:00+01:00"

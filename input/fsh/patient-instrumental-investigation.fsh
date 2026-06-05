@@ -1,9 +1,11 @@
 // ================================================
-// Patient Instrumental Investigation
+// Instrumental Investigation — instrumental_investigation table
+// Observation
 // ================================================
 
+
 // ------------------------------------------------------
-// Result ValueSet (Normal / Abnormal)
+// Result terminology (Normal / Abnormal)
 // ------------------------------------------------------
 
 CodeSystem: PatientInstrumentalInvestigationResultCS
@@ -24,42 +26,6 @@ Description: "Allowed results for the instrumental investigation test (Normal, A
 * PatientInstrumentalInvestigationResultCS#normal
 * PatientInstrumentalInvestigationResultCS#abnormal
 
-// ------------------------------------------------------
-// Extensions (ElementReferences & data items)
-// ------------------------------------------------------
-
-// patient_id – ElementReference → PatientTransplant
-Extension: PatientInstrumentalInvestigationPatientRef
-Id: patient-instrumental-investigation-patient-ref
-Title: "Patient ID relationship"
-Description: "patient_id – reference to the transplant recipient for whom the instrumental investigation was performed."
-* value[x] only Reference(PatientTransplant)
-* valueReference 1..1
-
-// instrumental_investigation_id – ElementReference → InstrumentalInvestigation
-Extension: PatientInstrumentalInvestigationInstrumentRef
-Id: patient-instrumental-investigation-instrument-ref
-Title: "Instrumental investigation ID relationship"
-Description: "instrumental_investigation_id – reference to the catalogue entry describing the test performed."
-* value[x] only Reference(InstrumentalInvestigation)
-* valueReference 1..1
-
-// result – Normal / Abnormal
-Extension: PatientInstrumentalInvestigationResult
-Id: patient-instrumental-investigation-result
-Title: "Result of the instrumental investigation"
-Description: "result – result of the instrumental investigation test conducted (Normal / Abnormal)."
-* value[x] only CodeableConcept
-* valueCodeableConcept from PatientInstrumentalInvestigationResultVS (required)
-
-// Optionally: date of investigation (if present in DM as 'date')
-// (leave optional and simple)
-Extension: PatientInstrumentalInvestigationDate
-Id: patient-instrumental-investigation-date
-Title: "Date of instrumental investigation"
-Description: "Date on which the instrumental investigation was performed."
-* value[x] only date
-* valueDate 1..1
 
 // ------------------------------------------------------
 // Profile on Observation
@@ -69,69 +35,78 @@ Profile: PatientInstrumentalInvestigation
 Parent: Observation
 Id: patient-instrumental-investigation
 Title: "Patient Instrumental Investigation"
-Description: "Instrumental investigation performed on a transplant patient, aligned with the patient_instrumental_investigation table."
+Description: "Instrumental investigation performed on a transplant patient, aligned with the pat_inst_inv table. All DM fields map to native Observation elements — no extensions."
 
-// pat_inst_inv_id → Observation.identifier (Mandatory)
+// inst_inv_id → Observation.identifier
 * identifier 1..1 MS
-* identifier ^short = "pat_inst_inv_id – identifier for the patient instrumental investigation record"
 * identifier.system 1..1
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/patient-instrumental-investigation-id" (exactly)
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/instrumental-investigation-id" (exactly)
 * identifier.value 1..1
+* identifier ^short = "inst_inv_id — instrumental investigation record identifier (DMv1.2)"
 
-// Observation core
 * status 1..1 MS
-* status = #final
+* status = #final (exactly)
+
+// instrumental_investigation → Observation.code
 * code 1..1 MS
-* code.text = "Patient instrumental investigation"
+* code from InstrumentalInvestigationNameVS (required)
+* code ^short = "instrumental_investigation_id — investigation type from InstrumentalInvestigationNameVS"
 
-// Subject is optional; DM linkage is via patient_id extension
-* subject 0..1 MS
-* subject ^short = "Optional subject; use patient_id extension for exact DM linkage."
+// patient_id → Observation.subject
+* subject 1..1 MS
+* subject only Reference(PatientTransplant)
+* subject ^short = "patient_id — transplant recipient"
 
-// We keep Observation.value[x] unused; result is in extension[result]
-* value[x] 0..0
+// visit_id → Observation.encounter
+* encounter 1..1 MS
+* encounter only Reference(Visit)
+* encounter ^short = "visit_id — visit during which this investigation was performed"
 
-// Attach extensions with DM variable names as slice names
-* extension contains PatientInstrumentalInvestigationPatientRef named patient_id 1..1 MS
-* extension contains PatientInstrumentalInvestigationInstrumentRef named instrumental_investigation_id 1..1 MS
-* extension contains PatientInstrumentalInvestigationResult named result 1..1 MS
-* extension contains PatientInstrumentalInvestigationDate named date 0..1 MS
+// date → Observation.effectiveDateTime
+* effective[x] 0..1 MS
+* effectiveDateTime 0..1
+* effectiveDateTime ^short = "date — date the instrumental investigation was performed"
 
-* extension[patient_id] ^short = "patient_id – reference to PatientTransplant"
-* extension[instrumental_investigation_id] ^short = "instrumental_investigation_id – reference to InstrumentalInvestigation"
-* extension[result] ^short = "result – Normal / Abnormal"
-* extension[date] ^short = "Date of the instrumental investigation"
+// result → Observation.value[x] CodeableConcept
+* value[x] 0..1 MS
+* value[x] only CodeableConcept
+* valueCodeableConcept from PatientInstrumentalInvestigationResultVS (required)
+* valueCodeableConcept ^short = "result — Normal or Abnormal"
+
+// abnormality + other_investigation → Observation.note, sliced by authorString
+* note ^slicing.discriminator.type = #value
+* note ^slicing.discriminator.path = "authorString"
+* note ^slicing.rules = #open
+* note MS
+
+* note contains
+    abnormality       0..1 MS and
+    other_investigation 0..1 MS
+
+* note[abnormality].authorString = "abnormality" (exactly)
+* note[abnormality].text 1..1
+* note[abnormality] ^short = "abnormality — free-text description of the abnormal finding"
+
+* note[other_investigation].authorString = "other_investigation" (exactly)
+* note[other_investigation].text 1..1
+* note[other_investigation] ^short = "other_investigation — free-text description of investigations not in the catalogue"
+
 
 // ------------------------------------------------------
-// Example instance
+// Example
 // ------------------------------------------------------
 
 Instance: PatientInstrumentalInvestigationExample1
 InstanceOf: PatientInstrumentalInvestigation
 Usage: #example
 Title: "Example Patient Instrumental Investigation"
-Description: "Example of a patient instrumental investigation linked to InstrumentalInvestigation catalogue."
+Description: "Example liver doppler ultrasound result for a transplant recipient."
 
-* id = "patient-instrumental-investigation-example-1"
-
-* code.text = "Patient instrumental investigation"
-
-
-// pat_inst_inv_id
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/patient-instrumental-investigation-id"
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/instrumental-investigation-id"
 * identifier.value = "PII0001"
-
-// optional Observation.subject
+* status = #final
+* code = InstrumentalInvestigationNameCS#718078008 "Liver doppler ultrasound"
 * subject = Reference(ExamplePatientTransplant1)
-
-// DM patient_id
-* extension[patient_id].valueReference = Reference(ExamplePatientTransplant1)
-
-// DM instrumental_investigation_id
-* extension[instrumental_investigation_id].valueReference = Reference(InstrumentalInvestigationExample1)
-
-// result (Normal)
-* extension[result].valueCodeableConcept = PatientInstrumentalInvestigationResultCS#normal "Normal"
-
-// date
-* extension[date].valueDate = "2024-03-10"
+* encounter = Reference(VisitExample1)
+* effectiveDateTime = "2024-03-10"
+* valueCodeableConcept = PatientInstrumentalInvestigationResultCS#normal "Normal"

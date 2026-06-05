@@ -1,17 +1,21 @@
 // patient-observations.fsh
-// Observation and List artifacts used to capture recipient and donor facts as Observations,
-// instead of using Patient extensions.
+// Patient and donor fact observations.
 //
-// Design:
-// - Each fact is an Observation linked via Observation.subject to PatientTransplant (recipient) or Donor.
-// - A List (PatientObservations) can be used to group the patient-level Observations for a case/visit.
+// Profiles defined here:
+//   PatientDemographicsObservation — age_years, age_months (category: survey)
+//   PatientImmunologyObservation  — max_pra, last_pra, date_histological_diag (category: laboratory)
+//   PatientLiverDiseaseDiagnosis / PatientRenalDiseaseDiagnosis — Condition resources
+//   DonorPreKtxDialysisTypeObservation / DonorLiverTypeObservation — donor-specific Observations
 //
-Alias: $loinc = http://loinc.org
-Alias: $ucum = http://unitsofmeasure.org
-Alias: $obs-cat = http://terminology.hl7.org/CodeSystem/observation-category
+// ABO/Rh CodeSystems and ValueSets are defined here and reused by immunological-data.fsh.
+
+Alias: $loinc    = http://loinc.org
+Alias: $ucum     = http://unitsofmeasure.org
+Alias: $obs-cat  = http://terminology.hl7.org/CodeSystem/observation-category
+Alias: $snomed   = http://snomed.info/sct
 
 // ------------------------------------------------------
-// Terminology – ABO, Rh
+// Terminology – ABO, Rh (also used by ImmunologicalData)
 // ------------------------------------------------------
 
 CodeSystem: PatientABOGroupCS
@@ -50,34 +54,32 @@ Description: "Rh factor for transplant recipients and donors."
 ValueSet: PatientRhFactorVS
 Id: patient-rh-factor-vs
 Title: "Rh Factor ValueSet"
-Description: "Allowed Rh factor values for transplant recipients and donors."
 * PatientRhFactorCS#positive
 * PatientRhFactorCS#negative
 
 // ------------------------------------------------------
-// Terminology – PRA observation type (max vs last)
+// Terminology – PRA component codes (max vs last)
 // ------------------------------------------------------
 
 CodeSystem: PatientPRATypeCS
 Id: patient-pra-type-cs
-Title: "PRA Observation Type CodeSystem"
-Description: "Distinguishes maximum (historical) vs most recent PRA measurements."
+Title: "PRA Type CodeSystem"
+Description: "Distinguishes maximum (historical) vs most recent PRA measurements. Used as component codes in PatientImmunologyObservation."
 * ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/patient-pra-type"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #max  "Maximum (historical)"
-* #last "Most recent"
+* #max  "Maximum PRA (historical)"
+* #last "Most recent PRA"
 
 ValueSet: PatientPRATypeVS
 Id: patient-pra-type-vs
-Title: "PRA Observation Type ValueSet"
-Description: "Allowed values for Observation.method when reporting maximum vs most recent PRA."
+Title: "PRA Type ValueSet"
 * PatientPRATypeCS#max
 * PatientPRATypeCS#last
 
 // ------------------------------------------------------
-// Terminology – Donor liver type (Complete / Partial)
+// Terminology – Donor liver type
 // ------------------------------------------------------
 
 CodeSystem: DonorLiverTypeCS
@@ -94,298 +96,235 @@ Description: "Type of liver donation (complete vs partial)."
 ValueSet: DonorLiverTypeVS
 Id: donor-liver-type-vs
 Title: "Donor Liver Type ValueSet"
-Description: "Allowed values for donor liver type (Complete, Partial)."
 * DonorLiverTypeCS#complete
 * DonorLiverTypeCS#partial
 
 // ------------------------------------------------------
-// ValueSet – Dialysis method (using LOINC LA answer codes)
+// Terminology – Dialysis method (donor pre-KTX)
 // ------------------------------------------------------
 
 ValueSet: DialysisTypeVS
 Id: dialysis-type-vs
 Title: "Dialysis method ValueSet"
-Description: "Dialysis method values expressed using LOINC Answer codes (aligned with LOINC answer list LL2102-3 for 70958-4)."
-* $loinc#LA9975-9 "Hemodialysis"
+Description: "Dialysis method values using LOINC answer codes."
+* $loinc#LA9975-9  "Hemodialysis"
 * $loinc#LA10059-6 "Peritoneal Dialysis"
 
 // ------------------------------------------------------
-
-// ------------------------------------------------------
-// Observation Profiles – recipient & donor facts
+// Terminology – panel codes (demographics and immunology panels)
 // ------------------------------------------------------
 
-// ABO blood group
-Profile: PatientABOGroupObservation
+CodeSystem: PatientObservationsPanelCS
+Id: patient-observations-panel-cs
+Title: "Patient Observations Panel CodeSystem"
+Description: "Local codes for PROTECT-CHILD patient observation panels."
+* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/patient-observations-panel"
+* ^content = #complete
+* ^caseSensitive = true
+* ^experimental = true
+* #patient-demographics-panel "Patient demographics panel (age)"
+* #patient-immunology-panel   "Patient pre-transplant immunology panel (PRA, histological date)"
+
+// ================================================
+// Profile: PatientDemographicsObservation
+// Age at transplant — category survey; one instance per patient or donor.
+// ================================================
+
+Profile: PatientDemographicsObservation
 Parent: Observation
-Id: patient-abo-group-observation
-Title: "ABO group observation"
-Description: "ABO blood group as an Observation (LOINC 883-9). Reusable for both recipients and donors."
+Id: patient-demographics-observation
+Title: "Patient Demographics Observation"
+Description: "Panel Observation for patient or donor age at transplant (age_years, age_months). Category is #survey to distinguish from laboratory results. One instance per patient or donor. Subject accepts PatientTransplant or Donor."
 
 * status 1..1 MS
 * status = #final (exactly)
 
 * category 1..1 MS
-* category = $obs-cat#laboratory (exactly)
+* category = $obs-cat#survey (exactly)
+* category ^short = "survey — demographic measurement, not a lab result"
 
 * code 1..1 MS
-* code = $loinc#883-9 "ABO group [Type] in Blood" (exactly)
+* code = PatientObservationsPanelCS#patient-demographics-panel "Patient demographics panel (age)" (exactly)
 
 * subject 1..1 MS
 * subject only Reference(PatientTransplant or Donor)
+* subject ^short = "Transplant recipient or donor"
 
 * effective[x] 0..1 MS
 
-* value[x] 1..1 MS
-* value[x] only CodeableConcept
-* valueCodeableConcept from PatientABOGroupVS (required)
+// ── Component slicing ──────────────────────────────────────────────────────
 
-
-// Rh blood group
-Profile: PatientRhFactorObservation
-Parent: Observation
-Id: patient-rh-factor-observation
-Title: "Rh factor observation"
-Description: "Rh type as an Observation (LOINC 10331-7). Reusable for both recipients and donors."
-
-* status 1..1 MS
-* status = #final (exactly)
-
-* category 1..1 MS
-* category = $obs-cat#laboratory (exactly)
-
-* code 1..1 MS
-* code = $loinc#10331-7 "Rh [Type] in Blood" (exactly)
-
-* subject 1..1 MS
-* subject only Reference(PatientTransplant or Donor)
-
-* effective[x] 0..1 MS
-
-* value[x] 1..1 MS
-* value[x] only CodeableConcept
-* valueCodeableConcept from PatientRhFactorVS (required)
-
-
-// PRA (max / last distinguished using Observation.method)
-Profile: PatientPRAObservation
-Parent: Observation
-Id: patient-pra-observation
-Title: "PRA observation"
-Description: "Panel reactive antibody / cPRA as an Observation (LOINC 80737-0). Use Observation.method to mark max vs last."
-
-* status 1..1 MS
-* status = #final (exactly)
-
-* category 1..1 MS
-* category = $obs-cat#laboratory (exactly)
-
-* code 1..1 MS
-* code = $loinc#80737-0 "Calculated panel reactive antibody - Serum" (exactly)
-
-* subject 1..1 MS
-* subject only Reference(PatientTransplant or Donor)
-
-* method 1..1 MS
-* method from PatientPRATypeVS (required)
-
-* effective[x] 0..1 MS
-
-* value[x] 1..1 MS
-* value[x] only integer
-* valueInteger ^minValueInteger = 0
-* valueInteger ^maxValueInteger = 100
-
-
-// HLA typing – Class I (A, B, C)
-Profile: PatientHLATypingClassIObservation
-Parent: Observation
-Id: patient-hla-typing-class-i-observation
-Title: "HLA Class I typing observation"
-Description: "HLA Class I (A, B, C) typing as an Observation panel (LOINC 96629-1)."
-
-* status 1..1 MS
-* status = #final (exactly)
-
-* category 1..1 MS
-* category = $obs-cat#laboratory (exactly)
-
-* code 1..1 MS
-* code = $loinc#96629-1 "HLA-A and B and C (class I) typing panel - Blood or Tissue by Low resolution" (exactly)
-
-* subject 1..1 MS
-* subject only Reference(PatientTransplant or Donor)
-
-* effective[x] 0..1 MS
-
-* component 0..* MS
 * component ^slicing.discriminator.type = #pattern
 * component ^slicing.discriminator.path = "code"
 * component ^slicing.rules = #open
+* component MS
 
-* component contains
-    hlaA 0..1 MS and
-    hlaB 0..1 MS and
-    hlaC 0..1 MS
+// age_years — LOINC 30525-0
+* component contains age_years 0..1 MS
+* component[age_years].code = $loinc#30525-0 "Age" (exactly)
+* component[age_years].value[x] only Quantity
+* component[age_years].valueQuantity.system = $ucum
+* component[age_years].valueQuantity.code = #a
+* component[age_years] ^short = "age_years — patient age in years (UCUM a)"
 
-* component[hlaA].code = $loinc#78014-8 "HLA-A [Type] by Low resolution" (exactly)
-* component[hlaA].value[x] 1..1
-* component[hlaA].value[x] only string
+// age_months — LOINC 63900-5
+* component contains age_months 0..1 MS
+* component[age_months].code = $loinc#63900-5 "Current age Months" (exactly)
+* component[age_months].value[x] only Quantity
+* component[age_months].valueQuantity.system = $ucum
+* component[age_months].valueQuantity.code = #mo
+* component[age_months] ^short = "age_months — patient age in months (UCUM mo); paediatric precision"
 
-* component[hlaB].code = $loinc#78015-5 "HLA-B [Type] by Low resolution" (exactly)
-* component[hlaB].value[x] 1..1
-* component[hlaB].value[x] only string
+// ================================================
+// Profile: PatientImmunologyObservation
+// Pre-transplant PRA + histological date — category laboratory.
+// One instance per patient (not used for donors).
+// ================================================
 
-* component[hlaC].code = $loinc#96636-6 "HLA-C [Type] by Low resolution" (exactly)
-* component[hlaC].value[x] 1..1
-* component[hlaC].value[x] only string
-
-
-// HLA typing – Class II (DP, DQ, DR)
-Profile: PatientHLATypingClassIIObservation
+Profile: PatientImmunologyObservation
 Parent: Observation
-Id: patient-hla-typing-class-ii-observation
-Title: "HLA Class II typing observation"
-Description: "HLA Class II (DP, DQ, DR) typing as an Observation panel (LOINC 96640-8)."
+Id: patient-immunology-observation
+Title: "Patient Pre-transplant Immunology Observation"
+Description: "Panel Observation for pre-transplant immunological scalar facts: maximum PRA, most recent PRA, and histological diagnosis date. Category is #laboratory. One instance per transplant recipient. ABO/Rh and HLA typing are in ImmunologicalData."
 
 * status 1..1 MS
 * status = #final (exactly)
 
 * category 1..1 MS
 * category = $obs-cat#laboratory (exactly)
+* category ^short = "laboratory — immunological measurements"
 
 * code 1..1 MS
-* code = $loinc#96640-8 "HLA-DP and DQ and DR (class II) typing panel - Blood or Tissue by Low resolution" (exactly)
+* code = PatientObservationsPanelCS#patient-immunology-panel "Patient pre-transplant immunology panel (PRA, histological date)" (exactly)
 
 * subject 1..1 MS
-* subject only Reference(PatientTransplant or Donor)
+* subject only Reference(PatientTransplant)
+* subject ^short = "Transplant recipient"
 
 * effective[x] 0..1 MS
 
-* component 0..* MS
+// ── Component slicing ──────────────────────────────────────────────────────
+
 * component ^slicing.discriminator.type = #pattern
 * component ^slicing.discriminator.path = "code"
 * component ^slicing.rules = #open
+* component MS
 
-* component contains
-    hlaDPA1 0..1 MS and
-    hlaDPB1 0..1 MS and
-    hlaDQA1 0..1 MS and
-    hlaDQB1 0..1 MS and
-    hlaDRB1 0..1 MS and
-    hlaDRB345 0..1 MS
+// max_pra — PatientPRATypeCS#max
+* component contains max_pra 0..1 MS
+* component[max_pra].code = PatientPRATypeCS#max "Maximum PRA (historical)" (exactly)
+* component[max_pra].value[x] only integer
+* component[max_pra] ^short = "max_pra — maximum historical pre-transplant PRA/cPRA (0–100 %)"
 
-* component[hlaDPA1].code = $loinc#96643-2 "HLA-DPA1 [Type] by Low resolution" (exactly)
-* component[hlaDPA1].value[x] 1..1
-* component[hlaDPA1].value[x] only string
+// last_pra — PatientPRATypeCS#last
+* component contains last_pra 0..1 MS
+* component[last_pra].code = PatientPRATypeCS#last "Most recent PRA" (exactly)
+* component[last_pra].value[x] only integer
+* component[last_pra] ^short = "last_pra — most recent pre-transplant PRA/cPRA (0–100 %)"
 
-* component[hlaDPB1].code = $loinc#96648-1 "HLA-DPB1 [Type] by Low resolution" (exactly)
-* component[hlaDPB1].value[x] 1..1
-* component[hlaDPB1].value[x] only string
+// date_histological_diag — LOINC 77975-1
+* component contains date_histological_diag 0..1 MS
+* component[date_histological_diag].code = $loinc#77975-1 "Earliest date of diagnosis" (exactly)
+* component[date_histological_diag].value[x] only dateTime
+* component[date_histological_diag] ^short = "date_histological_diag — date histology confirmed the primary disease"
 
-* component[hlaDQA1].code = $loinc#96654-9 "HLA-DQA1 [Type] by Low resolution" (exactly)
-* component[hlaDQA1].value[x] 1..1
-* component[hlaDQA1].value[x] only string
+// ================================================
+// Profile: PatientLiverDiseaseDiagnosis — Condition
+// Primary liver disease leading to transplantation.
+// ================================================
 
-* component[hlaDQB1].code = $loinc#78017-1 "HLA-DQB1 [Type] by Low resolution" (exactly)
-* component[hlaDQB1].value[x] 1..1
-* component[hlaDQB1].value[x] only string
+Profile: PatientLiverDiseaseDiagnosis
+Parent: Condition
+Id: patient-liver-disease-diagnosis
+Title: "Patient Liver Disease Diagnosis"
+Description: "Primary liver disease diagnosis that led to transplantation, aligned with DMv1.2 diag_primary_disease and date_diag_primary_disease. date_diag_primary_disease maps to Condition.onsetDateTime."
 
-* component[hlaDRB1].code = $loinc#96664-8 "HLA-DRB1 [Type] by Low resolution" (exactly)
-* component[hlaDRB1].value[x] 1..1
-* component[hlaDRB1].value[x] only string
+* clinicalStatus 1..1 MS
+* clinicalStatus ^short = "Clinical status of the diagnosis at time of transplant"
 
-* component[hlaDRB345].code = $loinc#96672-1 "HLA-DRB3 and HLA-DRB4 and HLA DRB5 [Type] by Low resolution" (exactly)
-* component[hlaDRB345].value[x] 1..1
-* component[hlaDRB345].value[x] only string
-
-
-// Histological diagnosis date
-Profile: PatientHistologicalDiagnosisDateObservation
-Parent: Observation
-Id: patient-histological-diagnosis-date-observation
-Title: "Histological diagnosis date observation"
-Description: "Date of histological diagnosis captured as an Observation date result (LOINC 77975-1)."
-
-* status 1..1 MS
-* status = #final (exactly)
-
+// diag_primary_disease → Condition.code (any coding system; ICD-10 recommended)
 * code 1..1 MS
-* code = $loinc#77975-1 "Earliest date of diagnosis" (exactly)
-
-* subject 1..1 MS
-* subject only Reference(PatientTransplant)
-
-* effective[x] 0..1 MS
-
-* value[x] 1..1 MS
-* value[x] only dateTime
-
-
-// Liver disease diagnosis (includes diagnosis date via Observation.effectiveDateTime)
-Profile: PatientLiverDiseaseDiagnosisObservation
-Parent: Observation
-Id: patient-liver-disease-diagnosis-observation
-Title: "Liver disease diagnosis observation"
-Description: "Primary liver disease diagnosis. Use effectiveDateTime as the diagnosis date and valueCodeableConcept as the diagnosis."
-
-* status 1..1 MS
-* status = #final (exactly)
-
-* code 1..1 MS
-* code = $loinc#29308-4 "Diagnosis" (exactly)
-
-* subject 1..1 MS
-* subject only Reference(PatientTransplant)
+* code ^short = "diag_primary_disease — primary liver disease diagnosis code"
 
 * bodySite 1..1 MS
-* bodySite = $loinc#LA4584-4 "Liver" (exactly)
-
-* effective[x] 1..1 MS
-* effective[x] only dateTime
-
-* value[x] 1..1 MS
-* value[x] only CodeableConcept
-
-* note 0..1 MS
-* note ^short = "Optional free text (diag_liver_disease_extra)"
-
-
-// Renal disease diagnosis (includes diagnosis date via Observation.effectiveDateTime)
-Profile: PatientRenalDiseaseDiagnosisObservation
-Parent: Observation
-Id: patient-renal-disease-diagnosis-observation
-Title: "Renal disease diagnosis observation"
-Description: "Primary renal disease diagnosis. Use effectiveDateTime as the diagnosis date and valueCodeableConcept as the diagnosis."
-
-* status 1..1 MS
-* status = #final (exactly)
-
-* code 1..1 MS
-* code = $loinc#29308-4 "Diagnosis" (exactly)
+* bodySite = $snomed#10200004 "Liver structure" (exactly)
+* bodySite ^short = "Liver — distinguishes this from the renal diagnosis profile"
 
 * subject 1..1 MS
 * subject only Reference(PatientTransplant)
+* subject ^short = "Transplant recipient"
+
+// date_diag_primary_disease → Condition.onsetDateTime
+* onset[x] 1..1 MS
+* onset[x] only dateTime
+* onsetDateTime ^short = "date_diag_primary_disease — date the primary liver disease was first diagnosed"
+
+// diag_liver_disease_extra → Condition.note (free text)
+* note 0..1 MS
+* note ^short = "diag_liver_disease_extra — free-text supplement to the coded diagnosis"
+
+// ================================================
+// Profile: PatientRenalDiseaseDiagnosis — Condition
+// Primary renal disease leading to transplantation.
+// ================================================
+
+Profile: PatientRenalDiseaseDiagnosis
+Parent: Condition
+Id: patient-renal-disease-diagnosis
+Title: "Patient Renal Disease Diagnosis"
+Description: "Primary renal disease diagnosis that led to transplantation, aligned with DMv1.2 diag_primary_disease and date_diag_primary_disease. date_diag_primary_disease maps to Condition.onsetDateTime."
+
+* clinicalStatus 1..1 MS
+* clinicalStatus ^short = "Clinical status of the diagnosis at time of transplant"
+
+// diag_primary_disease → Condition.code
+* code 1..1 MS
+* code ^short = "diag_primary_disease — primary renal disease diagnosis code"
 
 * bodySite 1..1 MS
-* bodySite = $loinc#LA4591-9 "Kidney" (exactly)
+* bodySite = $snomed#64033007 "Kidney structure" (exactly)
+* bodySite ^short = "Kidney — distinguishes this from the liver diagnosis profile"
 
-* effective[x] 1..1 MS
-* effective[x] only dateTime
+* subject 1..1 MS
+* subject only Reference(PatientTransplant)
+* subject ^short = "Transplant recipient"
 
-* value[x] 1..1 MS
-* value[x] only CodeableConcept
+// date_diag_primary_disease → Condition.onsetDateTime
+* onset[x] 1..1 MS
+* onset[x] only dateTime
+* onsetDateTime ^short = "date_diag_primary_disease — date the primary renal disease was first diagnosed"
 
+// diag_renal_disease_extra → Condition.note (free text)
 * note 0..1 MS
-* note ^short = "Optional free text (diag_renal_disease_extra)"
+* note ^short = "diag_renal_disease_extra — free-text supplement to the coded diagnosis"
 
+// ================================================
+// Organ invariants for donor-specific observations
+// ================================================
 
-// Donor pre-KTX dialysis type (donor-specific)
+Invariant: pc-donor-1
+Description: "Donor liver graft type is only applicable for liver or combined transplants."
+Severity: #error
+Expression: "extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').exists() implies extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').value.ofType(CodeableConcept).coding.where(code = 'liver' or code = 'combined').exists()"
+
+Invariant: pc-donor-2
+Description: "Donor pre-KTX dialysis type is only applicable for kidney or combined transplants."
+Severity: #error
+Expression: "extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').exists() implies extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').value.ofType(CodeableConcept).coding.where(code = 'kidney' or code = 'combined').exists()"
+
+// ================================================
+// Profile: DonorPreKtxDialysisTypeObservation (donor-specific)
+// ================================================
+
 Profile: DonorPreKtxDialysisTypeObservation
 Parent: Observation
 Id: donor-pre-ktx-dialysis-type-observation
 Title: "Donor pre-KTX dialysis type observation"
-Description: "Dialysis method prior to kidney transplantation (LOINC 70958-4)."
+Description: "Dialysis method prior to kidney transplantation (LOINC 70958-4). Only applicable for kidney or combined transplants — invariant pc-donor-2 enforces this when tx_type extension is present."
+
+* obeys pc-donor-2
+* extension contains TransplantTypeExt named tx_type 0..1 MS
+* extension[tx_type] ^short = "Transplant type context — should be kidney or combined"
 
 * status 1..1 MS
 * status = #final (exactly)
@@ -405,13 +344,19 @@ Description: "Dialysis method prior to kidney transplantation (LOINC 70958-4)."
 * value[x] only CodeableConcept
 * valueCodeableConcept from DialysisTypeVS (required)
 
+// ================================================
+// Profile: DonorLiverTypeObservation (donor-specific)
+// ================================================
 
-// Donor liver type (donor-specific)
 Profile: DonorLiverTypeObservation
 Parent: Observation
 Id: donor-liver-type-observation
 Title: "Donor liver graft type observation"
-Description: "Type of liver graft (complete vs partial) captured as an Observation (LOINC 74836-8)."
+Description: "Type of liver graft (complete vs partial) captured as an Observation (LOINC 74836-8). Only applicable for liver or combined transplants — invariant pc-donor-1 enforces this when tx_type extension is present."
+
+* obeys pc-donor-1
+* extension contains TransplantTypeExt named tx_type 0..1 MS
+* extension[tx_type] ^short = "Transplant type context — should be liver or combined"
 
 * status 1..1 MS
 * status = #final (exactly)
@@ -431,293 +376,101 @@ Description: "Type of liver graft (complete vs partial) captured as an Observati
 * value[x] only CodeableConcept
 * valueCodeableConcept from DonorLiverTypeVS (required)
 
+// ================================================
+// Examples
+// ================================================
 
-// ------------------------------------------------------
-// Profile: PatientObservations (List)
-// ------------------------------------------------------
-
-Profile: PatientObservations
-Parent: List
-Id: patient-observations
-Title: "Patient observations"
-Description: "A curated list of patient-level observations (ABO, Rh, PRA, HLA typing, diagnoses, etc.) that reference a transplant recipient."
-
-* status 1..1 MS
-* status = #current (exactly)
-
-* mode 1..1 MS
-* mode = #working (exactly)
-
-* subject 1..1 MS
-* subject only Reference(PatientTransplant or Donor)
-* subject ^short = "The transplant recipient this list applies to"
-
-* date 0..1 MS
-* date ^short = "Date the list was assembled/updated"
-
-* entry 1..* MS
-* entry ^slicing.discriminator.type = #profile
-* entry ^slicing.discriminator.path = "item"
-* entry ^slicing.rules = #open
-
-* entry contains
-    abo 0..1 MS and
-    rh 0..1 MS and
-    pra 0..* MS and
-    hlaClassI 0..1 MS and
-    hlaClassII 0..1 MS and
-    histDxDate 0..1 MS and
-    liverDx 0..1 MS and
-    renalDx 0..1 MS
-
-* entry[abo].item 1..1
-* entry[abo].item only Reference(PatientABOGroupObservation)
-
-* entry[rh].item 1..1
-* entry[rh].item only Reference(PatientRhFactorObservation)
-
-* entry[pra].item 1..1
-* entry[pra].item only Reference(PatientPRAObservation)
-
-* entry[hlaClassI].item 1..1
-* entry[hlaClassI].item only Reference(PatientHLATypingClassIObservation)
-
-* entry[hlaClassII].item 1..1
-* entry[hlaClassII].item only Reference(PatientHLATypingClassIIObservation)
-
-* entry[histDxDate].item 1..1
-* entry[histDxDate].item only Reference(PatientHistologicalDiagnosisDateObservation)
-
-* entry[liverDx].item 1..1
-* entry[liverDx].item only Reference(PatientLiverDiseaseDiagnosisObservation)
-
-* entry[renalDx].item 1..1
-* entry[renalDx].item only Reference(PatientRenalDiseaseDiagnosisObservation)
-
-
-// ------------------------------------------------------
-// Example Instances (recipient-level)
-// ------------------------------------------------------
-
-Instance: ExamplePatientABO1
-InstanceOf: PatientABOGroupObservation
+Instance: ExamplePatientAgeObservation1
+InstanceOf: PatientDemographicsObservation
 Usage: #example
-Title: "Example patient ABO observation"
-Description: "ABO group for the transplant recipient."
+Title: "Example patient age observation"
+Description: "Age at transplant for the recipient (PatientDemographicsObservation)."
 
 * status = #final
-* category = $obs-cat#laboratory
-* code = $loinc#883-9 "ABO group [Type] in Blood"
+* category = $obs-cat#survey
+* code = PatientObservationsPanelCS#patient-demographics-panel "Patient demographics panel (age)"
 * subject = Reference(ExamplePatientTransplant1)
 * effectiveDateTime = "2025-01-10"
-* valueCodeableConcept = PatientABOGroupCS#A "Group A"
 
-Instance: ExamplePatientRh1
-InstanceOf: PatientRhFactorObservation
+* component[age_years].valueQuantity.value = 9
+* component[age_years].valueQuantity.system = $ucum
+* component[age_years].valueQuantity.code = #a
+* component[age_years].valueQuantity.unit = "years"
+
+* component[age_months].valueQuantity.value = 108
+* component[age_months].valueQuantity.system = $ucum
+* component[age_months].valueQuantity.code = #mo
+* component[age_months].valueQuantity.unit = "months"
+
+Instance: ExamplePatientImmunologyObservation1
+InstanceOf: PatientImmunologyObservation
 Usage: #example
-Title: "Example patient Rh observation"
-Description: "Rh type for the transplant recipient."
+Title: "Example patient pre-transplant immunology observation"
+Description: "PRA and histological diagnosis date for the recipient (PatientImmunologyObservation)."
 
 * status = #final
 * category = $obs-cat#laboratory
-* code = $loinc#10331-7 "Rh [Type] in Blood"
+* code = PatientObservationsPanelCS#patient-immunology-panel "Patient pre-transplant immunology panel (PRA, histological date)"
 * subject = Reference(ExamplePatientTransplant1)
 * effectiveDateTime = "2025-01-10"
-* valueCodeableConcept = PatientRhFactorCS#positive "Rh positive"
 
-Instance: ExamplePatientPRAMax
-InstanceOf: PatientPRAObservation
+* component[max_pra].valueInteger = 80
+* component[last_pra].valueInteger = 55
+* component[date_histological_diag].valueDateTime = "2024-05-10"
+
+Instance: ExamplePatientLiverDiagnosis1
+InstanceOf: PatientLiverDiseaseDiagnosis
 Usage: #example
-Title: "Example patient max PRA observation"
-Description: "Maximum PRA (%)."
+Title: "Example patient liver disease diagnosis"
+Description: "Primary liver disease diagnosis leading to transplantation."
 
-* status = #final
-* category = $obs-cat#laboratory
-* code = $loinc#80737-0 "Calculated panel reactive antibody - Serum"
+* clinicalStatus = http://terminology.hl7.org/CodeSystem/condition-clinical#active
+* code = http://hl7.org/fhir/sid/icd-10#K74.60 "Unspecified cirrhosis of liver"
+* bodySite = $snomed#10200004 "Liver structure"
 * subject = Reference(ExamplePatientTransplant1)
-* method = PatientPRATypeCS#max "Maximum (historical)"
-* effectiveDateTime = "2024-12-20"
-* valueInteger = 80
-
-
-Instance: ExamplePatientPRALast
-InstanceOf: PatientPRAObservation
-Usage: #example
-Title: "Example patient last PRA observation"
-Description: "Most recent PRA (%)."
-
-* status = #final
-* category = $obs-cat#laboratory
-* code = $loinc#80737-0 "Calculated panel reactive antibody - Serum"
-* subject = Reference(ExamplePatientTransplant1)
-* method = PatientPRATypeCS#last "Most recent"
-* effectiveDateTime = "2025-01-05"
-* valueInteger = 55
-
-
-Instance: ExamplePatientHLAClassI1
-InstanceOf: PatientHLATypingClassIObservation
-Usage: #example
-Title: "Example patient HLA class I typing"
-Description: "Example HLA class I typing result (A, B, C)."
-
-* status = #final
-* category = $obs-cat#laboratory
-* code = $loinc#96629-1 "HLA-A and B and C (class I) typing panel - Blood or Tissue by Low resolution"
-* subject = Reference(ExamplePatientTransplant1)
-* effectiveDateTime = "2025-01-05"
-* component[hlaA].code = $loinc#78014-8 "HLA-A [Type] by Low resolution"
-* component[hlaA].valueString = "A*02"
-* component[hlaB].code = $loinc#78015-5 "HLA-B [Type] by Low resolution"
-* component[hlaB].valueString = "B*07"
-* component[hlaC].code = $loinc#96636-6 "HLA-C [Type] by Low resolution"
-* component[hlaC].valueString = "C*07"
-
-Instance: ExamplePatientHLAClassII1
-InstanceOf: PatientHLATypingClassIIObservation
-Usage: #example
-Title: "Example patient HLA class II typing"
-Description: "Example HLA class II typing result (DP, DQ, DR)."
-
-* status = #final
-* category = $obs-cat#laboratory
-* code = $loinc#96640-8 "HLA-DP and DQ and DR (class II) typing panel - Blood or Tissue by Low resolution"
-* subject = Reference(ExamplePatientTransplant1)
-* effectiveDateTime = "2025-01-05"
-* component[hlaDPA1].code = $loinc#96643-2 "HLA-DPA1 [Type] by Low resolution"
-* component[hlaDPA1].valueString = "DPA1*01"
-* component[hlaDPB1].code = $loinc#96648-1 "HLA-DPB1 [Type] by Low resolution"
-* component[hlaDPB1].valueString = "DPB1*04"
-* component[hlaDQA1].code = $loinc#96654-9 "HLA-DQA1 [Type] by Low resolution"
-* component[hlaDQA1].valueString = "DQA1*05"
-* component[hlaDQB1].code = $loinc#78017-1 "HLA-DQB1 [Type] by Low resolution"
-* component[hlaDQB1].valueString = "DQB1*02"
-* component[hlaDRB1].code = $loinc#96664-8 "HLA-DRB1 [Type] by Low resolution"
-* component[hlaDRB1].valueString = "DRB1*15"
-
-Instance: ExampleHistDxDate1
-InstanceOf: PatientHistologicalDiagnosisDateObservation
-Usage: #example
-Title: "Example histological diagnosis date"
-Description: "Example date of histological diagnosis."
-
-* status = #final
-* code = $loinc#77975-1 "Earliest date of diagnosis"
-* subject = Reference(ExamplePatientTransplant1)
-* valueDateTime = "2024-05-10"
-
-Instance: ExampleLiverDx1
-InstanceOf: PatientLiverDiseaseDiagnosisObservation
-Usage: #example
-Title: "Example liver disease diagnosis"
-Description: "Example liver diagnosis and diagnosis date."
-
-* status = #final
-* code = $loinc#29308-4 "Diagnosis"
-* subject = Reference(ExamplePatientTransplant1)
-* bodySite = $loinc#LA4584-4 "Liver"
-* effectiveDateTime = "2020-03-01"
-* valueCodeableConcept = http://hl7.org/fhir/sid/icd-10#K74.60 "Unspecified cirrhosis of liver"
+* onsetDateTime = "2020-03-01"
 * note.text = "Extra details about the diagnosis (free text)."
 
-Instance: ExampleRenalDx1
-InstanceOf: PatientRenalDiseaseDiagnosisObservation
+Instance: ExamplePatientRenalDiagnosis1
+InstanceOf: PatientRenalDiseaseDiagnosis
 Usage: #example
-Title: "Example renal disease diagnosis"
-Description: "Example renal diagnosis and diagnosis date."
+Title: "Example patient renal disease diagnosis"
+Description: "Primary renal disease diagnosis leading to transplantation."
 
-* status = #final
-* code = $loinc#29308-4 "Diagnosis"
+* clinicalStatus = http://terminology.hl7.org/CodeSystem/condition-clinical#active
+* code = http://hl7.org/fhir/sid/icd-10#N18.5 "Chronic kidney disease, stage 5"
+* bodySite = $snomed#64033007 "Kidney structure"
 * subject = Reference(ExamplePatientTransplant1)
-* bodySite = $loinc#LA4591-9 "Kidney"
-* effectiveDateTime = "2021-09-15"
-* valueCodeableConcept = http://hl7.org/fhir/sid/icd-10#N18.5 "Chronic kidney disease, stage 5"
+* onsetDateTime = "2021-09-15"
 * note.text = "Extra renal diagnosis details (free text)."
 
-
-// ------------------------------------------------------
-// Example Instances (donor-level)
-
-Instance: ExampleDonorABOGroupObservation1
-InstanceOf: PatientABOGroupObservation
+Instance: ExampleDonorAgeObservation1
+InstanceOf: PatientDemographicsObservation
 Usage: #example
-Title: "Example donor ABO observation"
-Description: "ABO group for the transplant donor."
+Title: "Example donor age observation"
+Description: "Age at donation for the transplant donor (PatientDemographicsObservation; subject = Reference(Donor))."
 
 * status = #final
-* category = $obs-cat#laboratory
-* code = $loinc#883-9 "ABO group [Type] in Blood"
+* category = $obs-cat#survey
+* code = PatientObservationsPanelCS#patient-demographics-panel "Patient demographics panel (age)"
 * subject = Reference(ExampleDonor1)
 * effectiveDateTime = "2025-01-01"
-* valueCodeableConcept = PatientABOGroupCS#O "Group O"
 
-Instance: ExampleDonorRhFactorObservation1
-InstanceOf: PatientRhFactorObservation
-Usage: #example
-Title: "Example donor Rh observation"
-Description: "Rh type for the transplant donor."
+* component[age_years].valueQuantity.value = 25
+* component[age_years].valueQuantity.system = $ucum
+* component[age_years].valueQuantity.code = #a
+* component[age_years].valueQuantity.unit = "years"
 
-* status = #final
-* category = $obs-cat#laboratory
-* code = $loinc#10331-7 "Rh [Type] in Blood"
-* subject = Reference(ExampleDonor1)
-* effectiveDateTime = "2025-01-01"
-* valueCodeableConcept = PatientRhFactorCS#positive "Rh positive"
-
-Instance: ExampleDonorPRAObservation1
-InstanceOf: PatientPRAObservation
-Usage: #example
-Title: "Example donor PRA observation"
-Description: "Example PRA (%) recorded for the donor (if available)."
-
-* status = #final
-* category = $obs-cat#laboratory
-* code = $loinc#80737-0 "Calculated panel reactive antibody - Serum"
-* subject = Reference(ExampleDonor1)
-* method = PatientPRATypeCS#last "Most recent"
-* effectiveDateTime = "2025-01-01"
-* valueInteger = 10
-
-
-Instance: ExampleDonorHLATypingClassIObservation1
-InstanceOf: PatientHLATypingClassIObservation
-Usage: #example
-Title: "Example donor HLA class I typing"
-Description: "Example HLA class I typing result (A, B, C) for the donor."
-
-* status = #final
-* category = $obs-cat#laboratory
-* code = $loinc#96629-1 "HLA-A and B and C (class I) typing panel - Blood or Tissue by Low resolution"
-* subject = Reference(ExampleDonor1)
-* effectiveDateTime = "2025-01-01"
-* component[hlaA].valueString = "A*01"
-* component[hlaB].valueString = "B*08"
-* component[hlaC].valueString = "C*07"
-
-Instance: ExampleDonorHLATypingClassIIObservation1
-InstanceOf: PatientHLATypingClassIIObservation
-Usage: #example
-Title: "Example donor HLA class II typing"
-Description: "Example HLA class II typing result (DP, DQ, DR) for the donor."
-
-* status = #final
-* category = $obs-cat#laboratory
-* code = $loinc#96640-8 "HLA-DP and DQ and DR (class II) typing panel - Blood or Tissue by Low resolution"
-* subject = Reference(ExampleDonor1)
-* effectiveDateTime = "2025-01-01"
-* component[hlaDPA1].valueString = "DPA1*01"
-* component[hlaDPB1].valueString = "DPB1*04"
-* component[hlaDQA1].valueString = "DQA1*05"
-* component[hlaDQB1].valueString = "DQB1*02"
-* component[hlaDRB1].valueString = "DRB1*15"
-
-// ------------------------------------------------------
+* component[age_months].valueQuantity.value = 300
+* component[age_months].valueQuantity.system = $ucum
+* component[age_months].valueQuantity.code = #mo
+* component[age_months].valueQuantity.unit = "months"
 
 Instance: ExampleDonorLiverType1
 InstanceOf: DonorLiverTypeObservation
 Usage: #example
 Title: "Example donor liver graft type"
-Description: "Example donor liver graft type."
+Description: "Complete liver graft from a deceased donor."
 
 * status = #final
 * category = $obs-cat#procedure
@@ -730,7 +483,7 @@ Instance: ExampleDonorDialysisType1
 InstanceOf: DonorPreKtxDialysisTypeObservation
 Usage: #example
 Title: "Example donor pre-KTX dialysis type"
-Description: "Example donor dialysis method prior to kidney transplant."
+Description: "Hemodialysis prior to kidney transplant."
 
 * status = #final
 * category = $obs-cat#procedure
@@ -738,51 +491,3 @@ Description: "Example donor dialysis method prior to kidney transplant."
 * subject = Reference(ExampleDonor1)
 * effectiveDateTime = "2024-11-15"
 * valueCodeableConcept = $loinc#LA9975-9 "Hemodialysis"
-
-
-// ------------------------------------------------------
-// Example: PatientObservations List
-// ------------------------------------------------------
-
-Instance: ExamplePatientObservationsList1
-InstanceOf: PatientObservations
-Usage: #example
-Title: "Example patient observations list"
-Description: "An example List that links the transplant recipient to their patient-level Observations."
-
-* status = #current
-* mode = #working
-* subject = Reference(ExamplePatientTransplant1)
-* date = "2025-01-10"
-
-* entry[abo].item = Reference(ExamplePatientABO1)
-* entry[rh].item  = Reference(ExamplePatientRh1)
-* entry[pra][0].item = Reference(ExamplePatientPRAMax)
-* entry[pra][1].item = Reference(ExamplePatientPRALast)
-* entry[hlaClassI].item = Reference(ExamplePatientHLAClassI1)
-* entry[hlaClassII].item = Reference(ExamplePatientHLAClassII1)
-* entry[histDxDate].item = Reference(ExampleHistDxDate1)
-* entry[liverDx].item = Reference(ExampleLiverDx1)
-* entry[renalDx].item = Reference(ExampleRenalDx1)
-
-
-// ------------------------------------------------------
-// Donor observations list (List)
-// ------------------------------------------------------
-
-Instance: ExampleDonorObservationsList1
-InstanceOf: PatientObservations
-Usage: #example
-Title: "Example donor observations list"
-Description: "An example List that links the donor to donor-level Observations."
-
-* status = #current
-* mode = #working
-* subject = Reference(ExampleDonor1)
-* date = "2024-02-02T12:00:00+01:00"
-
-* entry[abo].item = Reference(ExampleDonorABOGroupObservation1)
-* entry[rh].item = Reference(ExampleDonorRhFactorObservation1)
-* entry[pra][0].item = Reference(ExampleDonorPRAObservation1)
-* entry[hlaClassI].item = Reference(ExampleDonorHLATypingClassIObservation1)
-* entry[hlaClassII].item = Reference(ExampleDonorHLATypingClassIIObservation1)
