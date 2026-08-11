@@ -58,21 +58,21 @@
   <rect x="1" y="216" width="238" height="22" fill="white"/>
   <line x1="1" y1="238" x2="239" y2="238" stroke="#f0f4f8" stroke-width="1"/>
   <circle cx="12" cy="228" r="3" fill="#718096" opacity="0.85"/>
-  <a href="StructureDefinition-clinical-event-kidney-rejection-spec.html">
+  <a href="StructureDefinition-clinical-event-flag-observation.html">
     <text x="21" y="233" fill="#374151" font-size="13">Kidney Rejection Spec.</text>
     <text x="234" y="233" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
   </a>
   <rect x="1" y="238" width="238" height="22" fill="#f8fafc"/>
   <line x1="1" y1="260" x2="239" y2="260" stroke="#f0f4f8" stroke-width="1"/>
   <circle cx="12" cy="250" r="3" fill="#718096" opacity="0.85"/>
-  <a href="StructureDefinition-clinical-event-dgf.html">
+  <a href="StructureDefinition-clinical-event-flag-observation.html">
     <text x="21" y="255" fill="#374151" font-size="13">Delayed Graft Function</text>
     <text x="234" y="255" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
   </a>
   <rect x="1" y="260" width="238" height="22" fill="white"/>
   <line x1="1" y1="282" x2="239" y2="282" stroke="#f0f4f8" stroke-width="1"/>
   <circle cx="12" cy="272" r="3" fill="#718096" opacity="0.85"/>
-  <a href="StructureDefinition-clinical-event-previous-urological-intervention.html">
+  <a href="StructureDefinition-clinical-event-flag-observation.html">
     <text x="21" y="277" fill="#374151" font-size="13">Previous Urol. Intervention</text>
     <text x="234" y="277" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
   </a>
@@ -113,21 +113,21 @@
   <rect x="1" y="406" width="238" height="22" fill="#f8fafc"/>
   <line x1="1" y1="428" x2="239" y2="428" stroke="#f0f4f8" stroke-width="1"/>
   <circle cx="12" cy="418" r="3" fill="#718096" opacity="0.85"/>
-  <a href="ValueSet-clinical-event-dialysis-type-vs.html">
+  <a href="ValueSet-dialysis-type-vs.html">
     <text x="21" y="423" fill="#374151" font-size="13">Dialysis Type</text>
     <text x="234" y="423" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
   </a>
   <rect x="1" y="428" width="238" height="22" fill="white"/>
   <line x1="1" y1="450" x2="239" y2="450" stroke="#f0f4f8" stroke-width="1"/>
   <circle cx="12" cy="440" r="3" fill="#718096" opacity="0.85"/>
-  <a href="StructureDefinition-clinical-event-dialysis-start-date.html">
+  <a href="StructureDefinition-clinical-event-procedure.html">
     <text x="21" y="445" fill="#374151" font-size="13">Dialysis Start Date</text>
     <text x="234" y="445" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
   </a>
   <rect x="1" y="450" width="238" height="22" fill="#f8fafc"/>
   <line x1="1" y1="472" x2="239" y2="472" stroke="#f0f4f8" stroke-width="1"/>
   <circle cx="12" cy="462" r="3" fill="#718096" opacity="0.85"/>
-  <a href="StructureDefinition-clinical-event-dialysis-end-date.html">
+  <a href="StructureDefinition-clinical-event-procedure.html">
     <text x="21" y="467" fill="#374151" font-size="13">Dialysis End Date</text>
     <text x="234" y="467" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
   </a>
@@ -151,14 +151,14 @@
   <rect x="1" y="534" width="238" height="22" fill="white"/>
   <line x1="1" y1="556" x2="239" y2="556" stroke="#f0f4f8" stroke-width="1"/>
   <circle cx="12" cy="546" r="3" fill="#718096" opacity="0.85"/>
-  <a href="StructureDefinition-clinical-event-retransplantation.html">
+  <a href="StructureDefinition-clinical-event-procedure.html">
     <text x="21" y="551" fill="#374151" font-size="13">Retransplantation</text>
     <text x="234" y="551" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
   </a>
   <rect x="1" y="556" width="238" height="22" fill="#f8fafc"/>
   <line x1="1" y1="578" x2="239" y2="578" stroke="#f0f4f8" stroke-width="1"/>
   <circle cx="12" cy="568" r="3" fill="#718096" opacity="0.85"/>
-  <a href="StructureDefinition-clinical-event-retransplantation-date.html">
+  <a href="StructureDefinition-clinical-event-procedure.html">
     <text x="21" y="573" fill="#374151" font-size="13">Retransplantation Date</text>
     <text x="234" y="573" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
   </a>
@@ -172,7 +172,7 @@
   <rect x="1" y="600" width="238" height="22" fill="#f8fafc"/>
   <line x1="1" y1="622" x2="239" y2="622" stroke="#f0f4f8" stroke-width="1"/>
   <circle cx="12" cy="612" r="3" fill="#718096" opacity="0.85"/>
-  <a href="StructureDefinition-clinical-event-date-entry-transplant-list.html">
+  <a href="StructureDefinition-clinical-event-procedure.html">
     <text x="21" y="617" fill="#374151" font-size="13">Entry to Transplant List</text>
     <text x="234" y="617" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
   </a>

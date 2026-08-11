@@ -9,18 +9,18 @@ CodeSystem: TransplantTypeCS
 Id: transplant-type-cs
 Title: "Transplant Type CodeSystem"
 Description: "Type of solid-organ transplant (liver, kidney, combined liver-kidney)."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/transplant-type"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #liver    "Liver transplant"
-* #kidney   "Kidney transplant"
-* #combined "Combined liver-kidney transplant"
+* #liver    "Liver transplant" "Liver transplantation."
+* #kidney   "Kidney transplant" "Kidney transplantation."
+* #combined "Combined liver-kidney transplant" "Combined liver-kidney transplantation."
 
 ValueSet: TransplantTypeVS
 Id: transplant-type-vs
 Title: "Transplant Type ValueSet"
 Description: "Allowed transplant types."
+* ^experimental = true
 * TransplantTypeCS#liver
 * TransplantTypeCS#kidney
 * TransplantTypeCS#combined
@@ -30,19 +30,19 @@ CodeSystem: BiliaryAnastomosisTypeCS
 Id: biliary-anastomosis-type-cs
 Title: "Type of surgical biliary anastomosis CodeSystem"
 Description: "Types of biliary anastomosis used in liver transplantation."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/biliary-anastomosis-type"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #duct-to-duct          "Duct-to-duct anastomosis"
-* #choledochoenterostomy "Choledochoenterostomy"
-* #bilioenteric          "Bilioenteric anastomosis"
-* #roux-en-y             "Roux-en-Y hepaticojejunostomy"
+* #duct-to-duct          "Duct-to-duct anastomosis" "Direct end-to-end anastomosis between donor and recipient bile ducts (choledocho-choledochostomy)."
+* #choledochoenterostomy "Choledochoenterostomy" "Anastomosis of the common bile duct to the intestine."
+* #bilioenteric          "Bilioenteric anastomosis" "Anastomosis between the biliary tree and the bowel."
+* #roux-en-y             "Roux-en-Y hepaticojejunostomy" "Biliary drainage via a Roux-en-Y hepaticojejunostomy loop."
 
 ValueSet: BiliaryAnastomosisTypeVS
 Id: biliary-anastomosis-type-vs
 Title: "Type of surgical biliary anastomosis ValueSet"
 Description: "Allowed types of biliary anastomosis in liver transplant."
+* ^experimental = true
 * BiliaryAnastomosisTypeCS#duct-to-duct
 * BiliaryAnastomosisTypeCS#choledochoenterostomy
 * BiliaryAnastomosisTypeCS#bilioenteric
@@ -53,20 +53,20 @@ CodeSystem: IntraoperativeComplicationCS
 Id: intraoperative-complication-cs
 Title: "Intraoperative Complications CodeSystem"
 Description: "Intraoperative complications during transplantation (liver or kidney)."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/intraoperative-complication"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #major-bleeding    "Major bleeding"
-* #bile-duct-injury  "Bile duct injury"
-* #vessel-injury     "Vessel injury"
-* #liver-ischemia    "Liver ischemia"
-* #kidney-ischemia   "Kidney ischemia"
+* #major-bleeding    "Major bleeding" "Significant intraoperative haemorrhage."
+* #bile-duct-injury  "Bile duct injury" "Intraoperative injury to the bile duct."
+* #vessel-injury     "Vessel injury" "Intraoperative injury to a blood vessel."
+* #liver-ischemia    "Liver ischemia" "Intraoperative ischaemia of the liver."
+* #kidney-ischemia   "Kidney ischemia" "Intraoperative ischaemia of the kidney."
 
 ValueSet: IntraoperativeComplicationVS
 Id: intraoperative-complication-vs
 Title: "Intraoperative Complications ValueSet"
 Description: "Allowed intraoperative complications during transplantation."
+* ^experimental = true
 * IntraoperativeComplicationCS#major-bleeding
 * IntraoperativeComplicationCS#bile-duct-injury
 * IntraoperativeComplicationCS#vessel-injury
@@ -78,19 +78,19 @@ CodeSystem: UreteralAnastomosisTypeCS
 Id: ureteral-anastomosis-type-cs
 Title: "Ureteral Graft Anastomosis Type CodeSystem"
 Description: "Types of ureteral graft anastomosis used in transplantation (DMv1.2)."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/ureteral-anastomosis-type"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #standard         "Standard"
-* #cutaneous        "Cutaneous"
-* #ureterostomy     "Ureterostomy"
-* #epicistostomy    "Epicistostomy"
+* #standard         "Standard" "Standard ureteroneocystostomy anastomosis."
+* #cutaneous        "Cutaneous" "Cutaneous ureterostomy."
+* #ureterostomy     "Ureterostomy" "Ureterostomy."
+* #epicistostomy    "Epicistostomy" "Epicystostomy (suprapubic bladder drainage)."
 
 ValueSet: UreteralAnastomosisTypeVS
 Id: ureteral-anastomosis-type-vs
 Title: "Ureteral Graft Anastomosis Type ValueSet"
 Description: "Allowed ureteral graft anastomosis types."
+* ^experimental = true
 * UreteralAnastomosisTypeCS#standard
 * UreteralAnastomosisTypeCS#cutaneous
 * UreteralAnastomosisTypeCS#ureterostomy

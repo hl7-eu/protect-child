@@ -14,28 +14,28 @@ CodeSystem: TransplantDetailCS
 Id: transplant-detail-cs
 Title: "Transplant Detail CodeSystem"
 Description: "Codes for transplant-level details captured as Observation components."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/transplant-detail"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #transplant-details-panel              "Transplant details panel"
-* #tx-type                               "Transplant type (liver / kidney / combined)"
-* #d_r_weight_ratio                      "Donor/recipient weight ratio"
-* #vessel_mismatch_d_r                   "Vessel mismatch (donor-recipient)"
-* #cold_ischemia_time                    "Cold ischemia time (minutes)"
-* #time_diag_to_tx                       "Time from diagnosis to transplant (months)"
-* #warm_ischemia_time                    "Warm ischemia time (minutes)"
-* #vascular_anomalies                    "Vascular anomalies (free text)"
-* #type_surgical_biliary_anastomosis     "Type of surgical biliary anastomosis"
-* #intraoperative_complications          "Intraoperative complication"
-* #intraoperative_complications_other    "Other intraoperative complications (free text)"
-* #type_ureteral_graft_anastomosis       "Type of ureteral graft anastomosis"
-* #other_type_ureteral_graft_anastomosis "Other type of ureteral graft anastomosis (free text)"
+* #transplant-details-panel              "Transplant details panel" "Panel grouping intraoperative transplant detail observations."
+* #tx-type                               "Transplant type (liver / kidney / combined)" "Type of transplant (liver, kidney, or combined)."
+* #d_r_weight_ratio                      "Donor/recipient weight ratio" "Ratio of donor to recipient body weight."
+* #vessel_mismatch_d_r                   "Vessel mismatch (donor-recipient)" "Whether a donor-recipient vessel-size mismatch was present."
+* #cold_ischemia_time                    "Cold ischemia time (minutes)" "Cold ischaemia time, in minutes."
+* #time_diag_to_tx                       "Time from diagnosis to transplant (months)" "Time from primary diagnosis to transplant, in months."
+* #warm_ischemia_time                    "Warm ischemia time (minutes)" "Warm ischaemia time, in minutes."
+* #vascular_anomalies                    "Vascular anomalies (free text)" "Free-text description of vascular anomalies."
+* #type_surgical_biliary_anastomosis     "Type of surgical biliary anastomosis" "Type of surgical biliary anastomosis performed."
+* #intraoperative_complications          "Intraoperative complication" "Intraoperative complication that occurred."
+* #intraoperative_complications_other    "Other intraoperative complications (free text)" "Free-text description of other intraoperative complications."
+* #type_ureteral_graft_anastomosis       "Type of ureteral graft anastomosis" "Type of ureteral graft anastomosis performed."
+* #other_type_ureteral_graft_anastomosis "Other type of ureteral graft anastomosis (free text)" "Free-text description of another ureteral anastomosis type."
 
 ValueSet: TransplantDetailVS
 Id: transplant-detail-vs
 Title: "Transplant Detail ValueSet"
 Description: "Allowed codes for transplant detail Observation components."
+* ^experimental = true
 * include codes from system TransplantDetailCS
 
 // ------------------------------------------------------
@@ -103,10 +103,10 @@ Description: "Intraoperative and peri-operative details panel for a transplant, 
 * status = #final (exactly)
 
 * category 0..1 MS
-* category = $obs-cat#procedure (exactly)
+* category = $obs-cat#procedure
 
 * code 1..1 MS
-* code = TransplantDetailCS#transplant-details-panel "Transplant details panel" (exactly)
+* code = TransplantDetailCS#transplant-details-panel "Transplant details panel"
 
 * subject 1..1 MS
 * subject only Reference(PatientTransplant)
@@ -121,14 +121,14 @@ Description: "Intraoperative and peri-operative details panel for a transplant, 
 // tx_type (M) — transplant type carried here to enable organ-specific invariants
 // within the resource without requiring cross-resource resolve().
 * component contains txType 1..1 MS
-* component[txType].code = TransplantDetailCS#tx-type "Transplant type (liver / kidney / combined)" (exactly)
+* component[txType].code = TransplantDetailCS#tx-type "Transplant type (liver / kidney / combined)"
 * component[txType].value[x] only CodeableConcept
 * component[txType].valueCodeableConcept from TransplantTypeVS (required)
 * component[txType] ^short = "tx_type — transplant organ type; drives organ-specific field applicability"
 
 // time_diag_to_tx (M) — months from diagnosis to transplant
 * component contains time_diag_to_tx 0..1 MS
-* component[time_diag_to_tx].code = TransplantDetailCS#time_diag_to_tx (exactly)
+* component[time_diag_to_tx].code = TransplantDetailCS#time_diag_to_tx
 * component[time_diag_to_tx].value[x] only Quantity
 * component[time_diag_to_tx].valueQuantity.system = $ucum
 * component[time_diag_to_tx].valueQuantity.code = #mo
@@ -136,7 +136,7 @@ Description: "Intraoperative and peri-operative details panel for a transplant, 
 
 // d_r_weight_ratio (R) — dimensionless ratio
 * component contains d_r_weight_ratio 0..1 MS
-* component[d_r_weight_ratio].code = TransplantDetailCS#d_r_weight_ratio (exactly)
+* component[d_r_weight_ratio].code = TransplantDetailCS#d_r_weight_ratio
 * component[d_r_weight_ratio].value[x] only Quantity
 * component[d_r_weight_ratio].valueQuantity.system = $ucum
 * component[d_r_weight_ratio].valueQuantity.code = #1
@@ -144,13 +144,13 @@ Description: "Intraoperative and peri-operative details panel for a transplant, 
 
 // vessel_mismatch_d_r (R) — boolean
 * component contains vessel_mismatch_d_r 0..1 MS
-* component[vessel_mismatch_d_r].code = TransplantDetailCS#vessel_mismatch_d_r (exactly)
+* component[vessel_mismatch_d_r].code = TransplantDetailCS#vessel_mismatch_d_r
 * component[vessel_mismatch_d_r].value[x] only boolean
 * component[vessel_mismatch_d_r] ^short = "vessel_mismatch_d_r — vessel mismatch between donor and recipient"
 
 // cold_ischemia_time (R) — minutes
 * component contains cold_ischemia_time 0..1 MS
-* component[cold_ischemia_time].code = TransplantDetailCS#cold_ischemia_time (exactly)
+* component[cold_ischemia_time].code = TransplantDetailCS#cold_ischemia_time
 * component[cold_ischemia_time].value[x] only Quantity
 * component[cold_ischemia_time].valueQuantity.system = $ucum
 * component[cold_ischemia_time].valueQuantity.code = #min
@@ -158,7 +158,7 @@ Description: "Intraoperative and peri-operative details panel for a transplant, 
 
 // warm_ischemia_time (R) — minutes
 * component contains warm_ischemia_time 0..1 MS
-* component[warm_ischemia_time].code = TransplantDetailCS#warm_ischemia_time (exactly)
+* component[warm_ischemia_time].code = TransplantDetailCS#warm_ischemia_time
 * component[warm_ischemia_time].value[x] only Quantity
 * component[warm_ischemia_time].valueQuantity.system = $ucum
 * component[warm_ischemia_time].valueQuantity.code = #min
@@ -166,40 +166,40 @@ Description: "Intraoperative and peri-operative details panel for a transplant, 
 
 // vascular_anomalies (R) — free text
 * component contains vascular_anomalies 0..1 MS
-* component[vascular_anomalies].code = TransplantDetailCS#vascular_anomalies (exactly)
+* component[vascular_anomalies].code = TransplantDetailCS#vascular_anomalies
 * component[vascular_anomalies].value[x] only string
 * component[vascular_anomalies] ^short = "vascular_anomalies — vascular anomalies (free text)"
 
 // type_surgical_biliary_anastomosis (R) — CodeableConcept; Liver only
 * component contains type_surgical_biliary_anastomosis 0..1 MS
-* component[type_surgical_biliary_anastomosis].code = TransplantDetailCS#type_surgical_biliary_anastomosis (exactly)
+* component[type_surgical_biliary_anastomosis].code = TransplantDetailCS#type_surgical_biliary_anastomosis
 * component[type_surgical_biliary_anastomosis].value[x] only CodeableConcept
 * component[type_surgical_biliary_anastomosis].valueCodeableConcept from BiliaryAnastomosisTypeVS (required)
 * component[type_surgical_biliary_anastomosis] ^short = "type_surgical_biliary_anastomosis — biliary anastomosis type (Liver only)"
 
 // intraoperative_complications (R) — 0..* to support multiple complications per transplant
 * component contains intraoperative_complications 0..* MS
-* component[intraoperative_complications].code = TransplantDetailCS#intraoperative_complications (exactly)
+* component[intraoperative_complications].code = TransplantDetailCS#intraoperative_complications
 * component[intraoperative_complications].value[x] only CodeableConcept
 * component[intraoperative_complications].valueCodeableConcept from IntraoperativeComplicationVS (required)
 * component[intraoperative_complications] ^short = "intraoperative_complications — repeat per complication"
 
 // intraoperative_complications_other (R) — free text
 * component contains intraoperative_complications_other 0..1 MS
-* component[intraoperative_complications_other].code = TransplantDetailCS#intraoperative_complications_other (exactly)
+* component[intraoperative_complications_other].code = TransplantDetailCS#intraoperative_complications_other
 * component[intraoperative_complications_other].value[x] only string
 * component[intraoperative_complications_other] ^short = "intraoperative_complications_other — other complications (free text)"
 
 // type_ureteral_graft_anastomosis (O) — CodeableConcept; Kidney only
 * component contains type_ureteral_graft_anastomosis 0..1 MS
-* component[type_ureteral_graft_anastomosis].code = TransplantDetailCS#type_ureteral_graft_anastomosis (exactly)
+* component[type_ureteral_graft_anastomosis].code = TransplantDetailCS#type_ureteral_graft_anastomosis
 * component[type_ureteral_graft_anastomosis].value[x] only CodeableConcept
 * component[type_ureteral_graft_anastomosis].valueCodeableConcept from UreteralAnastomosisTypeVS (required)
 * component[type_ureteral_graft_anastomosis] ^short = "type_ureteral_graft_anastomosis (Kidney only)"
 
 // other_type_ureteral_graft_anastomosis (O) — free text
 * component contains other_type_ureteral_graft_anastomosis 0..1 MS
-* component[other_type_ureteral_graft_anastomosis].code = TransplantDetailCS#other_type_ureteral_graft_anastomosis (exactly)
+* component[other_type_ureteral_graft_anastomosis].code = TransplantDetailCS#other_type_ureteral_graft_anastomosis
 * component[other_type_ureteral_graft_anastomosis].value[x] only string
 * component[other_type_ureteral_graft_anastomosis] ^short = "other_type_ureteral_graft_anastomosis — free text"
 

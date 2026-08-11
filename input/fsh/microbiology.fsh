@@ -33,17 +33,17 @@ Description: "Records the transplant type (liver / kidney / combined) on resourc
 Invariant: pc-micro-1
 Description: "BKV kidney biopsy components are only applicable for kidney or combined transplants."
 Severity: #error
-Expression: "(component.where(code.coding.code = 'bkv-dna-kidney-biopsy').value.ofType(boolean) = true or component.where(code.coding.code = 'bkv-fish-kidney-biopsy').value.ofType(boolean) = true) implies extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').value.ofType(CodeableConcept).coding.where(code = 'kidney' or code = 'combined').exists()"
+Expression: "(component.where(code.coding.code = 'bkv-dna-kidney-biopsy' and value.ofType(boolean) = true).exists() or component.where(code.coding.code = 'bkv-fish-kidney-biopsy' and value.ofType(boolean) = true).exists()) implies extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').value.ofType(CodeableConcept).coding.where(code = 'kidney' or code = 'combined').exists()"
 
 Invariant: pc-micro-2
 Description: "Blood culture and urine culture are only applicable for kidney or combined transplants."
 Severity: #error
-Expression: "(component.where(code.coding.code = 'blood-colture').value.ofType(boolean) = true or component.where(code.coding.code = 'urine-colture').value.ofType(boolean) = true) implies extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').value.ofType(CodeableConcept).coding.where(code = 'kidney' or code = 'combined').exists()"
+Expression: "(component.where(code.coding.code = 'blood-colture' and value.ofType(boolean) = true).exists() or component.where(code.coding.code = 'urine-colture' and value.ofType(boolean) = true).exists()) implies extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').value.ofType(CodeableConcept).coding.where(code = 'kidney' or code = 'combined').exists()"
 
 Invariant: pc-micro-3
 Description: "EBV hepatitis on liver is only applicable for liver or combined transplants."
 Severity: #error
-Expression: "component.where(code.coding.code = 'ebv-hepatitis-liver').value.ofType(boolean) = true implies extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').value.ofType(CodeableConcept).coding.where(code = 'liver' or code = 'combined').exists()"
+Expression: "component.where(code.coding.code = 'ebv-hepatitis-liver' and value.ofType(boolean) = true).exists() implies extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').value.ofType(CodeableConcept).coding.where(code = 'liver' or code = 'combined').exists()"
 
 Invariant: pc-micro-4
 Description: "Evidence of BKVAN is only applicable for kidney or combined transplants."
@@ -59,43 +59,43 @@ CodeSystem: MicrobiologyCS
 Id: microbiology-cs
 Title: "Microbiology component codes"
 Description: "Local codes for microbiology panel Observation components."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/microbiology"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
 
-* #ebv-dna                  "EBV-DNA (quantitative)"
-* #ebv-igm-anti-ea          "EBV IgM anti-EA"
-* #ebv-igm-anti-vca         "EBV IgM anti-VCA"
-* #ebv-igg-anti-vca         "EBV IgG anti-VCA"
-* #ebv-igg-ebna             "EBV IgG EBNA"
-* #cmv-dna                  "CMV-DNA"
-* #cmv-igm                  "CMV IgM"
-* #cmv-igg                  "CMV IgG"
-* #parvovirus-b19-dna       "Parvovirus B19 DNA"
-* #parvovirus-b19-igg       "Parvovirus B19 IgG"
-* #parvovirus-b19-igm       "Parvovirus B19 IgM"
-* #hsv-igg                  "HSV IgG"
-* #hsv-igm                  "HSV IgM"
-* #adenovirus-igg           "Adenovirus IgG"
-* #adenovirus-igm           "Adenovirus IgM"
-* #vzv-igg                  "VZV IgG"
-* #vzv-igm                  "VZV IgM"
-* #blood-bkv-dna            "Blood BKV-DNA"
-* #urine-bkv-dna            "Urine BKV-DNA"
-* #bkv-dna-kidney-biopsy    "BKV-DNA on kidney biopsy"
-* #bkv-fish-kidney-biopsy   "BKV FISH on kidney biopsy"
-* #ebv-dna-copies             "EBV-DNA copies/ml"
-* #cmv-dna-copies             "CMV-DNA copies/ml"
-* #parvovirus-b19-dna-copies  "Parvovirus B19 DNA copies/ml"
-* #blood-adenovirus-dna       "Blood Adenovirus DNA"
-* #blood-adenovirus-dna-copies "Blood Adenovirus DNA copies/ml"
-* #blood-bkv-dna-copies       "Blood BKV-DNA copies/ml"
-* #blood-colture               "Blood culture"
-* #urine-colture               "Urine culture"
-* #other-positivity            "Other positivity"
-* #ebv-hepatitis-liver         "EBV Hepatitis on liver"
-* #evidence-bkvan              "Histological evidence of BKVAN"
+* #microbiology-panel       "Microbiology studies panel" "Panel grouping microbiology and virology results for a visit."
+* #ebv-dna                  "EBV-DNA (quantitative)" "Epstein-Barr virus DNA detected/quantified by PCR."
+* #ebv-igm-anti-ea          "EBV IgM anti-EA" "EBV IgM antibody to early antigen (EA)."
+* #ebv-igm-anti-vca         "EBV IgM anti-VCA" "EBV IgM antibody to viral capsid antigen (VCA)."
+* #ebv-igg-anti-vca         "EBV IgG anti-VCA" "EBV IgG antibody to viral capsid antigen (VCA)."
+* #ebv-igg-ebna             "EBV IgG EBNA" "EBV IgG antibody to Epstein-Barr nuclear antigen (EBNA)."
+* #cmv-dna                  "CMV-DNA" "Cytomegalovirus DNA detected/quantified by PCR."
+* #cmv-igm                  "CMV IgM" "Cytomegalovirus IgM antibody."
+* #cmv-igg                  "CMV IgG" "Cytomegalovirus IgG antibody."
+* #parvovirus-b19-dna       "Parvovirus B19 DNA" "Parvovirus B19 DNA detected by PCR."
+* #parvovirus-b19-igg       "Parvovirus B19 IgG" "Parvovirus B19 IgG antibody."
+* #parvovirus-b19-igm       "Parvovirus B19 IgM" "Parvovirus B19 IgM antibody."
+* #hsv-igg                  "HSV IgG" "Herpes simplex virus IgG antibody."
+* #hsv-igm                  "HSV IgM" "Herpes simplex virus IgM antibody."
+* #adenovirus-igg           "Adenovirus IgG" "Adenovirus IgG antibody."
+* #adenovirus-igm           "Adenovirus IgM" "Adenovirus IgM antibody."
+* #vzv-igg                  "VZV IgG" "Varicella-zoster virus IgG antibody."
+* #vzv-igm                  "VZV IgM" "Varicella-zoster virus IgM antibody."
+* #blood-bkv-dna            "Blood BKV-DNA" "BK polyomavirus DNA in blood by PCR."
+* #urine-bkv-dna            "Urine BKV-DNA" "BK polyomavirus DNA in urine by PCR."
+* #bkv-dna-kidney-biopsy    "BKV-DNA on kidney biopsy" "BK polyomavirus DNA detected in kidney biopsy tissue."
+* #bkv-fish-kidney-biopsy   "BKV FISH on kidney biopsy" "BK polyomavirus detected by FISH in kidney biopsy tissue."
+* #ebv-dna-copies             "EBV-DNA copies/ml" "Quantitative EBV DNA viral load (copies/mL)."
+* #cmv-dna-copies             "CMV-DNA copies/ml" "Quantitative CMV DNA viral load (copies/mL)."
+* #parvovirus-b19-dna-copies  "Parvovirus B19 DNA copies/ml" "Quantitative parvovirus B19 DNA viral load (copies/mL)."
+* #blood-adenovirus-dna       "Blood Adenovirus DNA" "Adenovirus DNA in blood by PCR."
+* #blood-adenovirus-dna-copies "Blood Adenovirus DNA copies/ml" "Quantitative blood adenovirus DNA viral load (copies/mL)."
+* #blood-bkv-dna-copies       "Blood BKV-DNA copies/ml" "Quantitative blood BK virus DNA viral load (copies/mL)."
+* #blood-colture               "Blood culture" "Blood culture for microbial growth."
+* #urine-colture               "Urine culture" "Urine culture for microbial growth."
+* #other-positivity            "Other positivity" "Other microbiological positivity not otherwise specified."
+* #ebv-hepatitis-liver         "EBV Hepatitis on liver" "EBV-associated hepatitis involving the liver allograft."
+* #evidence-bkvan              "Histological evidence of BKVAN" "Histological evidence of BK virus-associated nephropathy (BKVAN)."
 
 
 // ================================================
@@ -127,7 +127,7 @@ Description: "Microbiology panel for transplant recipients and/or donors. Compon
 
 // Panel code
 * code 1..1 MS
-* code = http://loinc.org#24323-8 "Microbiology studies (set)"
+* code = MicrobiologyCS#microbiology-panel "Microbiology studies panel"
 
 * status 1..1 MS
 * status = #final (exactly)
@@ -346,7 +346,7 @@ Description: "Example microbiology panel for a liver transplant recipient."
 * identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/microbiology-id"
 * identifier.value = "M0001"
 * status = #final
-* code = http://loinc.org#24323-8 "Microbiology studies (set)"
+* code = MicrobiologyCS#microbiology-panel "Microbiology studies panel"
 * subject = Reference(ExamplePatientTransplant1)
 * encounter = Reference(VisitExample1)
 // Donor serology example (uncomment if recording pre-transplant donor results):

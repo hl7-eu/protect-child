@@ -15,15 +15,21 @@ Alias: $obs-cat = http://terminology.hl7.org/CodeSystem/observation-category
 CodeSystem: VitalSignLocalCS
 Id: vital-sign-local-cs
 Title: "Vital Sign Local Codes"
-Description: "Local codes for ABPM-derived metrics that have no published LOINC code: systolic/diastolic blood pressure load and nocturnal dip percentages."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/vital-sign-local"
+Description: "Local codes for vital-sign metrics with no published LOINC code: the vital-signs panel, systolic/diastolic blood pressure percentiles, daytime/night-time mean systolic and diastolic blood pressure, blood pressure load, and nocturnal dip percentages."
 * ^content = #complete
 * ^caseSensitive = true
 * ^experimental = true
-* #sbp-load "Systolic blood pressure load (%)"
-* #dbp-load "Diastolic blood pressure load (%)"
-* #sbp-dip  "Systolic blood pressure nocturnal dip (%)"
-* #dbp-dip  "Diastolic blood pressure nocturnal dip (%)"
+* #sbp-load "Systolic blood pressure load (%)" "Systolic blood pressure load: percentage of readings above the age threshold."
+* #dbp-load "Diastolic blood pressure load (%)" "Diastolic blood pressure load: percentage of readings above the age threshold."
+* #sbp-dip  "Systolic blood pressure nocturnal dip (%)" "Nocturnal dip in systolic blood pressure, as a percentage."
+* #dbp-dip  "Diastolic blood pressure nocturnal dip (%)" "Nocturnal dip in diastolic blood pressure, as a percentage."
+* #mean-sbp-day   "Mean systolic blood pressure — daytime (mmHg)" "Mean daytime systolic blood pressure (ABPM), in mmHg."
+* #mean-dbp-day   "Mean diastolic blood pressure — daytime (mmHg)" "Mean daytime diastolic blood pressure (ABPM), in mmHg."
+* #mean-sbp-night "Mean systolic blood pressure — night-time (mmHg)" "Mean night-time systolic blood pressure (ABPM), in mmHg."
+* #mean-dbp-night "Mean diastolic blood pressure — night-time (mmHg)" "Mean night-time diastolic blood pressure (ABPM), in mmHg."
+* #sbp-percentile "Systolic blood pressure percentile" "Systolic blood pressure percentile for age, height and sex."
+* #dbp-percentile "Diastolic blood pressure percentile" "Diastolic blood pressure percentile for age, height and sex."
+* #vital-signs-panel "Vital signs panel" "Panel grouping vital-sign observations."
 
 // ================================================
 // Profile: VitalSign — Observation panel
@@ -46,11 +52,11 @@ Description: "Vital signs panel for a transplant patient at a visit, aligned wit
 * status = #final (exactly)
 
 * category 1..1 MS
-* category = $obs-cat#vital-signs (exactly)
+* category = $obs-cat#vital-signs
 
 // Panel code — vital signs panel
 * code 1..1 MS
-* code = $loinc#85353-1 "Vital signs, weight, height, head circumference, oxygen saturation and BMI panel" (exactly)
+* code = VitalSignLocalCS#vital-signs-panel "Vital signs panel"
 * code ^short = "Vital signs panel"
 
 * subject 1..1 MS
@@ -78,7 +84,7 @@ Description: "Vital signs panel for a transplant patient at a visit, aligned wit
 
 // systolic_blood_pressure (mmHg)
 * component contains systolic_bp 0..1 MS
-* component[systolic_bp].code = $loinc#8480-6 "Systolic blood pressure" (exactly)
+* component[systolic_bp].code = $loinc#8480-6 "Systolic blood pressure"
 * component[systolic_bp].value[x] only Quantity
 * component[systolic_bp].valueQuantity.system = $ucum
 * component[systolic_bp].valueQuantity.code = #mm[Hg]
@@ -86,7 +92,7 @@ Description: "Vital signs panel for a transplant patient at a visit, aligned wit
 
 // diastolic_blood_pressure (mmHg)
 * component contains diastolic_bp 0..1 MS
-* component[diastolic_bp].code = $loinc#8462-4 "Diastolic blood pressure" (exactly)
+* component[diastolic_bp].code = $loinc#8462-4 "Diastolic blood pressure"
 * component[diastolic_bp].value[x] only Quantity
 * component[diastolic_bp].valueQuantity.system = $ucum
 * component[diastolic_bp].valueQuantity.code = #mm[Hg]
@@ -94,7 +100,7 @@ Description: "Vital signs panel for a transplant patient at a visit, aligned wit
 
 // heart_rate (bpm)
 * component contains heart_rate 0..1 MS
-* component[heart_rate].code = $loinc#8867-4 "Heart rate" (exactly)
+* component[heart_rate].code = $loinc#8867-4 "Heart rate"
 * component[heart_rate].value[x] only Quantity
 * component[heart_rate].valueQuantity.system = $ucum
 * component[heart_rate].valueQuantity.code = #/min
@@ -102,7 +108,7 @@ Description: "Vital signs panel for a transplant patient at a visit, aligned wit
 
 // oxygen_saturation (%)
 * component contains oxygen_saturation 0..1 MS
-* component[oxygen_saturation].code = $loinc#59408-5 "Oxygen saturation in Arterial blood by Pulse oximetry" (exactly)
+* component[oxygen_saturation].code = $loinc#59408-5 "Oxygen saturation in Arterial blood by Pulse oximetry"
 * component[oxygen_saturation].value[x] only Quantity
 * component[oxygen_saturation].valueQuantity.system = $ucum
 * component[oxygen_saturation].valueQuantity.code = #%
@@ -110,7 +116,7 @@ Description: "Vital signs panel for a transplant patient at a visit, aligned wit
 
 // temperature (°C)
 * component contains temperature 0..1 MS
-* component[temperature].code = $loinc#8310-5 "Body temperature" (exactly)
+* component[temperature].code = $loinc#8310-5 "Body temperature"
 * component[temperature].value[x] only Quantity
 * component[temperature].valueQuantity.system = $ucum
 * component[temperature].valueQuantity.code = #Cel
@@ -118,7 +124,7 @@ Description: "Vital signs panel for a transplant patient at a visit, aligned wit
 
 // bmi
 * component contains bmi 0..1 MS
-* component[bmi].code = $loinc#39156-5 "Body mass index (BMI) [Ratio]" (exactly)
+* component[bmi].code = $loinc#39156-5 "Body mass index (BMI) [Ratio]"
 * component[bmi].value[x] only Quantity
 * component[bmi].valueQuantity.system = $ucum
 * component[bmi].valueQuantity.code = #kg/m2
@@ -126,19 +132,19 @@ Description: "Vital signs panel for a transplant patient at a visit, aligned wit
 
 // sbp_percentile
 * component contains sbp_percentile 0..1 MS
-* component[sbp_percentile].code = $loinc#59574-4 "Systolic blood pressure percentile" (exactly)
+* component[sbp_percentile].code = VitalSignLocalCS#sbp-percentile "Systolic blood pressure percentile"
 * component[sbp_percentile].value[x] only integer
 * component[sbp_percentile] ^short = "sbp_percentile — systolic BP percentile"
 
 // dbp_percentile
 * component contains dbp_percentile 0..1 MS
-* component[dbp_percentile].code = $loinc#59575-1 "Diastolic blood pressure percentile" (exactly)
+* component[dbp_percentile].code = VitalSignLocalCS#dbp-percentile "Diastolic blood pressure percentile"
 * component[dbp_percentile].value[x] only integer
 * component[dbp_percentile] ^short = "dbp_percentile — diastolic BP percentile"
 
 // ABPM — mean_sbp_24
 * component contains mean_sbp_24 0..1 MS
-* component[mean_sbp_24].code = $loinc#8490-5 "Systolic blood pressure 24 hour mean" (exactly)
+* component[mean_sbp_24].code = $loinc#8490-5 "Systolic blood pressure 24 hour mean"
 * component[mean_sbp_24].value[x] only Quantity
 * component[mean_sbp_24].valueQuantity.system = $ucum
 * component[mean_sbp_24].valueQuantity.code = #mm[Hg]
@@ -146,7 +152,7 @@ Description: "Vital signs panel for a transplant patient at a visit, aligned wit
 
 // ABPM — mean_dbp_24
 * component contains mean_dbp_24 0..1 MS
-* component[mean_dbp_24].code = $loinc#8472-3 "Diastolic blood pressure 24 hour mean" (exactly)
+* component[mean_dbp_24].code = $loinc#8472-3 "Diastolic blood pressure 24 hour mean"
 * component[mean_dbp_24].value[x] only Quantity
 * component[mean_dbp_24].valueQuantity.system = $ucum
 * component[mean_dbp_24].valueQuantity.code = #mm[Hg]
@@ -154,7 +160,7 @@ Description: "Vital signs panel for a transplant patient at a visit, aligned wit
 
 // ABPM — mean_sbp_day
 * component contains mean_sbp_day 0..1 MS
-* component[mean_sbp_day].code = $loinc#8484-8 "Systolic blood pressure --day average" (exactly)
+* component[mean_sbp_day].code = VitalSignLocalCS#mean-sbp-day "Mean systolic blood pressure — daytime (mmHg)"
 * component[mean_sbp_day].value[x] only Quantity
 * component[mean_sbp_day].valueQuantity.system = $ucum
 * component[mean_sbp_day].valueQuantity.code = #mm[Hg]
@@ -162,7 +168,7 @@ Description: "Vital signs panel for a transplant patient at a visit, aligned wit
 
 // ABPM — mean_dbp_day
 * component contains mean_dbp_day 0..1 MS
-* component[mean_dbp_day].code = $loinc#8466-5 "Diastolic blood pressure --day average" (exactly)
+* component[mean_dbp_day].code = VitalSignLocalCS#mean-dbp-day "Mean diastolic blood pressure — daytime (mmHg)"
 * component[mean_dbp_day].value[x] only Quantity
 * component[mean_dbp_day].valueQuantity.system = $ucum
 * component[mean_dbp_day].valueQuantity.code = #mm[Hg]
@@ -170,7 +176,7 @@ Description: "Vital signs panel for a transplant patient at a visit, aligned wit
 
 // ABPM — mean_sbp_night
 * component contains mean_sbp_night 0..1 MS
-* component[mean_sbp_night].code = $loinc#8489-7 "Systolic blood pressure --night average" (exactly)
+* component[mean_sbp_night].code = VitalSignLocalCS#mean-sbp-night "Mean systolic blood pressure — night-time (mmHg)"
 * component[mean_sbp_night].value[x] only Quantity
 * component[mean_sbp_night].valueQuantity.system = $ucum
 * component[mean_sbp_night].valueQuantity.code = #mm[Hg]
@@ -178,7 +184,7 @@ Description: "Vital signs panel for a transplant patient at a visit, aligned wit
 
 // ABPM — mean_dbp_night
 * component contains mean_dbp_night 0..1 MS
-* component[mean_dbp_night].code = $loinc#8471-5 "Diastolic blood pressure --night average" (exactly)
+* component[mean_dbp_night].code = VitalSignLocalCS#mean-dbp-night "Mean diastolic blood pressure — night-time (mmHg)"
 * component[mean_dbp_night].value[x] only Quantity
 * component[mean_dbp_night].valueQuantity.system = $ucum
 * component[mean_dbp_night].valueQuantity.code = #mm[Hg]
@@ -186,7 +192,7 @@ Description: "Vital signs panel for a transplant patient at a visit, aligned wit
 
 // sbp_load (%) — local code (no LOINC equivalent)
 * component contains sbp_load 0..1 MS
-* component[sbp_load].code = VitalSignLocalCS#sbp-load "Systolic blood pressure load (%)" (exactly)
+* component[sbp_load].code = VitalSignLocalCS#sbp-load "Systolic blood pressure load (%)"
 * component[sbp_load].value[x] only Quantity
 * component[sbp_load].valueQuantity.system = $ucum
 * component[sbp_load].valueQuantity.code = #%
@@ -194,7 +200,7 @@ Description: "Vital signs panel for a transplant patient at a visit, aligned wit
 
 // dbp_load (%) — local code (no LOINC equivalent)
 * component contains dbp_load 0..1 MS
-* component[dbp_load].code = VitalSignLocalCS#dbp-load "Diastolic blood pressure load (%)" (exactly)
+* component[dbp_load].code = VitalSignLocalCS#dbp-load "Diastolic blood pressure load (%)"
 * component[dbp_load].value[x] only Quantity
 * component[dbp_load].valueQuantity.system = $ucum
 * component[dbp_load].valueQuantity.code = #%
@@ -202,7 +208,7 @@ Description: "Vital signs panel for a transplant patient at a visit, aligned wit
 
 // sbp_dip (%) — local code (no LOINC equivalent)
 * component contains sbp_dip 0..1 MS
-* component[sbp_dip].code = VitalSignLocalCS#sbp-dip "Systolic blood pressure nocturnal dip (%)" (exactly)
+* component[sbp_dip].code = VitalSignLocalCS#sbp-dip "Systolic blood pressure nocturnal dip (%)"
 * component[sbp_dip].value[x] only Quantity
 * component[sbp_dip].valueQuantity.system = $ucum
 * component[sbp_dip].valueQuantity.code = #%
@@ -210,7 +216,7 @@ Description: "Vital signs panel for a transplant patient at a visit, aligned wit
 
 // dbp_dip (%) — local code (no LOINC equivalent)
 * component contains dbp_dip 0..1 MS
-* component[dbp_dip].code = VitalSignLocalCS#dbp-dip "Diastolic blood pressure nocturnal dip (%)" (exactly)
+* component[dbp_dip].code = VitalSignLocalCS#dbp-dip "Diastolic blood pressure nocturnal dip (%)"
 * component[dbp_dip].value[x] only Quantity
 * component[dbp_dip].valueQuantity.system = $ucum
 * component[dbp_dip].valueQuantity.code = #%
@@ -231,7 +237,7 @@ Description: "Example vital signs panel for a transplant recipient at 1-month vi
 * identifier.value = "VS-001"
 * status = #final
 * category = $obs-cat#vital-signs
-* code = $loinc#85353-1 "Vital signs, weight, height, head circumference, oxygen saturation and BMI panel"
+* code = VitalSignLocalCS#vital-signs-panel "Vital signs panel"
 * subject = Reference(ExamplePatientTransplant1)
 * encounter = Reference(VisitExample1)
 * effectiveDateTime = "2023-09-15"

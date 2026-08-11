@@ -30,7 +30,7 @@ Description: "Allowed UCUM units of measurement for lab result values (DMv1.2 un
 * http://unitsofmeasure.org#"10*9/L"          "10^9/L"
 * http://unitsofmeasure.org#"10*3/uL"         "10^3/µL"
 * http://unitsofmeasure.org#"s"               "s"
-* http://unitsofmeasure.org#"el/uL"           "el/µL"
+* http://unitsofmeasure.org#"/uL"             "cells/µL"
 * http://unitsofmeasure.org#"mg/d"            "mg(protein)/day"
 * http://unitsofmeasure.org#"mg/mg"           "mg/mg"
 * http://unitsofmeasure.org#"mg/mmol"         "mg/mmol"

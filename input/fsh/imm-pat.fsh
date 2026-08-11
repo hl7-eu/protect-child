@@ -13,17 +13,17 @@ CodeSystem: ImmPatPhaseCS
 Id: imm-pat-phase-cs
 Title: "Immunosuppressant Phase CodeSystem"
 Description: "Whether the immunosuppressant record is for induction or maintenance phase (DMv1.2). Used as MedicationStatement.category codes."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/imm-pat-phase"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #induction    "Induction"
-* #maintenance  "Maintenance"
+* #induction    "Induction" "Induction phase of immunosuppression (peri-transplant)."
+* #maintenance  "Maintenance" "Maintenance phase of immunosuppression (ongoing)."
 
 ValueSet: ImmPatPhaseVS
 Id: imm-pat-phase-vs
 Title: "Immunosuppressant Phase ValueSet"
 Description: "Allowed phase values for MedicationStatement.category on ImmPat records."
+* ^experimental = true
 * ImmPatPhaseCS#induction
 * ImmPatPhaseCS#maintenance
 
@@ -37,18 +37,18 @@ CodeSystem: ImmPatPKTypeCS
 Id: imm-pat-pk-type-cs
 Title: "Immunosuppressant PK Observation Type CodeSystem"
 Description: "Types of pharmacokinetic monitoring observations for immunosuppressant therapy (DMv1.2 pre_dose_level, csa_2h_post_dose_level, auc)."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/imm-pat-pk-type"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #pre-dose-level     "Pre-dose drug level (trough / C0)"
-* #post-dose-2h-level "2 h post-dose drug level (C2)"
-* #auc                "Pharmacokinetic AUC"
+* #pre-dose-level     "Pre-dose drug level (trough / C0)" "Trough (pre-dose, C0) drug concentration."
+* #post-dose-2h-level "2 h post-dose drug level (C2)" "Drug concentration 2 hours post-dose (C2)."
+* #auc                "Pharmacokinetic AUC" "Area under the concentration-time curve (pharmacokinetic exposure)."
 
 ValueSet: ImmPatPKTypeVS
 Id: imm-pat-pk-type-vs
 Title: "Immunosuppressant PK Observation Type ValueSet"
 Description: "Allowed PK observation types for ImmPatPKObservation."
+* ^experimental = true
 * ImmPatPKTypeCS#pre-dose-level
 * ImmPatPKTypeCS#post-dose-2h-level
 * ImmPatPKTypeCS#auc
@@ -103,6 +103,7 @@ Description: "Immunosuppressive treatment record for a transplant patient (induc
 
 // start_date / end_date → MedicationStatement.effectivePeriod
 * effective[x] 0..1 MS
+* effectivePeriod MS
 * effectivePeriod.start 0..1
 * effectivePeriod.start ^short = "start_date — date treatment started"
 * effectivePeriod.end 0..1
@@ -151,7 +152,7 @@ Description: "Pharmacokinetic monitoring result (pre-dose trough level, 2 h post
 * status = #final (exactly)
 
 * category 1..1 MS
-* category = $obs-cat#laboratory (exactly)
+* category = $obs-cat#laboratory
 
 // PK measurement type — identifies which DM field this Observation represents
 * code 1..1 MS

@@ -24,10 +24,14 @@ publisher:
 pages:
   index.md:
     title: "Home"
+  patient-timeline.md:
+    title: "Patient Timeline"
   logical-models.md:
     title: "Logical Models"
   data-model-erd.md:
     title: "Data Model (ERD)"
+  data-dictionary.md:
+    title: "Data Dictionary"
   mapping.md:
     title: "Model Maps"
     patient-map.md:

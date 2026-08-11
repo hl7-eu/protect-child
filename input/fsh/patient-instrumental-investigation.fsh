@@ -12,19 +12,29 @@ CodeSystem: PatientInstrumentalInvestigationResultCS
 Id: patient-instrumental-investigation-result-cs
 Title: "Patient Instrumental Investigation Result CodeSystem"
 Description: "Result of the instrumental investigation test conducted (Normal / Abnormal)."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/patient-instrumental-investigation-result"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #normal   "Normal"
-* #abnormal "Abnormal"
+* #normal   "Normal" "Investigation result within normal limits."
+* #abnormal "Abnormal" "Investigation result outside normal limits."
 
 ValueSet: PatientInstrumentalInvestigationResultVS
 Id: patient-instrumental-investigation-result-vs
 Title: "Patient Instrumental Investigation Result ValueSet"
 Description: "Allowed results for the instrumental investigation test (Normal, Abnormal)."
+* ^experimental = true
 * PatientInstrumentalInvestigationResultCS#normal
 * PatientInstrumentalInvestigationResultCS#abnormal
+
+CodeSystem: PatientInstrumentalInvestigationComponentCS
+Id: patient-instrumental-investigation-component-cs
+Title: "Patient Instrumental Investigation Component Codes"
+Description: "Local codes for the free-text components of a patient instrumental investigation (abnormality, other investigation)."
+* ^content = #complete
+* ^caseSensitive = true
+* ^experimental = true
+* #abnormality         "Abnormality description" "Free-text description of the abnormal finding."
+* #other-investigation "Other investigation description" "Free-text description of an investigation not in the catalogue."
 
 
 // ------------------------------------------------------
@@ -64,7 +74,7 @@ Description: "Instrumental investigation performed on a transplant patient, alig
 
 // date → Observation.effectiveDateTime
 * effective[x] 0..1 MS
-* effectiveDateTime 0..1
+* effectiveDateTime 0..1 MS
 * effectiveDateTime ^short = "date — date the instrumental investigation was performed"
 
 // result → Observation.value[x] CodeableConcept
@@ -73,23 +83,23 @@ Description: "Instrumental investigation performed on a transplant patient, alig
 * valueCodeableConcept from PatientInstrumentalInvestigationResultVS (required)
 * valueCodeableConcept ^short = "result — Normal or Abnormal"
 
-// abnormality + other_investigation → Observation.note, sliced by authorString
-* note ^slicing.discriminator.type = #value
-* note ^slicing.discriminator.path = "authorString"
-* note ^slicing.rules = #open
-* note MS
+// abnormality + other_investigation → Observation.component (coded free-text)
+* component ^slicing.discriminator.type = #pattern
+* component ^slicing.discriminator.path = "code"
+* component ^slicing.rules = #open
+* component MS
 
-* note contains
+* component contains
     abnormality       0..1 MS and
     other_investigation 0..1 MS
 
-* note[abnormality].authorString = "abnormality" (exactly)
-* note[abnormality].text 1..1
-* note[abnormality] ^short = "abnormality — free-text description of the abnormal finding"
+* component[abnormality].code = PatientInstrumentalInvestigationComponentCS#abnormality "Abnormality description"
+* component[abnormality].value[x] only string
+* component[abnormality] ^short = "abnormality — free-text description of the abnormal finding"
 
-* note[other_investigation].authorString = "other_investigation" (exactly)
-* note[other_investigation].text 1..1
-* note[other_investigation] ^short = "other_investigation — free-text description of investigations not in the catalogue"
+* component[other_investigation].code = PatientInstrumentalInvestigationComponentCS#other-investigation "Other investigation description"
+* component[other_investigation].value[x] only string
+* component[other_investigation] ^short = "other_investigation — free-text description of investigations not in the catalogue"
 
 
 // ------------------------------------------------------

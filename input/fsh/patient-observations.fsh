@@ -22,19 +22,19 @@ CodeSystem: PatientABOGroupCS
 Id: patient-abo-group-cs
 Title: "ABO Group CodeSystem"
 Description: "ABO blood groups for transplant recipients and donors."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/patient-abo-group"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #A  "Group A"
-* #B  "Group B"
-* #AB "Group AB"
-* #O  "Group O"
+* #A  "Group A" "ABO blood group A."
+* #B  "Group B" "ABO blood group B."
+* #AB "Group AB" "ABO blood group AB."
+* #O  "Group O" "ABO blood group O."
 
 ValueSet: PatientABOGroupVS
 Id: patient-abo-group-vs
 Title: "ABO Group ValueSet"
 Description: "ABO blood groups for transplant recipients and donors."
+* ^experimental = true
 * PatientABOGroupCS#A
 * PatientABOGroupCS#B
 * PatientABOGroupCS#AB
@@ -44,16 +44,17 @@ CodeSystem: PatientRhFactorCS
 Id: patient-rh-factor-cs
 Title: "Rh Factor CodeSystem"
 Description: "Rh factor for transplant recipients and donors."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/patient-rh-factor"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #positive "Rh positive"
-* #negative "Rh negative"
+* #positive "Rh positive" "Rhesus (Rh) D antigen positive."
+* #negative "Rh negative" "Rhesus (Rh) D antigen negative."
 
 ValueSet: PatientRhFactorVS
 Id: patient-rh-factor-vs
 Title: "Rh Factor ValueSet"
+Description: "Rhesus (Rh) blood group factor: positive or negative."
+* ^experimental = true
 * PatientRhFactorCS#positive
 * PatientRhFactorCS#negative
 
@@ -65,16 +66,17 @@ CodeSystem: PatientPRATypeCS
 Id: patient-pra-type-cs
 Title: "PRA Type CodeSystem"
 Description: "Distinguishes maximum (historical) vs most recent PRA measurements. Used as component codes in PatientImmunologyObservation."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/patient-pra-type"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #max  "Maximum PRA (historical)"
-* #last "Most recent PRA"
+* #max  "Maximum PRA (historical)" "Maximum historical panel-reactive antibody (PRA/cPRA) value."
+* #last "Most recent PRA" "Most recent panel-reactive antibody (PRA/cPRA) value."
 
 ValueSet: PatientPRATypeVS
 Id: patient-pra-type-vs
 Title: "PRA Type ValueSet"
+Description: "Panel-reactive antibody (PRA) measurement type used for immunological risk assessment."
+* ^experimental = true
 * PatientPRATypeCS#max
 * PatientPRATypeCS#last
 
@@ -86,16 +88,17 @@ CodeSystem: DonorLiverTypeCS
 Id: donor-liver-type-cs
 Title: "Donor Liver Type CodeSystem"
 Description: "Type of liver donation (complete vs partial)."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/donor-liver-type"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #complete "Complete liver graft"
-* #partial  "Partial liver graft"
+* #complete "Complete liver graft" "Whole (complete) liver graft."
+* #partial  "Partial liver graft" "Partial liver graft (e.g. split or reduced-size)."
 
 ValueSet: DonorLiverTypeVS
 Id: donor-liver-type-vs
 Title: "Donor Liver Type ValueSet"
+Description: "Type of donor liver graft (e.g. whole, split, reduced, or living-donor lobe)."
+* ^experimental = true
 * DonorLiverTypeCS#complete
 * DonorLiverTypeCS#partial
 
@@ -107,6 +110,7 @@ ValueSet: DialysisTypeVS
 Id: dialysis-type-vs
 Title: "Dialysis method ValueSet"
 Description: "Dialysis method values using LOINC answer codes."
+* ^experimental = true
 * $loinc#LA9975-9  "Hemodialysis"
 * $loinc#LA10059-6 "Peritoneal Dialysis"
 
@@ -117,13 +121,13 @@ Description: "Dialysis method values using LOINC answer codes."
 CodeSystem: PatientObservationsPanelCS
 Id: patient-observations-panel-cs
 Title: "Patient Observations Panel CodeSystem"
-Description: "Local codes for PROTECT-CHILD patient observation panels."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/patient-observations-panel"
+Description: "Local codes for PROTECT-CHILD patient observation panels and components."
 * ^content = #complete
 * ^caseSensitive = true
 * ^experimental = true
-* #patient-demographics-panel "Patient demographics panel (age)"
-* #patient-immunology-panel   "Patient pre-transplant immunology panel (PRA, histological date)"
+* #patient-demographics-panel "Patient demographics panel (age)" "Panel grouping patient demographic observations (age)."
+* #patient-immunology-panel   "Patient pre-transplant immunology panel (PRA, histological date)" "Panel grouping pre-transplant immunology observations (PRA, histological diagnosis date)."
+* #age-months                 "Patient age in months" "Patient age expressed in months."
 
 // ================================================
 // Profile: PatientDemographicsObservation
@@ -140,11 +144,11 @@ Description: "Panel Observation for patient or donor age at transplant (age_year
 * status = #final (exactly)
 
 * category 1..1 MS
-* category = $obs-cat#survey (exactly)
+* category = $obs-cat#survey
 * category ^short = "survey — demographic measurement, not a lab result"
 
 * code 1..1 MS
-* code = PatientObservationsPanelCS#patient-demographics-panel "Patient demographics panel (age)" (exactly)
+* code = PatientObservationsPanelCS#patient-demographics-panel "Patient demographics panel (age)"
 
 * subject 1..1 MS
 * subject only Reference(PatientTransplant or Donor)
@@ -161,15 +165,15 @@ Description: "Panel Observation for patient or donor age at transplant (age_year
 
 // age_years — LOINC 30525-0
 * component contains age_years 0..1 MS
-* component[age_years].code = $loinc#30525-0 "Age" (exactly)
+* component[age_years].code = $loinc#30525-0 "Age"
 * component[age_years].value[x] only Quantity
 * component[age_years].valueQuantity.system = $ucum
 * component[age_years].valueQuantity.code = #a
 * component[age_years] ^short = "age_years — patient age in years (UCUM a)"
 
-// age_months — LOINC 63900-5
+// age_months — local code (no LOINC for age expressed in months)
 * component contains age_months 0..1 MS
-* component[age_months].code = $loinc#63900-5 "Current age Months" (exactly)
+* component[age_months].code = PatientObservationsPanelCS#age-months "Patient age in months"
 * component[age_months].value[x] only Quantity
 * component[age_months].valueQuantity.system = $ucum
 * component[age_months].valueQuantity.code = #mo
@@ -191,11 +195,11 @@ Description: "Panel Observation for pre-transplant immunological scalar facts: m
 * status = #final (exactly)
 
 * category 1..1 MS
-* category = $obs-cat#laboratory (exactly)
+* category = $obs-cat#laboratory
 * category ^short = "laboratory — immunological measurements"
 
 * code 1..1 MS
-* code = PatientObservationsPanelCS#patient-immunology-panel "Patient pre-transplant immunology panel (PRA, histological date)" (exactly)
+* code = PatientObservationsPanelCS#patient-immunology-panel "Patient pre-transplant immunology panel (PRA, histological date)"
 
 * subject 1..1 MS
 * subject only Reference(PatientTransplant)
@@ -212,19 +216,19 @@ Description: "Panel Observation for pre-transplant immunological scalar facts: m
 
 // max_pra — PatientPRATypeCS#max
 * component contains max_pra 0..1 MS
-* component[max_pra].code = PatientPRATypeCS#max "Maximum PRA (historical)" (exactly)
+* component[max_pra].code = PatientPRATypeCS#max "Maximum PRA (historical)"
 * component[max_pra].value[x] only integer
 * component[max_pra] ^short = "max_pra — maximum historical pre-transplant PRA/cPRA (0–100 %)"
 
 // last_pra — PatientPRATypeCS#last
 * component contains last_pra 0..1 MS
-* component[last_pra].code = PatientPRATypeCS#last "Most recent PRA" (exactly)
+* component[last_pra].code = PatientPRATypeCS#last "Most recent PRA"
 * component[last_pra].value[x] only integer
 * component[last_pra] ^short = "last_pra — most recent pre-transplant PRA/cPRA (0–100 %)"
 
 // date_histological_diag — LOINC 77975-1
 * component contains date_histological_diag 0..1 MS
-* component[date_histological_diag].code = $loinc#77975-1 "Earliest date of diagnosis" (exactly)
+* component[date_histological_diag].code = $loinc#77975-1 "Earliest date of diagnosis"
 * component[date_histological_diag].value[x] only dateTime
 * component[date_histological_diag] ^short = "date_histological_diag — date histology confirmed the primary disease"
 
@@ -247,7 +251,7 @@ Description: "Primary liver disease diagnosis that led to transplantation, align
 * code ^short = "diag_primary_disease — primary liver disease diagnosis code"
 
 * bodySite 1..1 MS
-* bodySite = $snomed#10200004 "Liver structure" (exactly)
+* bodySite = $snomed#10200004 "Liver structure"
 * bodySite ^short = "Liver — distinguishes this from the renal diagnosis profile"
 
 * subject 1..1 MS
@@ -282,7 +286,7 @@ Description: "Primary renal disease diagnosis that led to transplantation, align
 * code ^short = "diag_primary_disease — primary renal disease diagnosis code"
 
 * bodySite 1..1 MS
-* bodySite = $snomed#64033007 "Kidney structure" (exactly)
+* bodySite = $snomed#64033007 "Kidney structure"
 * bodySite ^short = "Kidney — distinguishes this from the liver diagnosis profile"
 
 * subject 1..1 MS
@@ -320,7 +324,7 @@ Profile: DonorPreKtxDialysisTypeObservation
 Parent: Observation
 Id: donor-pre-ktx-dialysis-type-observation
 Title: "Donor pre-KTX dialysis type observation"
-Description: "Dialysis method prior to kidney transplantation (LOINC 70958-4). Only applicable for kidney or combined transplants — invariant pc-donor-2 enforces this when tx_type extension is present."
+Description: "Dialysis method prior to kidney transplantation. Only applicable for kidney or combined transplants — invariant pc-donor-2 enforces this when tx_type extension is present."
 
 * obeys pc-donor-2
 * extension contains TransplantTypeExt named tx_type 0..1 MS
@@ -330,10 +334,10 @@ Description: "Dialysis method prior to kidney transplantation (LOINC 70958-4). O
 * status = #final (exactly)
 
 * category 1..1 MS
-* category = $obs-cat#procedure (exactly)
+* category = $obs-cat#procedure
 
 * code 1..1 MS
-* code = $loinc#70958-4 "Dialysis method [ESRD]" (exactly)
+* code = $loinc#70958-4 "Dialysis method [ESRD]"
 
 * subject 1..1 MS
 * subject only Reference(Donor)
@@ -352,7 +356,7 @@ Profile: DonorLiverTypeObservation
 Parent: Observation
 Id: donor-liver-type-observation
 Title: "Donor liver graft type observation"
-Description: "Type of liver graft (complete vs partial) captured as an Observation (LOINC 74836-8). Only applicable for liver or combined transplants — invariant pc-donor-1 enforces this when tx_type extension is present."
+Description: "Type of liver graft (complete vs partial) captured as an Observation. Only applicable for liver or combined transplants — invariant pc-donor-1 enforces this when tx_type extension is present."
 
 * obeys pc-donor-1
 * extension contains TransplantTypeExt named tx_type 0..1 MS
@@ -362,10 +366,10 @@ Description: "Type of liver graft (complete vs partial) captured as an Observati
 * status = #final (exactly)
 
 * category 1..1 MS
-* category = $obs-cat#procedure (exactly)
+* category = $obs-cat#procedure
 
 * code 1..1 MS
-* code = $loinc#74836-8 "Transplant type [Anatomy]" (exactly)
+* code = $loinc#74836-8 "Transplant type [Anatomy]"
 
 * subject 1..1 MS
 * subject only Reference(Donor)
@@ -425,7 +429,7 @@ Title: "Example patient liver disease diagnosis"
 Description: "Primary liver disease diagnosis leading to transplantation."
 
 * clinicalStatus = http://terminology.hl7.org/CodeSystem/condition-clinical#active
-* code = http://hl7.org/fhir/sid/icd-10#K74.60 "Unspecified cirrhosis of liver"
+* code = http://hl7.org/fhir/sid/icd-10#K74.6 "Other and unspecified cirrhosis of liver"
 * bodySite = $snomed#10200004 "Liver structure"
 * subject = Reference(ExamplePatientTransplant1)
 * onsetDateTime = "2020-03-01"

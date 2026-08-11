@@ -30,7 +30,7 @@
 <polyline points="2015.0,556.6 2015.0,614.0" fill="none" stroke="#6699AA" stroke-width="1.5" marker-end="url(#arr)"/>
 
 <!-- patient -->
-<a href="StructureDefinition-pc-patient-lm.html" target="_top" xlink:href="StructureDefinition-pc-patient-lm.html">
+<a href="StructureDefinition-pcPatientLm.html" target="_top" xlink:href="StructureDefinition-pcPatientLm.html">
 <rect fill="#FFFFFF" height="197.00" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:1.5;" width="260" x="1190" y="60"/>
 <rect fill="#E8F4F8" height="28" rx="2.5" ry="2.5" style="stroke:none;" width="260" x="1190" y="60"/>
 <text fill="#185FA5" font-family="Verdana" font-size="14" font-weight="bold" text-anchor="middle" text-decoration="underline" x="1320.0" y="78">patient</text>
@@ -49,7 +49,7 @@
 </a>
 
 <!-- donor -->
-<a href="StructureDefinition-pc-donor-lm.html" target="_top" xlink:href="StructureDefinition-pc-donor-lm.html">
+<a href="StructureDefinition-pcDonorLm.html" target="_top" xlink:href="StructureDefinition-pcDonorLm.html">
 <rect fill="#FFFFFF" height="115.50" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:1.5;" width="200" x="1900" y="60"/>
 <rect fill="#E8F4F8" height="28" rx="2.5" ry="2.5" style="stroke:none;" width="200" x="1900" y="60"/>
 <text fill="#185FA5" font-family="Verdana" font-size="14" font-weight="bold" text-anchor="middle" text-decoration="underline" x="2000.0" y="78">donor</text>
@@ -63,7 +63,7 @@
 </a>
 
 <!-- bio_sample -->
-<a href="StructureDefinition-pc-bio-sample-lm.html" target="_top" xlink:href="StructureDefinition-pc-bio-sample-lm.html">
+<a href="StructureDefinition-pcBioSampleLm.html" target="_top" xlink:href="StructureDefinition-pcBioSampleLm.html">
 <rect fill="#FFFFFF" height="131.80" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:1.5;" width="220" x="30" y="370"/>
 <rect fill="#E8F4F8" height="28" rx="2.5" ry="2.5" style="stroke:none;" width="220" x="30" y="370"/>
 <text fill="#185FA5" font-family="Verdana" font-size="14" font-weight="bold" text-anchor="middle" text-decoration="underline" x="140.0" y="388">bio_sample</text>
@@ -78,7 +78,7 @@
 </a>
 
 <!-- pre_medication -->
-<a href="StructureDefinition-pc-pre-medication-lm.html" target="_top" xlink:href="StructureDefinition-pc-pre-medication-lm.html">
+<a href="StructureDefinition-pcPreMedicationLm.html" target="_top" xlink:href="StructureDefinition-pcPreMedicationLm.html">
 <rect fill="#FFFFFF" height="148.10" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:1.5;" width="260" x="290" y="370"/>
 <rect fill="#E8F4F8" height="28" rx="2.5" ry="2.5" style="stroke:none;" width="260" x="290" y="370"/>
 <text fill="#185FA5" font-family="Verdana" font-size="14" font-weight="bold" text-anchor="middle" text-decoration="underline" x="420.0" y="388">pre_medication</text>
@@ -94,7 +94,7 @@
 </a>
 
 <!-- clinical_variable -->
-<a href="StructureDefinition-pc-clinical-variable-lm.html" target="_top" xlink:href="StructureDefinition-pc-clinical-variable-lm.html">
+<a href="StructureDefinition-pcClinicalVariableLm.html" target="_top" xlink:href="StructureDefinition-pcClinicalVariableLm.html">
 <rect fill="#FFFFFF" height="197.00" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:1.5;" width="240" x="590" y="370"/>
 <rect fill="#E8F4F8" height="28" rx="2.5" ry="2.5" style="stroke:none;" width="240" x="590" y="370"/>
 <text fill="#185FA5" font-family="Verdana" font-size="14" font-weight="bold" text-anchor="middle" text-decoration="underline" x="710.0" y="388">clinical_variable</text>
@@ -113,7 +113,7 @@
 </a>
 
 <!-- vital_sign -->
-<a href="StructureDefinition-pc-vital-sign-lm.html" target="_top" xlink:href="StructureDefinition-pc-vital-sign-lm.html">
+<a href="StructureDefinition-pcVitalSignLm.html" target="_top" xlink:href="StructureDefinition-pcVitalSignLm.html">
 <rect fill="#FFFFFF" height="376.30" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:1.5;" width="270" x="870" y="370"/>
 <rect fill="#E8F4F8" height="28" rx="2.5" ry="2.5" style="stroke:none;" width="270" x="870" y="370"/>
 <text fill="#185FA5" font-family="Verdana" font-size="14" font-weight="bold" text-anchor="middle" text-decoration="underline" x="1005.0" y="388">vital_sign</text>
@@ -143,7 +143,7 @@
 </a>
 
 <!-- visit -->
-<a href="StructureDefinition-pc-visit-lm.html" target="_top" xlink:href="StructureDefinition-pc-visit-lm.html">
+<a href="StructureDefinition-pcVisitLm.html" target="_top" xlink:href="StructureDefinition-pcVisitLm.html">
 <rect fill="#FFFFFF" height="99.20" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:1.5;" width="200" x="1190" y="370"/>
 <rect fill="#E8F4F8" height="28" rx="2.5" ry="2.5" style="stroke:none;" width="200" x="1190" y="370"/>
 <text fill="#185FA5" font-family="Verdana" font-size="14" font-weight="bold" text-anchor="middle" text-decoration="underline" x="1290.0" y="388">visit</text>
@@ -156,7 +156,7 @@
 </a>
 
 <!-- transplant -->
-<a href="StructureDefinition-pc-transplant-lm.html" target="_top" xlink:href="StructureDefinition-pc-transplant-lm.html">
+<a href="StructureDefinition-pcTransplantLm.html" target="_top" xlink:href="StructureDefinition-pcTransplantLm.html">
 <rect fill="#FFFFFF" height="294.80" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:1.5;" width="320" x="1530" y="370"/>
 <rect fill="#E8F4F8" height="28" rx="2.5" ry="2.5" style="stroke:none;" width="320" x="1530" y="370"/>
 <text fill="#185FA5" font-family="Verdana" font-size="14" font-weight="bold" text-anchor="middle" text-decoration="underline" x="1690.0" y="388">transplant</text>
@@ -181,7 +181,7 @@
 </a>
 
 <!-- immunological_data -->
-<a href="StructureDefinition-pc-immunological-data-lm.html" target="_top" xlink:href="StructureDefinition-pc-immunological-data-lm.html">
+<a href="StructureDefinition-pcImmunologicalDataLm.html" target="_top" xlink:href="StructureDefinition-pcImmunologicalDataLm.html">
 <rect fill="#FFFFFF" height="457.80" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:1.5;" width="310" x="2280" y="60"/>
 <rect fill="#E8F4F8" height="28" rx="2.5" ry="2.5" style="stroke:none;" width="310" x="2280" y="60"/>
 <text fill="#185FA5" font-family="Verdana" font-size="14" font-weight="bold" text-anchor="middle" text-decoration="underline" x="2435.0" y="78">immunological_data</text>
@@ -216,7 +216,7 @@
 </a>
 
 <!-- microbiology -->
-<a href="StructureDefinition-pc-microbiology-lm.html" target="_top" xlink:href="StructureDefinition-pc-microbiology-lm.html">
+<a href="StructureDefinition-pcMicrobiologyLm.html" target="_top" xlink:href="StructureDefinition-pcMicrobiologyLm.html">
 <rect fill="#FFFFFF" height="604.50" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:1.5;" width="280" x="2630" y="60"/>
 <rect fill="#E8F4F8" height="28" rx="2.5" ry="2.5" style="stroke:none;" width="280" x="2630" y="60"/>
 <text fill="#185FA5" font-family="Verdana" font-size="14" font-weight="bold" text-anchor="middle" text-decoration="underline" x="2770.0" y="78">microbiology</text>
@@ -260,7 +260,7 @@
 </a>
 
 <!-- immunosuppressant -->
-<a href="StructureDefinition-pc-immunosuppressant-lm.html" target="_top" xlink:href="StructureDefinition-pc-immunosuppressant-lm.html">
+<a href="StructureDefinition-pcImmunosuppressantLm.html" target="_top" xlink:href="StructureDefinition-pcImmunosuppressantLm.html">
 <rect fill="#FFFFFF" height="66.60" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:1.5;" width="200" x="1190" y="490"/>
 <rect fill="#E8F4F8" height="28" rx="2.5" ry="2.5" style="stroke:none;" width="200" x="1190" y="490"/>
 <text fill="#185FA5" font-family="Verdana" font-size="14" font-weight="bold" text-anchor="middle" text-decoration="underline" x="1290.0" y="508">immunosuppressant</text>
@@ -271,7 +271,7 @@
 </a>
 
 <!-- imm_pat -->
-<a href="StructureDefinition-pc-imm-pat-lm.html" target="_top" xlink:href="StructureDefinition-pc-imm-pat-lm.html">
+<a href="StructureDefinition-pcImmPatLm.html" target="_top" xlink:href="StructureDefinition-pcImmPatLm.html">
 <rect fill="#FFFFFF" height="213.30" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:1.5;" width="270" x="1190" y="615"/>
 <rect fill="#E8F4F8" height="28" rx="2.5" ry="2.5" style="stroke:none;" width="270" x="1190" y="615"/>
 <text fill="#185FA5" font-family="Verdana" font-size="14" font-weight="bold" text-anchor="middle" text-decoration="underline" x="1325.0" y="633">imm_pat</text>
@@ -291,7 +291,7 @@
 </a>
 
 <!-- concomitant_medication -->
-<a href="StructureDefinition-pc-concomitant-medication-lm.html" target="_top" xlink:href="StructureDefinition-pc-concomitant-medication-lm.html">
+<a href="StructureDefinition-pcConcomitantMedicationLm.html" target="_top" xlink:href="StructureDefinition-pcConcomitantMedicationLm.html">
 <rect fill="#FFFFFF" height="148.10" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:1.5;" width="265" x="30" y="860"/>
 <rect fill="#E8F4F8" height="28" rx="2.5" ry="2.5" style="stroke:none;" width="265" x="30" y="860"/>
 <text fill="#185FA5" font-family="Verdana" font-size="14" font-weight="bold" text-anchor="middle" text-decoration="underline" x="162.5" y="878">concomitant_medication</text>
@@ -307,7 +307,7 @@
 </a>
 
 <!-- instrumental_investigation -->
-<a href="StructureDefinition-pc-instrumental-investigation-lm.html" target="_top" xlink:href="StructureDefinition-pc-instrumental-investigation-lm.html">
+<a href="StructureDefinition-pcInstrumentalInvestigationLm.html" target="_top" xlink:href="StructureDefinition-pcInstrumentalInvestigationLm.html">
 <rect fill="#FFFFFF" height="148.10" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:1.5;" width="270" x="330" y="860"/>
 <rect fill="#E8F4F8" height="28" rx="2.5" ry="2.5" style="stroke:none;" width="270" x="330" y="860"/>
 <text fill="#185FA5" font-family="Verdana" font-size="14" font-weight="bold" text-anchor="middle" text-decoration="underline" x="465.0" y="878">instrumental_investigation</text>
@@ -323,7 +323,7 @@
 </a>
 
 <!-- lab_test -->
-<a href="StructureDefinition-pc-lab-test-lm.html" target="_top" xlink:href="StructureDefinition-pc-lab-test-lm.html">
+<a href="StructureDefinition-pcLabTestLm.html" target="_top" xlink:href="StructureDefinition-pcLabTestLm.html">
 <rect fill="#FFFFFF" height="66.60" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:1.5;" width="180" x="1530" y="740"/>
 <rect fill="#E8F4F8" height="28" rx="2.5" ry="2.5" style="stroke:none;" width="180" x="1530" y="740"/>
 <text fill="#185FA5" font-family="Verdana" font-size="14" font-weight="bold" text-anchor="middle" text-decoration="underline" x="1620.0" y="758">lab_test</text>
@@ -334,7 +334,7 @@
 </a>
 
 <!-- lab_result -->
-<a href="StructureDefinition-pc-lab-result-lm.html" target="_top" xlink:href="StructureDefinition-pc-lab-result-lm.html">
+<a href="StructureDefinition-pcLabResultLm.html" target="_top" xlink:href="StructureDefinition-pcLabResultLm.html">
 <rect fill="#FFFFFF" height="164.40" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:1.5;" width="240" x="1530" y="860"/>
 <rect fill="#E8F4F8" height="28" rx="2.5" ry="2.5" style="stroke:none;" width="240" x="1530" y="860"/>
 <text fill="#185FA5" font-family="Verdana" font-size="14" font-weight="bold" text-anchor="middle" text-decoration="underline" x="1650.0" y="878">lab_result</text>
@@ -351,7 +351,7 @@
 </a>
 
 <!-- clinical_event_type -->
-<a href="StructureDefinition-pc-clinical-event-type-lm.html" target="_top" xlink:href="StructureDefinition-pc-clinical-event-type-lm.html">
+<a href="StructureDefinition-pcClinicalEventTypeLm.html" target="_top" xlink:href="StructureDefinition-pcClinicalEventTypeLm.html">
 <rect fill="#FFFFFF" height="66.60" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:1.5;" width="230" x="1900" y="490"/>
 <rect fill="#E8F4F8" height="28" rx="2.5" ry="2.5" style="stroke:none;" width="230" x="1900" y="490"/>
 <text fill="#185FA5" font-family="Verdana" font-size="14" font-weight="bold" text-anchor="middle" text-decoration="underline" x="2015.0" y="508">clinical_event_type</text>
@@ -362,7 +362,7 @@
 </a>
 
 <!-- clinical_event -->
-<a href="StructureDefinition-pc-clinical-event-lm.html" target="_top" xlink:href="StructureDefinition-pc-clinical-event-lm.html">
+<a href="StructureDefinition-pcClinicalEventLm.html" target="_top" xlink:href="StructureDefinition-pcClinicalEventLm.html">
 <rect fill="#FFFFFF" height="408.90" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:1.5;" width="320" x="1900" y="615"/>
 <rect fill="#E8F4F8" height="28" rx="2.5" ry="2.5" style="stroke:none;" width="320" x="1900" y="615"/>
 <text fill="#185FA5" font-family="Verdana" font-size="14" font-weight="bold" text-anchor="middle" text-decoration="underline" x="2060.0" y="633">clinical_event</text>

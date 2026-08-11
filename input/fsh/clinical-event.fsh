@@ -15,41 +15,41 @@ CodeSystem: ClinicalEventTypeCS
 Id: clinical-event-type-cs
 Title: "Clinical Event Type CodeSystem"
 Description: "Types of clinical events in the PROTECT-CHILD study (DMv1.2), replacing outcome_type and post_event_type."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/clinical-event-type"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #alloimmunization                         "Alloimmunization"
-* #biliary-complications                    "Biliary Complications"
-* #bk-virus-infection                       "BK Virus Infection"
-* #chronic-liver-failure                    "Chronic Liver Failure"
-* #chronic-liver-rejection                  "Chronic Liver Rejection"
-* #chronic-renal-failure-after-pltx         "Chronic Renal Failure After pLTx"
-* #cmv-infection                            "Cytomegalovirus Infection"
-* #delayed-kidney-graft-function            "Delayed Kidney Graft Function"
-* #diabetes                                 "Diabetes"
-* #graft-failure                            "Graft Failure"
-* #high-blood-pressure                      "High Blood Pressure"
-* #kidney-primary-non-function              "Kidney Primary Non-Function"
-* #kidney-rejection-episode                 "Kidney Rejection Episode"
-* #liver-early-allograft-dysfunction        "Liver Early Allograft Dysfunction"
-* #liver-primary-non-function               "Liver Primary Non-Function"
-* #liver-rejection-episode                  "Liver Rejection Episode"
-* #microangiopathy                          "Microangiopathy"
-* #mortality                                "Mortality"
-* #mtor-inhibitors-toxicity                 "mTOR Inhibitors Toxicity"
-* #mycophenolate-toxicity                   "Mycophenolate Toxicity"
-* #pres                                     "PRES"
-* #ptld                                     "PTLD"
-* #relapse-primary-immunomediated-disease   "Relapse Primary Immunomediated Disease"
-* #renal-cni-toxicity                       "Renal CNI Toxicity"
-* #urological-complications                 "Urological Complications"
-* #vascular-complications                   "Vascular Complications"
+* #alloimmunization                         "Alloimmunization" "Development of antibodies against alloantigens (e.g. HLA) following transplantation or transfusion."
+* #biliary-complications                    "Biliary Complications" "Post-transplant complications of the biliary tract (e.g. stricture, leak, stones)."
+* #bk-virus-infection                       "BK Virus Infection" "Infection or reactivation of BK polyomavirus."
+* #chronic-liver-failure                    "Chronic Liver Failure" "Progressive, long-standing loss of liver function."
+* #chronic-liver-rejection                  "Chronic Liver Rejection" "Chronic rejection of the liver allograft (e.g. ductopenia / vanishing bile duct syndrome)."
+* #chronic-renal-failure-after-pltx         "Chronic Renal Failure After pLTx" "Chronic kidney disease developing after paediatric liver transplantation."
+* #cmv-infection                            "Cytomegalovirus Infection" "Infection or reactivation of cytomegalovirus."
+* #delayed-kidney-graft-function            "Delayed Kidney Graft Function" "Delayed function of the kidney allograft requiring dialysis in the first post-transplant week."
+* #diabetes                                 "Diabetes" "Diabetes mellitus, including new-onset diabetes after transplantation."
+* #graft-failure                            "Graft Failure" "Loss of function of the transplanted organ."
+* #high-blood-pressure                      "High Blood Pressure" "Arterial hypertension."
+* #kidney-primary-non-function              "Kidney Primary Non-Function" "Kidney allograft that never achieves function after transplantation."
+* #kidney-rejection-episode                 "Kidney Rejection Episode" "An episode of acute or chronic rejection of the kidney allograft."
+* #liver-early-allograft-dysfunction        "Liver Early Allograft Dysfunction" "Early dysfunction of the liver allograft in the initial post-transplant period."
+* #liver-primary-non-function               "Liver Primary Non-Function" "Liver allograft that never achieves function, requiring urgent re-transplantation."
+* #liver-rejection-episode                  "Liver Rejection Episode" "An episode of acute or chronic rejection of the liver allograft."
+* #microangiopathy                          "Microangiopathy" "Thrombotic microangiopathy affecting small blood vessels."
+* #mortality                                "Mortality" "Death of the patient."
+* #mtor-inhibitors-toxicity                 "mTOR Inhibitors Toxicity" "Adverse effects attributable to mTOR-inhibitor immunosuppression."
+* #mycophenolate-toxicity                   "Mycophenolate Toxicity" "Adverse effects attributable to mycophenolate immunosuppression."
+* #pres                                     "PRES" "Posterior reversible encephalopathy syndrome (PRES)."
+* #ptld                                     "PTLD" "Post-transplant lymphoproliferative disorder (PTLD)."
+* #relapse-primary-immunomediated-disease   "Relapse Primary Immunomediated Disease" "Recurrence of the primary immune-mediated disease that led to transplantation."
+* #renal-cni-toxicity                       "Renal CNI Toxicity" "Calcineurin-inhibitor-induced renal toxicity."
+* #urological-complications                 "Urological Complications" "Post-transplant complications of the urinary tract (e.g. obstruction, leak, reflux)."
+* #vascular-complications                   "Vascular Complications" "Post-transplant vascular complications (e.g. thrombosis, stenosis)."
 
 ValueSet: ClinicalEventTypeVS
 Id: clinical-event-type-vs
 Title: "Clinical Event Type ValueSet"
 Description: "Allowed clinical event types in the PROTECT-CHILD study (DMv1.2)."
+* ^experimental = true
 * include codes from system ClinicalEventTypeCS
 
 // ------------------------------------------------
@@ -60,18 +60,19 @@ CodeSystem: VascularComplicationTypeCS
 Id: vascular-complication-type-cs
 Title: "Vascular Complication Type CodeSystem"
 Description: "Types of vascular complications in transplant (DMv1.2)."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/vascular-complication-type"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #HAT                    "HAT"
-* #portal-vein-stenosis   "Portal Vein Stenosis"
-* #portal-vein-thrombosis "Portal Vein Thrombosis"
-* #unknown                "Unknown"
+* #HAT                    "HAT" "Hepatic artery thrombosis (HAT)."
+* #portal-vein-stenosis   "Portal Vein Stenosis" "Stenosis of the portal vein."
+* #portal-vein-thrombosis "Portal Vein Thrombosis" "Thrombosis of the portal vein."
+* #unknown                "Unknown" "Vascular complication of unknown type."
 
 ValueSet: VascularComplicationTypeVS
 Id: vascular-complication-type-vs
 Title: "Vascular Complication Type ValueSet"
+Description: "Types of vascular complication occurring after solid-organ transplantation."
+* ^experimental = true
 * VascularComplicationTypeCS#HAT
 * VascularComplicationTypeCS#portal-vein-stenosis
 * VascularComplicationTypeCS#portal-vein-thrombosis
@@ -87,21 +88,21 @@ CodeSystem: ClinicalEventEvidenceCS
 Id: clinical-event-evidence-cs
 Title: "Clinical Event Evidence CodeSystem"
 Description: "Coded findings used in Condition.evidence.code to represent boolean DM fields. Presence of a code means the flag is true; absence means false."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/clinical-event-evidence"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #dgf                          "Delayed graft function"
-* #episodes-aki-after-ltx       "Episodes of AKI after liver transplant"
-* #histologic-evidence-cni-tox  "Histological evidence of CNI nephrotoxicity"
-* #hypoxic-ischemic-pltx        "Hypoxic-ischemic event post liver transplant"
-* #concomitant-medications      "Concomitant medications present"
-* #treatment-adherence          "Treatment adherence confirmed"
+* #dgf                          "Delayed graft function" "Delayed graft function: dialysis requirement or failure of graft function to improve in the first post-transplant week."
+* #episodes-aki-after-ltx       "Episodes of AKI after liver transplant" "One or more episodes of acute kidney injury after liver transplantation."
+* #histologic-evidence-cni-tox  "Histological evidence of CNI nephrotoxicity" "Histological findings consistent with calcineurin-inhibitor nephrotoxicity."
+* #hypoxic-ischemic-pltx        "Hypoxic-ischemic event post liver transplant" "Hypoxic-ischaemic event occurring after paediatric liver transplantation."
+* #concomitant-medications      "Concomitant medications present" "Indicates that concomitant medications were recorded for the event."
+* #treatment-adherence          "Treatment adherence confirmed" "Indicates that adherence to prescribed treatment was confirmed."
 
 ValueSet: ClinicalEventEvidenceVS
 Id: clinical-event-evidence-vs
 Title: "Clinical Event Flag ValueSet"
 Description: "Codes for ClinicalEventFlagObservation.code — one per boolean DM flag on the clinical_event table. Presence of an Observation with this code means the flag is true."
+* ^experimental = true
 * include codes from system ClinicalEventEvidenceCS
 
 // ------------------------------------------------
@@ -114,19 +115,19 @@ CodeSystem: ClinicalEventProcedureTypeCS
 Id: clinical-event-procedure-type-cs
 Title: "Clinical Event Procedure Type CodeSystem"
 Description: "Types of procedures linked to a ClinicalEvent via ClinicalEventProcedure.reasonReference. Used for dialysis episodes, retransplantation, and transplant-list entry (DMv1.2)."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/clinical-event-procedure-type"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #hemodialysis        "Hemodialysis"
-* #peritoneal-dialysis "Peritoneal dialysis"
-* #retransplantation   "Retransplantation"
-* #transplant-listing  "Listed for retransplant"
+* #hemodialysis        "Hemodialysis" "Renal replacement therapy by haemodialysis."
+* #peritoneal-dialysis "Peritoneal dialysis" "Renal replacement therapy by peritoneal dialysis."
+* #retransplantation   "Retransplantation" "Repeat transplantation of the same organ."
+* #transplant-listing  "Listed for retransplant" "Placement of the patient on the waiting list for (re)transplantation."
 
 ValueSet: ClinicalEventProcedureTypeVS
 Id: clinical-event-procedure-type-vs
 Title: "Clinical Event Procedure Type ValueSet"
 Description: "Allowed procedure types for ClinicalEventProcedure."
+* ^experimental = true
 * include codes from system ClinicalEventProcedureTypeCS
 
 // ================================================
@@ -169,17 +170,17 @@ Description: "A clinical event for a transplant patient, aligned with the DMv1.2
 * clinicalStatus ^short = "event_phase — #active = START visit; #resolved = END visit"
 
 * onset[x] 0..1 MS
-* onsetDateTime 0..1
+* onsetDateTime 0..1 MS
 * onsetDateTime ^short = "Date this event started (START visit date)"
 
 * abatement[x] 0..1 MS
-* abatementDateTime 0..1
+* abatementDateTime 0..1 MS
 * abatementDateTime ^short = "Date this event ended (END visit date)"
 
 // Five free-text DM fields → Condition.note, sliced by authorString.
 // authorString is the DM field name; text carries the free-text content.
 * note ^slicing.discriminator.type = #value
-* note ^slicing.discriminator.path = "authorString"
+* note ^slicing.discriminator.path = "author.ofType(string)"
 * note ^slicing.rules = #open
 * note MS
 
@@ -268,7 +269,7 @@ Description: "Boolean flag associated with a clinical event (DMv1.2 clinical_eve
 * status = #final (exactly)
 
 * category 1..1 MS
-* category = $obs-cat#exam (exactly)
+* category = $obs-cat#exam
 
 // Flag type — which DM boolean field this Observation represents
 * code 1..1 MS

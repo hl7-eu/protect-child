@@ -11,7 +11,6 @@ CodeSystem: PreMedicationAntihypertensiveDrugCS
 Id: pre-medication-antihypertensive-drug-cs
 Title: "Pre-medication Antihypertensive Drug CodeSystem"
 Description: "Antihypertensive drugs used as pre-transplant medication."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/pre-medication-antihypertensive-drug"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
@@ -29,6 +28,7 @@ ValueSet: PreMedicationAntihypertensiveDrugVS
 Id: pre-medication-antihypertensive-drug-vs
 Title: "Pre-medication Antihypertensive Drug ValueSet"
 Description: "Allowed antihypertensive drugs for antihypertensive_treatment."
+* ^experimental = true
 * PreMedicationAntihypertensiveDrugCS#1332418
 * PreMedicationAntihypertensiveDrugCS#1318853
 * PreMedicationAntihypertensiveDrugCS#1340128

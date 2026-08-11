@@ -10,7 +10,7 @@ Alias: $pc = https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child
 // ─── Patient ────────────────────────────────────────────────────────────────
 
 Logical: PcPatient
-Id: pc-patient-lm
+Id: pcPatientLm
 Title: "Patient logical model"
 Description: "Logical model for the PROTECT-CHILD patient table."
 
@@ -28,7 +28,7 @@ Description: "Logical model for the PROTECT-CHILD patient table."
 // ─── Donor ──────────────────────────────────────────────────────────────────
 
 Logical: PcDonor
-Id: pc-donor-lm
+Id: pcDonorLm
 Title: "Donor logical model"
 Description: "Logical model for the PROTECT-CHILD donor table."
 
@@ -41,7 +41,7 @@ Description: "Logical model for the PROTECT-CHILD donor table."
 // ─── Visit ──────────────────────────────────────────────────────────────────
 
 Logical: PcVisit
-Id: pc-visit-lm
+Id: pcVisitLm
 Title: "Visit logical model"
 Description: "Logical model for the PROTECT-CHILD visit table."
 
@@ -53,7 +53,7 @@ Description: "Logical model for the PROTECT-CHILD visit table."
 // ─── Transplant ─────────────────────────────────────────────────────────────
 
 Logical: PcTransplant
-Id: pc-transplant-lm
+Id: pcTransplantLm
 Title: "Transplant logical model"
 Description: "Logical model for the PROTECT-CHILD transplant table."
 
@@ -77,7 +77,7 @@ Description: "Logical model for the PROTECT-CHILD transplant table."
 // ─── Immunological Data ─────────────────────────────────────────────────────
 
 Logical: PcImmunologicalData
-Id: pc-immunological-data-lm
+Id: pcImmunologicalDataLm
 Title: "Immunological Data logical model"
 Description: "Logical model for the PROTECT-CHILD immunological_data table. Covers blood group, Rh, HLA allele typing, DSA, Banff category, C4d, and ANCA."
 
@@ -116,7 +116,7 @@ Description: "Logical model for the PROTECT-CHILD immunological_data table. Cove
 // ─── Vital Sign ─────────────────────────────────────────────────────────────
 
 Logical: PcVitalSign
-Id: pc-vital-sign-lm
+Id: pcVitalSignLm
 Title: "Vital Sign logical model"
 Description: "Logical model for the PROTECT-CHILD vital_sign table. Contains standard vitals and ABPM measurements."
 
@@ -145,7 +145,7 @@ Description: "Logical model for the PROTECT-CHILD vital_sign table. Contains sta
 // ─── BioSample ──────────────────────────────────────────────────────────────
 
 Logical: PcBioSample
-Id: pc-bio-sample-lm
+Id: pcBioSampleLm
 Title: "BioSample logical model"
 Description: "Logical model for the PROTECT-CHILD bio_sample table."
 
@@ -159,7 +159,7 @@ Description: "Logical model for the PROTECT-CHILD bio_sample table."
 // ─── Pre-Medication ─────────────────────────────────────────────────────────
 
 Logical: PcPreMedication
-Id: pc-pre-medication-lm
+Id: pcPreMedicationLm
 Title: "PreMedication logical model"
 Description: "Logical model for the PROTECT-CHILD pre_medication table."
 
@@ -174,7 +174,7 @@ Description: "Logical model for the PROTECT-CHILD pre_medication table."
 // ─── Clinical Variable ───────────────────────────────────────────────────────
 
 Logical: PcClinicalVariable
-Id: pc-clinical-variable-lm
+Id: pcClinicalVariableLm
 Title: "ClinicalVariable logical model"
 Description: "Logical model for the PROTECT-CHILD clinical_variable table. Includes weight, height, diuresis, and concomitant disease."
 
@@ -192,7 +192,7 @@ Description: "Logical model for the PROTECT-CHILD clinical_variable table. Inclu
 // ─── Concomitant Medication ──────────────────────────────────────────────────
 
 Logical: PcConcomitantMedication
-Id: pc-concomitant-medication-lm
+Id: pcConcomitantMedicationLm
 Title: "ConcomitantMedication logical model"
 Description: "Logical model for the PROTECT-CHILD concomitant_medication table."
 
@@ -207,7 +207,7 @@ Description: "Logical model for the PROTECT-CHILD concomitant_medication table."
 // ─── Microbiology ────────────────────────────────────────────────────────────
 
 Logical: PcMicrobiology
-Id: pc-microbiology-lm
+Id: pcMicrobiologyLm
 Title: "Microbiology logical model"
 Description: "Logical model for the PROTECT-CHILD microbiology table. Covers viral serology, DNA quantification, culture results, and BKVAN evidence."
 
@@ -250,7 +250,7 @@ Description: "Logical model for the PROTECT-CHILD microbiology table. Covers vir
 // ─── Instrumental Investigation ──────────────────────────────────────────────
 
 Logical: PcInstrumentalInvestigation
-Id: pc-instrumental-investigation-lm
+Id: pcInstrumentalInvestigationLm
 Title: "InstrumentalInvestigation logical model"
 Description: "Logical model for the PROTECT-CHILD instrumental_investigation table."
 
@@ -265,7 +265,7 @@ Description: "Logical model for the PROTECT-CHILD instrumental_investigation tab
 // ─── Immunosuppressant ───────────────────────────────────────────────────────
 
 Logical: PcImmunosuppressant
-Id: pc-immunosuppressant-lm
+Id: pcImmunosuppressantLm
 Title: "Immunosuppressant logical model"
 Description: "Logical model for the PROTECT-CHILD immunosuppressant catalogue table."
 
@@ -275,7 +275,7 @@ Description: "Logical model for the PROTECT-CHILD immunosuppressant catalogue ta
 // ─── Imm Pat (merged induction + maintenance) ────────────────────────────────
 
 Logical: PcImmPat
-Id: pc-imm-pat-lm
+Id: pcImmPatLm
 Title: "ImmPat logical model"
 Description: "Logical model for the PROTECT-CHILD imm_pat table. Phase field (Induction / Maintenance) maps to MedicationStatement.category."
 
@@ -294,7 +294,7 @@ Description: "Logical model for the PROTECT-CHILD imm_pat table. Phase field (In
 // ─── Lab Test ────────────────────────────────────────────────────────────────
 
 Logical: PcLabTest
-Id: pc-lab-test-lm
+Id: pcLabTestLm
 Title: "LabTest logical model"
 Description: "Logical model for the PROTECT-CHILD lab_test catalogue table."
 
@@ -304,7 +304,7 @@ Description: "Logical model for the PROTECT-CHILD lab_test catalogue table."
 // ─── Lab Result ──────────────────────────────────────────────────────────────
 
 Logical: PcLabResult
-Id: pc-lab-result-lm
+Id: pcLabResultLm
 Title: "LabResult logical model"
 Description: "Logical model for the PROTECT-CHILD lab_result table."
 
@@ -320,7 +320,7 @@ Description: "Logical model for the PROTECT-CHILD lab_result table."
 // ─── Clinical Event Type ────────────────────────────────────────────────────
 
 Logical: PcClinicalEventType
-Id: pc-clinical-event-type-lm
+Id: pcClinicalEventTypeLm
 Title: "ClinicalEventType logical model"
 Description: "Logical model for the PROTECT-CHILD clinical_event_type table."
 
@@ -330,7 +330,7 @@ Description: "Logical model for the PROTECT-CHILD clinical_event_type table."
 // ─── Clinical Event ──────────────────────────────────────────────────────────
 
 Logical: PcClinicalEvent
-Id: pc-clinical-event-lm
+Id: pcClinicalEventLm
 Title: "ClinicalEvent logical model"
 Description: "Logical model for the PROTECT-CHILD clinical_event table. Each visit record captures either the start or end of a clinical event."
 

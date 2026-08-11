@@ -1,9 +1,11 @@
 <ul xmlns="http://www.w3.org/1999/xhtml" class="nav navbar-nav">
   <!-- Menu items -->
   <li><a href="index.html">Home</a></li>
+  <li><a href="patient-timeline.html">Patient Timeline</a></li>
   <li><a href="logical-models.html">Logical Models</a></li>
   <li><a href="mapping.html">Logical Model → FHIR Mapping</a></li>
   <!-- <li><a href="omop-mapping.html">Logical Model → OMOP → FHIR Mapping</a></li>-->
   <li><a href="data-model-erd.html">Data Model (ERD)</a></li>
+  <li><a href="data-dictionary.html">Data Dictionary</a></li>
   <li><a href="artifacts.html">Artifacts</a></li>
 </ul>

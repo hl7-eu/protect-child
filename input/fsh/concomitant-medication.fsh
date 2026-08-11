@@ -43,6 +43,7 @@ Description: "Concomitant medication record for a transplant patient at a visit,
 
 // start_date / end_date → MedicationStatement.effectivePeriod
 * effective[x] 0..1 MS
+* effectivePeriod MS
 * effectivePeriod.start 0..1
 * effectivePeriod.start ^short = "start_date — date medication started"
 * effectivePeriod.end 0..1

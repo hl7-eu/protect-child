@@ -15,7 +15,6 @@ CodeSystem: ConcomitantDiseaseCategory
 Id: concomitant-disease-category
 Title: "Concomitant Disease Category CodeSystem"
 Description: "Concomitant disease codes used in the DMv1.2 clinical_variable table. Coded values are carried as ClinicalVariable Observation components (component[concomitant_disease])."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/concomitant-disease-category"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
@@ -78,6 +77,7 @@ ValueSet: ConcomitantDiseaseCategoryVS
 Id: concomitant-disease-category-vs
 Title: "Concomitant Disease Category ValueSet"
 Description: "Allowed concomitant disease codes in clinical_variable (DMv1.2)."
+* ^experimental = true
 * include codes from system ConcomitantDiseaseCategory
 
 // ================================================
@@ -88,11 +88,10 @@ CodeSystem: ClinicalVariableComponentCS
 Id: clinical-variable-component-cs
 Title: "Clinical Variable Component Codes"
 Description: "Local codes for ClinicalVariable Observation component slices that are not covered by LOINC. Currently used for the concomitant_disease repeating component."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/clinical-variable-component"
 * ^content = #complete
 * ^caseSensitive = true
 * ^experimental = true
-* #concomitant-disease "Concomitant disease"
+* #concomitant-disease "Concomitant disease" "A comorbid condition or concomitant disease recorded as a clinical variable."
 
 // ================================================
 // ClinicalVariable profile — Observation
@@ -114,11 +113,11 @@ Description: "Clinical variables recorded for a transplant patient at a visit, a
 * status = #final (exactly)
 
 * category 1..1 MS
-* category = $obs-cat#exam (exactly)
+* category = $obs-cat#exam
 
 // Panel code
 * code 1..1 MS
-* code = $loinc#55752-0 "Clinical information" (exactly)
+* code = $loinc#55752-0 "Clinical information"
 
 // patient_id → Observation.subject
 * subject 1..1 MS
@@ -151,28 +150,28 @@ Description: "Clinical variables recorded for a transplant patient at a visit, a
     concomitant_disease 1..* MS
 
 // weight (kg)
-* component[weight].code = $loinc#29463-7 "Body weight" (exactly)
+* component[weight].code = $loinc#29463-7 "Body weight"
 * component[weight].value[x] only Quantity
 * component[weight].valueQuantity.system = $ucum
 * component[weight].valueQuantity.code = #kg
 * component[weight] ^short = "weight (kg)"
 
 // height (cm)
-* component[height].code = $loinc#8302-2 "Body height" (exactly)
+* component[height].code = $loinc#8302-2 "Body height"
 * component[height].value[x] only Quantity
 * component[height].valueQuantity.system = $ucum
 * component[height].valueQuantity.code = #cm
 * component[height] ^short = "height (cm)"
 
 // diuresis_value (ml/day)
-* component[diuresis_value].code = $loinc#9192-6 "Urine output 24 hour" (exactly)
+* component[diuresis_value].code = $loinc#9192-6 "Urine output 24 hour"
 * component[diuresis_value].value[x] only Quantity
 * component[diuresis_value].valueQuantity.system = $ucum
 * component[diuresis_value].valueQuantity.code = #mL/d
 * component[diuresis_value] ^short = "diuresis_value — 24 h diuresis (ml/day)"
 
 // concomitant_disease — repeat per concurrent disease
-* component[concomitant_disease].code = ClinicalVariableComponentCS#concomitant-disease "Concomitant disease" (exactly)
+* component[concomitant_disease].code = ClinicalVariableComponentCS#concomitant-disease "Concomitant disease"
 * component[concomitant_disease].value[x] only CodeableConcept
 * component[concomitant_disease].valueCodeableConcept from ConcomitantDiseaseCategoryVS (required)
 * component[concomitant_disease] ^short = "concomitant_disease — coded concomitant disease (repeat per disease)"

@@ -8,23 +8,23 @@ CodeSystem: VisitTypeCS
 Id: visit-type-cs
 Title: "Visit Type CodeSystem"
 Description: "Type of visit in the transplant follow-up schedule."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/visit-type"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #pre-transplant    "Pre-transplant visit"
-* #month-1           "1 month visit"
-* #month-3           "3 month visit"
-* #month-6           "6 month visit"
-* #month-12          "12 month visit"
-* #month-24          "24 month visit"
-* #clinical-event    "Clinical Event visit"
-* #termination       "Termination visit"
+* #pre-transplant    "Pre-transplant visit" "Pre-transplant (baseline) visit."
+* #month-1           "1 month visit" "1-month post-transplant follow-up visit."
+* #month-3           "3 month visit" "3-month post-transplant follow-up visit."
+* #month-6           "6 month visit" "6-month post-transplant follow-up visit."
+* #month-12          "12 month visit" "12-month post-transplant follow-up visit."
+* #month-24          "24 month visit" "24-month post-transplant follow-up visit."
+* #clinical-event    "Clinical Event visit" "Unscheduled visit prompted by a clinical event."
+* #termination       "Termination visit" "Study termination / end-of-follow-up visit."
 
 ValueSet: VisitTypeVS
 Id: visit-type-vs
 Title: "Visit Type ValueSet"
 Description: "Allowed types of visits in the transplant follow-up schedule (DMv1.2)."
+* ^experimental = true
 * VisitTypeCS#pre-transplant
 * VisitTypeCS#month-1
 * VisitTypeCS#month-3
@@ -101,6 +101,6 @@ Description: "Example visit. Clinical resources (ClinicalVariable, Microbiology,
 * status = #finished
 * class = http://terminology.hl7.org/CodeSystem/v3-ActCode#AMB "ambulatory"
 * period.start = "2023-09-15"
-* type[0].coding[0].system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/visit-type"
+* type[0].coding[0].system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/visit-type-cs"
 * type[0].coding[0].code = #month-1
 * type[0].coding[0].display = "1 month visit"

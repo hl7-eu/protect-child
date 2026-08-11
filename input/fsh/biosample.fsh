@@ -12,17 +12,17 @@ CodeSystem: BioSampleAnalysisTypeCS
 Id: biosample-analysis-type-cs
 Title: "Biological Sample Analysis Type"
 Description: "Intended omics analysis type for a biological sample. Used as the ServiceRequest.code on BioSampleAnalysisRequest resources."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/biosample-analysis-type"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #genomic    "Genomic analysis"
-* #epigenomic "Epigenomic analysis"
+* #genomic    "Genomic analysis" "Genomic (DNA sequence) analysis of the biospecimen."
+* #epigenomic "Epigenomic analysis" "Epigenomic (e.g. DNA methylation) analysis of the biospecimen."
 
 ValueSet: BioSampleAnalysisTypeVS
 Id: biosample-analysis-type-vs
 Title: "Biological Sample Analysis Type ValueSet"
 Description: "Allowed analysis type codes for BioSampleAnalysisRequest.code."
+* ^experimental = true
 * BioSampleAnalysisTypeCS#genomic
 * BioSampleAnalysisTypeCS#epigenomic
 

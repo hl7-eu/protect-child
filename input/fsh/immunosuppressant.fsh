@@ -6,7 +6,6 @@ CodeSystem: ImmunosuppressantDrugTypeCS
 Id: immunosuppressant-drug-type-cs
 Title: "Immunosuppressant Drug Type"
 Description: "Types of immunosuppressive drugs used in the transplant setting."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/immunosuppressant-drug-type"
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
@@ -25,7 +24,7 @@ ValueSet: ImmunosuppressantDrugTypeVS
 Id: immunosuppressant-drug-type-vs
 Title: "Immunosuppressant Drug Type"
 Description: "ValueSet of immunosuppressive drug types."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/ValueSet/immunosuppressant-drug-type"
+* ^experimental = true
 * codes from system ImmunosuppressantDrugTypeCS
 
 

@@ -20,7 +20,6 @@ CodeSystem: LabTestLocalCS
 Id: lab-test-local-cs
 Title: "Lab Test Local Codes"
 Description: "Local codes for laboratory tests that do not have a single unambiguous LOINC code in the PROTECT-CHILD context (e.g., calculated values or composite measures)."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/lab-test-local"
 * ^content = #complete
 * ^caseSensitive = true
 * ^experimental = true
@@ -41,7 +40,6 @@ ValueSet: LabTestNameVS
 Id: lab-test-name-vs
 Title: "Lab Test Name ValueSet"
 Description: "Allowed laboratory test names for the PROTECT-CHILD data model. LOINC codes are used as the primary standard; local codes from LabTestLocalCS are used only for calculated or composite measures without a single unambiguous LOINC equivalent."
-* ^url = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/ValueSet/lab-test-name"
 * ^experimental = true
 
 // ── Proteins & Enzymes ──
