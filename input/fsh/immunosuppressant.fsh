@@ -33,7 +33,7 @@ Description: "ValueSet of immunosuppressive drug types."
 // Medication
 
 Profile: Immunosuppressant
-Parent: Medication
+Parent: http://hl7.eu/fhir/base/StructureDefinition/medication-eu-core
 Id: immunosuppressant
 Title: "Immunosuppressant"
 Description: "Immunosuppressive drug catalogue entry. imm_id is carried as an identifier; the drug name maps to Medication.code."

@@ -28,7 +28,7 @@ Description: "Namespace for PROTECT-CHILD study centre identifiers (center_no = 
 // -------------------------------------------------------
 
 Profile: StudyCentre
-Parent: Organization
+Parent: http://hl7.eu/fhir/base/StructureDefinition/organization-eu-core
 Id: study-centre
 Title: "Study Centre"
 Description: "A PROTECT-CHILD participating transplant centre. center_no (1–4) is carried as identifier.value in the study-centre namespace. All PatientTransplant resources reference their centre via Patient.managingOrganization."

@@ -68,4 +68,4 @@ pages:
       title: "Clinical Event"
 dependencies:
   hl7.fhir.eu.base:
-    version: 0.1.0-ballot
+    version: 2.0.0
