@@ -15,7 +15,7 @@ See the latest successful build at <http://build.fhir.org/ig/hl7-eu/protect-chil
 The guide is organised into the following pages:
 
 - **Home** — introduction and scope
-- **Patient Timeline** — the pediatric transplant journey over time
+- **Worked Examples** — the pediatric transplant journey as shown through this IG. 
 - **Logical Models** — the underlying data model definitions
 - **Data Model (ERD)** — entity–relationship view of the model
 - **Data Dictionary** — element-by-element reference
