@@ -4,8 +4,8 @@
 // Profiles defined here:
 //   PatientDemographicsObservation — age_years, age_months (category: survey)
 //   PatientImmunologyObservation  — max_pra, last_pra, date_histological_diag (category: laboratory)
-//   PatientLiverDiseaseDiagnosis / PatientRenalDiseaseDiagnosis — Condition resources
-//   DonorPreKtxDialysisTypeObservation / DonorLiverTypeObservation — donor-specific Observations
+//   PatientPrimaryDiseaseDiagnosis — Condition resource (organ in bodySite)
+//   DonorLiverTypeObservation — donor-specific Observation
 //
 // ABO/Rh CodeSystems and ValueSets are defined here and reused by immunological-data.fsh.
 
@@ -71,48 +71,23 @@ Description: "Distinguishes maximum (historical) vs most recent PRA measurements
 * ^experimental = true
 * #max  "Maximum PRA (historical)" "Maximum historical panel-reactive antibody (PRA/cPRA) value."
 * #last "Most recent PRA" "Most recent panel-reactive antibody (PRA/cPRA) value."
-
-ValueSet: PatientPRATypeVS
-Id: patient-pra-type-vs
-Title: "PRA Type ValueSet"
-Description: "Panel-reactive antibody (PRA) measurement type used for immunological risk assessment."
-* ^experimental = true
-* PatientPRATypeCS#max
-* PatientPRATypeCS#last
-
-// ------------------------------------------------------
-// Terminology – Donor liver type
-// ------------------------------------------------------
-
 CodeSystem: DonorLiverTypeCS
 Id: donor-liver-type-cs
 Title: "Donor Liver Type CodeSystem"
-Description: "Type of liver donation (complete vs partial)."
+Description: "Type of liver donation (whole vs split), per donor.liver_type."
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #complete "Complete liver graft" "Whole (complete) liver graft."
-* #partial  "Partial liver graft" "Partial liver graft (e.g. split or reduced-size)."
+* #whole "Whole liver graft" "Whole (entire) liver graft."
+* #split "Split liver graft" "Split (partial / reduced-size) liver graft."
 
 ValueSet: DonorLiverTypeVS
 Id: donor-liver-type-vs
 Title: "Donor Liver Type ValueSet"
-Description: "Type of donor liver graft (e.g. whole, split, reduced, or living-donor lobe)."
+Description: "Type of donor liver graft (donor.liver_type: Whole or Split)."
 * ^experimental = true
-* DonorLiverTypeCS#complete
-* DonorLiverTypeCS#partial
-
-// ------------------------------------------------------
-// Terminology – Dialysis method (donor pre-KTX)
-// ------------------------------------------------------
-
-ValueSet: DialysisTypeVS
-Id: dialysis-type-vs
-Title: "Dialysis method ValueSet"
-Description: "Dialysis method values using LOINC answer codes."
-* ^experimental = true
-* $loinc#LA9975-9  "Hemodialysis"
-* $loinc#LA10059-6 "Peritoneal Dialysis"
+* DonorLiverTypeCS#whole
+* DonorLiverTypeCS#split
 
 // ------------------------------------------------------
 // Terminology – panel codes (demographics and immunology panels)
@@ -233,26 +208,27 @@ Description: "Panel Observation for pre-transplant immunological scalar facts: m
 * component[date_histological_diag] ^short = "date_histological_diag — date histology confirmed the primary disease"
 
 // ================================================
-// Profile: PatientLiverDiseaseDiagnosis — Condition
-// Primary liver disease leading to transplantation.
+// Profile: PatientPrimaryDiseaseDiagnosis — Condition
+// Primary disease (liver or renal) leading to transplantation.
+// The affected organ is carried in Condition.bodySite.
 // ================================================
 
-Profile: PatientLiverDiseaseDiagnosis
+Profile: PatientPrimaryDiseaseDiagnosis
 Parent: Condition
-Id: patient-liver-disease-diagnosis
-Title: "Patient Liver Disease Diagnosis"
-Description: "Primary liver disease diagnosis that led to transplantation, aligned with DMv1.2 diag_primary_disease and date_diag_primary_disease. date_diag_primary_disease maps to Condition.onsetDateTime."
+Id: patient-primary-disease-diagnosis
+Title: "Patient Primary Disease Diagnosis"
+Description: "Primary disease that led to transplantation (diag_primary_disease, date_diag_primary_disease). A single profile for both liver and renal primary disease; the affected organ is given in Condition.bodySite. date_diag_primary_disease maps to Condition.onsetDateTime."
 
 * clinicalStatus 1..1 MS
 * clinicalStatus ^short = "Clinical status of the diagnosis at time of transplant"
 
 // diag_primary_disease → Condition.code (any coding system; ICD-10 recommended)
 * code 1..1 MS
-* code ^short = "diag_primary_disease — primary liver disease diagnosis code"
+* code ^short = "diag_primary_disease — primary disease diagnosis code"
 
+// Affected organ — liver or kidney
 * bodySite 1..1 MS
-* bodySite = $snomed#10200004 "Liver structure"
-* bodySite ^short = "Liver — distinguishes this from the renal diagnosis profile"
+* bodySite ^short = "Affected organ — Liver structure (SNOMED 10200004) or Kidney structure (64033007)"
 
 * subject 1..1 MS
 * subject only Reference(PatientTransplant)
@@ -261,92 +237,20 @@ Description: "Primary liver disease diagnosis that led to transplantation, align
 // date_diag_primary_disease → Condition.onsetDateTime
 * onset[x] 1..1 MS
 * onset[x] only dateTime
-* onsetDateTime ^short = "date_diag_primary_disease — date the primary liver disease was first diagnosed"
+* onsetDateTime ^short = "date_diag_primary_disease — date the primary disease was first diagnosed"
 
-// diag_liver_disease_extra → Condition.note (free text)
+// diag_liver_disease_extra / diag_renal_disease_extra → Condition.note (free text)
 * note 0..1 MS
-* note ^short = "diag_liver_disease_extra — free-text supplement to the coded diagnosis"
-
-// ================================================
-// Profile: PatientRenalDiseaseDiagnosis — Condition
-// Primary renal disease leading to transplantation.
-// ================================================
-
-Profile: PatientRenalDiseaseDiagnosis
-Parent: Condition
-Id: patient-renal-disease-diagnosis
-Title: "Patient Renal Disease Diagnosis"
-Description: "Primary renal disease diagnosis that led to transplantation, aligned with DMv1.2 diag_primary_disease and date_diag_primary_disease. date_diag_primary_disease maps to Condition.onsetDateTime."
-
-* clinicalStatus 1..1 MS
-* clinicalStatus ^short = "Clinical status of the diagnosis at time of transplant"
-
-// diag_primary_disease → Condition.code
-* code 1..1 MS
-* code ^short = "diag_primary_disease — primary renal disease diagnosis code"
-
-* bodySite 1..1 MS
-* bodySite = $snomed#64033007 "Kidney structure"
-* bodySite ^short = "Kidney — distinguishes this from the liver diagnosis profile"
-
-* subject 1..1 MS
-* subject only Reference(PatientTransplant)
-* subject ^short = "Transplant recipient"
-
-// date_diag_primary_disease → Condition.onsetDateTime
-* onset[x] 1..1 MS
-* onset[x] only dateTime
-* onsetDateTime ^short = "date_diag_primary_disease — date the primary renal disease was first diagnosed"
-
-// diag_renal_disease_extra → Condition.note (free text)
-* note 0..1 MS
-* note ^short = "diag_renal_disease_extra — free-text supplement to the coded diagnosis"
+* note ^short = "diag_*_disease_extra — free-text supplement to the coded diagnosis"
 
 // ================================================
 // Organ invariants for donor-specific observations
 // ================================================
 
 Invariant: pc-donor-1
-Description: "Donor liver graft type is only applicable for liver or combined transplants."
+Description: "Donor liver graft type is only applicable for liver or combined transplants: the transplant-type context SHALL be liver or combined."
 Severity: #error
-Expression: "extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').exists() implies extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').value.ofType(CodeableConcept).coding.where(code = 'liver' or code = 'combined').exists()"
-
-Invariant: pc-donor-2
-Description: "Donor pre-KTX dialysis type is only applicable for kidney or combined transplants."
-Severity: #error
-Expression: "extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').exists() implies extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').value.ofType(CodeableConcept).coding.where(code = 'kidney' or code = 'combined').exists()"
-
-// ================================================
-// Profile: DonorPreKtxDialysisTypeObservation (donor-specific)
-// ================================================
-
-Profile: DonorPreKtxDialysisTypeObservation
-Parent: Observation
-Id: donor-pre-ktx-dialysis-type-observation
-Title: "Donor pre-KTX dialysis type observation"
-Description: "Dialysis method prior to kidney transplantation. Only applicable for kidney or combined transplants — invariant pc-donor-2 enforces this when tx_type extension is present."
-
-* obeys pc-donor-2
-* extension contains TransplantTypeExt named tx_type 0..1 MS
-* extension[tx_type] ^short = "Transplant type context — should be kidney or combined"
-
-* status 1..1 MS
-* status = #final (exactly)
-
-* category 1..1 MS
-* category = $obs-cat#procedure
-
-* code 1..1 MS
-* code = $loinc#70958-4 "Dialysis method [ESRD]"
-
-* subject 1..1 MS
-* subject only Reference(Donor)
-
-* effective[x] 0..1 MS
-
-* value[x] 1..1 MS
-* value[x] only CodeableConcept
-* valueCodeableConcept from DialysisTypeVS (required)
+Expression: "extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').value.ofType(CodeableConcept).coding.where(code = 'liver' or code = 'combined').exists()"
 
 // ================================================
 // Profile: DonorLiverTypeObservation (donor-specific)
@@ -359,7 +263,7 @@ Title: "Donor liver graft type observation"
 Description: "Type of liver graft (complete vs partial) captured as an Observation. Only applicable for liver or combined transplants — invariant pc-donor-1 enforces this when tx_type extension is present."
 
 * obeys pc-donor-1
-* extension contains TransplantTypeExt named tx_type 0..1 MS
+* extension contains TransplantTypeExt named tx_type 1..1 MS
 * extension[tx_type] ^short = "Transplant type context — should be liver or combined"
 
 * status 1..1 MS
@@ -394,7 +298,8 @@ Description: "Age at transplant for the recipient (PatientDemographicsObservatio
 * category = $obs-cat#survey
 * code = PatientObservationsPanelCS#patient-demographics-panel "Patient demographics panel (age)"
 * subject = Reference(ExamplePatientTransplant1)
-* effectiveDateTime = "2025-01-10"
+* performer = Reference(PCCenter1LaPaz)
+* effectiveDateTime = "2023-08-15"
 
 * component[age_years].valueQuantity.value = 9
 * component[age_years].valueQuantity.system = $ucum
@@ -416,14 +321,16 @@ Description: "PRA and histological diagnosis date for the recipient (PatientImmu
 * category = $obs-cat#laboratory
 * code = PatientObservationsPanelCS#patient-immunology-panel "Patient pre-transplant immunology panel (PRA, histological date)"
 * subject = Reference(ExamplePatientTransplant1)
-* effectiveDateTime = "2025-01-10"
+* performer = Reference(PCCenter1LaPaz)
+* encounter = Reference(VisitPreTxExample1)
+* effectiveDateTime = "2023-08-01"
 
 * component[max_pra].valueInteger = 80
 * component[last_pra].valueInteger = 55
-* component[date_histological_diag].valueDateTime = "2024-05-10"
+* component[date_histological_diag].valueDateTime = "2020-03-15"
 
 Instance: ExamplePatientLiverDiagnosis1
-InstanceOf: PatientLiverDiseaseDiagnosis
+InstanceOf: PatientPrimaryDiseaseDiagnosis
 Usage: #example
 Title: "Example patient liver disease diagnosis"
 Description: "Primary liver disease diagnosis leading to transplantation."
@@ -436,7 +343,7 @@ Description: "Primary liver disease diagnosis leading to transplantation."
 * note.text = "Extra details about the diagnosis (free text)."
 
 Instance: ExamplePatientRenalDiagnosis1
-InstanceOf: PatientRenalDiseaseDiagnosis
+InstanceOf: PatientPrimaryDiseaseDiagnosis
 Usage: #example
 Title: "Example patient renal disease diagnosis"
 Description: "Primary renal disease diagnosis leading to transplantation."
@@ -458,7 +365,8 @@ Description: "Age at donation for the transplant donor (PatientDemographicsObser
 * category = $obs-cat#survey
 * code = PatientObservationsPanelCS#patient-demographics-panel "Patient demographics panel (age)"
 * subject = Reference(ExampleDonor1)
-* effectiveDateTime = "2025-01-01"
+* performer = Reference(PCCenter1LaPaz)
+* effectiveDateTime = "2023-08-15"
 
 * component[age_years].valueQuantity.value = 25
 * component[age_years].valueQuantity.system = $ucum
@@ -474,24 +382,13 @@ Instance: ExampleDonorLiverType1
 InstanceOf: DonorLiverTypeObservation
 Usage: #example
 Title: "Example donor liver graft type"
-Description: "Complete liver graft from a deceased donor."
+Description: "Partial (reduced-size) liver graft — a whole adult liver would be large-for-size for a 32.5 kg recipient."
 
 * status = #final
 * category = $obs-cat#procedure
 * code = $loinc#74836-8 "Transplant type [Anatomy]"
 * subject = Reference(ExampleDonor1)
-* effectiveDateTime = "2025-01-01"
-* valueCodeableConcept = DonorLiverTypeCS#complete "Complete liver graft"
-
-Instance: ExampleDonorDialysisType1
-InstanceOf: DonorPreKtxDialysisTypeObservation
-Usage: #example
-Title: "Example donor pre-KTX dialysis type"
-Description: "Hemodialysis prior to kidney transplant."
-
-* status = #final
-* category = $obs-cat#procedure
-* code = $loinc#70958-4 "Dialysis method [ESRD]"
-* subject = Reference(ExampleDonor1)
-* effectiveDateTime = "2024-11-15"
-* valueCodeableConcept = $loinc#LA9975-9 "Hemodialysis"
+* extension[tx_type].valueCodeableConcept = TransplantTypeCS#liver "Liver transplant"
+* performer = Reference(PCCenter1LaPaz)
+* effectiveDateTime = "2023-08-15"
+* valueCodeableConcept = DonorLiverTypeCS#split "Split liver graft"

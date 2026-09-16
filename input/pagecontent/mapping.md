@@ -17,7 +17,7 @@ The diagram below shows how the data model entities relate to each other and whi
 - **Patient** is the anchor. Each patient has one or more **Visits**, which in turn anchor all per-visit clinical data.
 - **Donor** links to **Transplant** (the surgical event) and optionally to **Immunological Data** (for donor-side HLA/ABO typing) and **Microbiology** (for donor-derived results).
 - **Visit** acts as the central hub: every clinical, laboratory, medication, specimen, and outcome record carries a `visit_id` foreign key that resolves to an `Encounter` reference in FHIR.
-- **Transplant** is a `Procedure` that captures the surgical event. Intraoperative details (ischemia times, complications, etc.) are components of a single companion `TransplantDetails` Observation linked via `Observation.partOf`.
+- **Transplant** is a `Procedure` that captures the surgical event. Peri-operative measurements (ischemia times, weight ratio, etc.) are components of a companion `TransplantDetails` Observation linked via `Observation.partOf`; each surgical anastomosis is a `TransplantAnastomosis` Procedure linked via `Procedure.partOf`; and each intraoperative complication is an `IntraoperativeComplication` Condition linked via `Procedure.complicationDetail`.
 
 ---
 
@@ -28,12 +28,12 @@ The diagram below shows how the data model entities relate to each other and whi
 | Patient | `Patient` + `Observation` (panel) + `Condition` | [Patient map](patient-map.html) |
 | Donor | `Patient` | [Donor map](donor-map.html) |
 | Visit | `Encounter` | [Visit map](visit-map.html) |
-| Transplant | `Procedure` + `Observation` (panel) | [Transplant map](transplant-map.html) |
+| Transplant | `Procedure` + `Observation` (panel) + `Procedure` (anastomoses) + `Condition` (complications) | [Transplant map](transplant-map.html) |
 | Immunological Data | `Observation` (panel) | [Immunological Data map](immunological-data-map.html) |
 | Vital Sign | `Observation` (panel) | [Vital Sign map](vital-sign-map.html) |
 | BioSample | `Specimen` | [BioSample map](biosample-map.html) |
 | Pre-Medication | `MedicationStatement` | [Pre-Medication map](pre-medication-map.html) |
-| Clinical Variable | `Observation` | [Clinical Variable map](clinical-variable-map.html) |
+| Clinical Variable | `Observation` + `Condition` (concomitant disease) | [Clinical Variable map](clinical-variable-map.html) |
 | Concomitant Medication | `MedicationStatement` | [Concomitant Medication map](concomitant-medication-map.html) |
 | Microbiology | `Observation` (panel) | [Microbiology map](microbiology-map.html) |
 | Instrumental Investigation | `Observation` | [Instrumental Investigation map](instrumental-investigation-map.html) |

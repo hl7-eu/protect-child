@@ -46,7 +46,7 @@ A consolidated, searchable reference of every variable in the PROTECT-CHILD data
 
 ## Transplant
 
-**FHIR mapping:** `Procedure` + TransplantDetails (`Observation` panel) — see [Transplant map](transplant-map.html). *(DM table: `transplant`, 16 fields.)*
+**FHIR mapping:** `Procedure` + TransplantDetails (`Observation` panel) + TransplantAnastomosis (`Procedure`) + IntraoperativeComplication (`Condition`) — see [Transplant map](transplant-map.html). *(DM table: `transplant`, 16 fields.)*
 
 | Field | Label | Type | Req | Organ |
 | --- | --- | --- | --- | --- |
@@ -78,20 +78,20 @@ A consolidated, searchable reference of every variable in the PROTECT-CHILD data
 | `visit_id` | Visit ID | ElementReference | M | Both |
 | `blood_group` | Blood group | Code | R | Both |
 | `rh_factor` | Rh Factor | Code | R | Both |
-| `hla_a_1` | HLA A (Allele 1) | Integer | R | Both |
-| `hla_a_2` | HLA A (Allele 2) | Integer | R | Both |
-| `hla_b_1` | HLA B (Allele 1) | Integer | R | Both |
-| `hla_b_2` | HLA B (Allele 2) | Integer | R | Both |
-| `hla_c_1` | HLA C (Allele 1) | Integer | R | Both |
-| `hla_c_2` | HLA C (Allele 2) | Integer | R | Both |
-| `hla_drb1_1` | HLA DRB1 (Allele 1) | Integer | R | Both |
-| `hla_drb1_2` | HLA DRB1 (Allele 2) | Integer | R | Both |
-| `hla_dp_1` | HLA DP (Allele 1) | Integer | R | Both |
-| `hla_dp_2` | HLA DP (Allele 2) | Integer | R | Both |
-| `hla_dqb1_1` | HLA DQB1 (Allele 1) | Integer | R | Both |
-| `hla_dqb1_2` | HLA DQB1 (Allele 2) | Integer | R | Both |
+| `hla_a_1` | HLA A (Allele 1) | String | R | Both |
+| `hla_a_2` | HLA A (Allele 2) | String | R | Both |
+| `hla_b_1` | HLA B (Allele 1) | String | R | Both |
+| `hla_b_2` | HLA B (Allele 2) | String | R | Both |
+| `hla_c_1` | HLA C (Allele 1) | String | R | Both |
+| `hla_c_2` | HLA C (Allele 2) | String | R | Both |
+| `hla_drb1_1` | HLA DRB1 (Allele 1) | String | R | Both |
+| `hla_drb1_2` | HLA DRB1 (Allele 2) | String | R | Both |
+| `hla_dp_1` | HLA DP (Allele 1) | String | R | Both |
+| `hla_dp_2` | HLA DP (Allele 2) | String | R | Both |
+| `hla_dqb1_1` | HLA DQB1 (Allele 1) | String | R | Both |
+| `hla_dqb1_2` | HLA DQB1 (Allele 2) | String | R | Both |
 | `post_transplant_ab_anti_hla_dsa_class` | Post-transplant Ab anti-HLA DSA (Class) | Code | R | Both |
-| `pre_trasnplant_anti_hla_dsa` | Pre-transplant anti-HLA DSA | String | R | Both |
+| `pre_transplant_anti_hla_dsa` | Pre-transplant anti-HLA DSA *(DM v1.2 sheet: `pre_trasnplant_anti_hla_dsa`)* | String | R | Both |
 | `mfi` | MFI Category | Code | R | Both |
 | `banff_category` | Banff category (Done?) | Code | R | Both |
 | `ihc_if_c4d` | IHC/IF C4d (Result) | Boolean | R | Both |
@@ -130,7 +130,7 @@ A consolidated, searchable reference of every variable in the PROTECT-CHILD data
 
 ## Clinical Variable
 
-**FHIR mapping:** `Observation` panel — see [Clinical Variable map](clinical-variable-map.html). *(DM table: `clinical_variable`, 10 fields.)*
+**FHIR mapping:** `Observation` panel + ConcomitantDisease (`Condition`) — see [Clinical Variable map](clinical-variable-map.html). *(DM table: `clinical_variable`, 10 fields.)*
 
 | Field | Label | Type | Req | Organ |
 | --- | --- | --- | --- | --- |
@@ -249,10 +249,8 @@ A consolidated, searchable reference of every variable in the PROTECT-CHILD data
 
 | Field | Label | Type | Req | Organ |
 | --- | --- | --- | --- | --- |
-| `imm_id` | Immunosuppressant ID |  | ID | Both |
-| `name` | Name | Initial immunosuppressive treatment after transplantation (M)
-Immunosuppresive treatment
-Immunosuppressive drug type | Code | Both |
+| `imm_id` | Immunosuppressant ID | ID | M | Both |
+| `name` | Immunosuppressive drug type *(DM v1.2 label: "Initial immunosuppressive treatment after transplantation")* | Code | M | Both |
 
 ## Immunosuppressant to Patient (ImmPat)
 

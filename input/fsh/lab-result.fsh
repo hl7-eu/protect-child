@@ -1,6 +1,6 @@
 // lab-result.fsh
 // Lab results — lab_result table
-// Observation + DiagnosticReport
+// Observation
 
 // gfr_formula and gfr_cyst_formula are carried via Observation.method (native R4 field).
 // method.text holds the free-text formula name (e.g. "CKD-EPI", "Schwartz", "MDRD").
@@ -61,7 +61,7 @@ Description: "Individual laboratory result for a transplant recipient, aligned w
 * identifier 1..1 MS
 * identifier ^short = "lab_result_id – lab result identifier from the data model"
 * identifier.system 1..1
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/lab-result-id" (exactly)
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id" (exactly)
 * identifier.value 1..1
 
 // Status is mandatory
@@ -143,58 +143,6 @@ Description: "Individual laboratory result for a transplant recipient, aligned w
 
 
 // ---------------------------------------
-// LabReport profile (DiagnosticReport)
-// ---------------------------------------
-
-Profile: LabReport
-Parent: DiagnosticReport
-Id: lab-report
-Title: "Laboratory DiagnosticReport"
-Description: "Laboratory report grouping one or more lab result observations for a transplant recipient."
-
-// Status is mandatory
-* status 1..1 MS
-* status ^short = "Status of the laboratory report"
-
-// Category fixed to LAB
-* category 1..1 MS
-* category.coding 1..1
-* category.coding.system 1..1
-* category.coding.system = "http://terminology.hl7.org/CodeSystem/v2-0074" (exactly)
-* category.coding.code 1..1
-* category.coding.code = #LAB (exactly)
-* category.coding.display = "Laboratory"
-
-// Report code (generic)
-* code 1..1 MS
-* code.coding 1..1
-* code.coding.system 1..1
-* code.coding.system = "http://loinc.org" (exactly)
-* code.coding.code 1..1
-* code.coding.code = #11502-2
-* code.coding.display = "Laboratory report"
-
-// Recipient link
-* subject 1..1 MS
-* subject only Reference(PatientTransplant)
-* subject ^short = "Transplant recipient"
-
-// Timing
-* effective[x] 0..1 MS
-* issued 0..1 MS
-
-// Specimen
-* specimen 0..* MS
-* specimen only Reference(BioSample)
-
-// Results
-* result 1..* MS
-* result only Reference(Observation)
-* result ^short = "References one or more LabResultObservation resources"
-
-
-
-// ---------------------------------------
 // Examples
 // ---------------------------------------
 
@@ -207,8 +155,8 @@ Description: "Example creatinine result for a transplant recipient."
 * id = "lab-result-observation-example-1"
 
 // lab_result_id
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/lab-result-id"
-* identifier.value = "LR0001"
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "LBR-1-0001"
 
 // Status & category
 * status = #final
@@ -221,15 +169,15 @@ Description: "Example creatinine result for a transplant recipient."
 
 // patient_id → Observation.subject (native)
 * subject = Reference(ExamplePatientTransplant1)
+* performer = Reference(PCCenter1LaPaz)
 
 // visit_id (link back to Visit)
 * encounter = Reference(VisitExample1)
 
 // Timing (date of lab test)
-* effectiveDateTime = "2023-09-02T09:15:00+01:00"
+* effectiveDateTime = "2023-09-15T09:15:00+02:00"
 
-// Specimen
-* specimen = Reference(BioSampleExample1)
+// Specimen absent: BioSampleExample1 is the research biospecimen, not a clinical chemistry specimen.
 
 // Numeric result and unit
 * valueQuantity.value = 1.2
@@ -242,35 +190,252 @@ Description: "Example creatinine result for a transplant recipient."
 * interpretation[0].coding[0].code = #H
 * interpretation[0].coding[0].display = "High"
 
-
-Instance: LabReportExample1
-InstanceOf: LabReport
+Instance: LabResultObservationExample2
+InstanceOf: LabResultObservation
 Usage: #example
-Title: "Example Laboratory Report"
-Description: "Example lab report grouping a single creatinine result."
+Title: "Example Lab Result Observation — 12-month visit"
+Description: "Creatinine repeated at 12 months. Improved from 1.2, but 0.8 mg/dL is still above the paediatric reference range (~0.4–0.7), so it is flagged H — do not apply adult ranges."
 
-* id = "lab-report-example-1"
+* id = "lab-result-observation-example-2"
 
-// Status & category
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "LBR-1-0004"
+
 * status = #final
-* category.coding.system = "http://terminology.hl7.org/CodeSystem/v2-0074"
-* category.coding.code = #LAB
+* category.coding.system = "http://terminology.hl7.org/CodeSystem/observation-category"
+* category.coding.code = #laboratory
 * category.coding.display = "Laboratory"
 
-// Report code
-* code.coding.system = "http://loinc.org"
-* code.coding.code = #11502-2
-* code.coding.display = "Laboratory report"
-
-// Recipient
+* code = http://loinc.org#2160-0 "Creatinine [Mass/volume] in Serum or Plasma"
 * subject = Reference(ExamplePatientTransplant1)
+* performer = Reference(PCCenter1LaPaz)
+* encounter = Reference(VisitMonth12Example1)
+* effectiveDateTime = "2024-08-15T09:00:00+02:00"
 
-// Timing
-* effectiveDateTime = "2023-09-02T09:15:00+01:00"
-* issued = "2023-09-02T11:30:00+01:00"
+* valueQuantity.value = 0.8
+* valueQuantity.code = #"mg/dL"
+* valueQuantity.unit = "mg/dL"
+* valueQuantity.system = "http://unitsofmeasure.org"
 
-// Specimen
-* specimen[0] = Reference(BioSampleExample1)
+* interpretation[0].coding[0].system = "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
+* interpretation[0].coding[0].code = #H
+* interpretation[0].coding[0].display = "High"
 
-// Results
-* result[0] = Reference(LabResultObservationExample1)
+Instance: LabResultAlbuminMonth1
+InstanceOf: LabResultObservation
+Usage: #example
+Title: "Example Lab Result — Albumin, 1-month visit"
+Description: "Albumin result for recipient REC-1-0001 at the 1-month follow-up visit."
+
+* id = "lab-result-albumin-month-1"
+
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "LBR-1-0002"
+
+* status = #final
+* category.coding.system = "http://terminology.hl7.org/CodeSystem/observation-category"
+* category.coding.code = #laboratory
+* category.coding.display = "Laboratory"
+
+* code = http://loinc.org#1751-7 "Albumin [Mass/volume] in Serum or Plasma"
+* subject = Reference(ExamplePatientTransplant1)
+* performer = Reference(PCCenter1LaPaz)
+* encounter = Reference(VisitExample1)
+* effectiveDateTime = "2023-09-15T09:15:00+02:00"
+
+* valueQuantity.value = 3.4
+* valueQuantity.code = #"g/dL"
+* valueQuantity.unit = "g/dL"
+* valueQuantity.system = "http://unitsofmeasure.org"
+
+* interpretation[0].coding[0].system = "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
+* interpretation[0].coding[0].code = #L
+* interpretation[0].coding[0].display = "Low"
+
+Instance: LabResultAlbuminMonth12
+InstanceOf: LabResultObservation
+Usage: #example
+Title: "Example Lab Result — Albumin, 12-month visit"
+Description: "Albumin result for recipient REC-1-0001 at the 12-month follow-up visit."
+
+* id = "lab-result-albumin-month-12"
+
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "LBR-1-0005"
+
+* status = #final
+* category.coding.system = "http://terminology.hl7.org/CodeSystem/observation-category"
+* category.coding.code = #laboratory
+* category.coding.display = "Laboratory"
+
+* code = http://loinc.org#1751-7 "Albumin [Mass/volume] in Serum or Plasma"
+* subject = Reference(ExamplePatientTransplant1)
+* performer = Reference(PCCenter1LaPaz)
+* encounter = Reference(VisitMonth12Example1)
+* effectiveDateTime = "2024-08-15T09:00:00+02:00"
+
+* valueQuantity.value = 4.2
+* valueQuantity.code = #"g/dL"
+* valueQuantity.unit = "g/dL"
+* valueQuantity.system = "http://unitsofmeasure.org"
+
+* interpretation[0].coding[0].system = "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
+* interpretation[0].coding[0].code = #N
+* interpretation[0].coding[0].display = "Normal"
+
+Instance: LabResultAltMonth1
+InstanceOf: LabResultObservation
+Usage: #example
+Title: "Example Lab Result — Alanine aminotransferase, 1-month visit"
+Description: "Alanine aminotransferase result for recipient REC-1-0001 at the 1-month follow-up visit."
+
+* id = "lab-result-alt-month-1"
+
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "LBR-1-0003"
+
+* status = #final
+* category.coding.system = "http://terminology.hl7.org/CodeSystem/observation-category"
+* category.coding.code = #laboratory
+* category.coding.display = "Laboratory"
+
+* code = http://loinc.org#1742-6 "Alanine aminotransferase [Enzymatic activity/volume] in Serum or Plasma"
+* subject = Reference(ExamplePatientTransplant1)
+* performer = Reference(PCCenter1LaPaz)
+* encounter = Reference(VisitExample1)
+* effectiveDateTime = "2023-09-15T09:15:00+02:00"
+
+* valueQuantity.value = 86
+* valueQuantity.code = #"[IU]/L"
+* valueQuantity.unit = "U/L"
+* valueQuantity.system = "http://unitsofmeasure.org"
+
+* interpretation[0].coding[0].system = "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
+* interpretation[0].coding[0].code = #H
+* interpretation[0].coding[0].display = "High"
+
+Instance: LabResultAltMonth12
+InstanceOf: LabResultObservation
+Usage: #example
+Title: "Example Lab Result — Alanine aminotransferase, 12-month visit"
+Description: "Alanine aminotransferase result for recipient REC-1-0001 at the 12-month follow-up visit."
+
+* id = "lab-result-alt-month-12"
+
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "LBR-1-0006"
+
+* status = #final
+* category.coding.system = "http://terminology.hl7.org/CodeSystem/observation-category"
+* category.coding.code = #laboratory
+* category.coding.display = "Laboratory"
+
+* code = http://loinc.org#1742-6 "Alanine aminotransferase [Enzymatic activity/volume] in Serum or Plasma"
+* subject = Reference(ExamplePatientTransplant1)
+* performer = Reference(PCCenter1LaPaz)
+* encounter = Reference(VisitMonth12Example1)
+* effectiveDateTime = "2024-08-15T09:00:00+02:00"
+
+* valueQuantity.value = 31
+* valueQuantity.code = #"[IU]/L"
+* valueQuantity.unit = "U/L"
+* valueQuantity.system = "http://unitsofmeasure.org"
+
+* interpretation[0].coding[0].system = "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
+* interpretation[0].coding[0].code = #N
+* interpretation[0].coding[0].display = "Normal"
+
+// Liver function tests at the rejection episode (2023-11-15) — the bloods that prompt the biopsy.
+
+Instance: LabResultAltRejection1
+InstanceOf: LabResultObservation
+Usage: #example
+Title: "Example Lab Result — Alanine aminotransferase at the rejection episode"
+Description: "ALT at the rejection visit. The rise from 86 to 210 U/L prompts the graft biopsy."
+
+* id = "lab-result-alt-rejection-1"
+
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "LBR-1-0007"
+
+* status = #final
+* category.coding.system = "http://terminology.hl7.org/CodeSystem/observation-category"
+* category.coding.code = #laboratory
+* category.coding.display = "Laboratory"
+
+* code = http://loinc.org#1742-6 "Alanine aminotransferase [Enzymatic activity/volume] in Serum or Plasma"
+* subject = Reference(ExamplePatientTransplant1)
+* performer = Reference(PCCenter1LaPaz)
+* encounter = Reference(VisitClinicalEventExample1)
+* effectiveDateTime = "2023-11-15T08:30:00+01:00"
+
+* valueQuantity.value = 210
+* valueQuantity.code = #"[IU]/L"
+* valueQuantity.unit = "U/L"
+* valueQuantity.system = "http://unitsofmeasure.org"
+
+* interpretation[0].coding[0].system = "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
+* interpretation[0].coding[0].code = #H
+* interpretation[0].coding[0].display = "High"
+
+Instance: LabResultBilirubinRejection1
+InstanceOf: LabResultObservation
+Usage: #example
+Title: "Example Lab Result — Total bilirubin at the rejection episode"
+Description: "Total bilirubin at the rejection visit, raised with the transaminases and GGT."
+
+* id = "lab-result-bilirubin-rejection-1"
+
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "LBR-1-0008"
+
+* status = #final
+* category.coding.system = "http://terminology.hl7.org/CodeSystem/observation-category"
+* category.coding.code = #laboratory
+* category.coding.display = "Laboratory"
+
+* code = http://loinc.org#1975-2 "Bilirubin.total [Mass/volume] in Serum or Plasma"
+* subject = Reference(ExamplePatientTransplant1)
+* performer = Reference(PCCenter1LaPaz)
+* encounter = Reference(VisitClinicalEventExample1)
+* effectiveDateTime = "2023-11-15T08:30:00+01:00"
+
+* valueQuantity.value = 3.8
+* valueQuantity.code = #"mg/dL"
+* valueQuantity.unit = "mg/dL"
+* valueQuantity.system = "http://unitsofmeasure.org"
+
+* interpretation[0].coding[0].system = "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
+* interpretation[0].coding[0].code = #H
+* interpretation[0].coding[0].display = "High"
+
+Instance: LabResultGgtRejection1
+InstanceOf: LabResultObservation
+Usage: #example
+Title: "Example Lab Result — Gamma glutamyl transferase at the rejection episode"
+Description: "GGT at the rejection visit — the cholestatic component, with the bilirubin."
+
+* id = "lab-result-ggt-rejection-1"
+
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "LBR-1-0009"
+
+* status = #final
+* category.coding.system = "http://terminology.hl7.org/CodeSystem/observation-category"
+* category.coding.code = #laboratory
+* category.coding.display = "Laboratory"
+
+* code = http://loinc.org#2324-2 "Gamma glutamyl transferase [Enzymatic activity/volume] in Serum or Plasma"
+* subject = Reference(ExamplePatientTransplant1)
+* performer = Reference(PCCenter1LaPaz)
+* encounter = Reference(VisitClinicalEventExample1)
+* effectiveDateTime = "2023-11-15T08:30:00+01:00"
+
+* valueQuantity.value = 180
+* valueQuantity.code = #"[IU]/L"
+* valueQuantity.unit = "U/L"
+* valueQuantity.system = "http://unitsofmeasure.org"
+
+* interpretation[0].coding[0].system = "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
+* interpretation[0].coding[0].code = #H
+* interpretation[0].coding[0].display = "High"

@@ -49,8 +49,8 @@ Usage: #example
 Title: "Example transplant donor"
 Description: "Example Patient instance conforming to Donor."
 
-* identifier[0].system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/ids/donor"
-* identifier[0].value = "DON-001"
+* identifier[0].system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier[0].value = "DON-1-0001"
 * deceasedBoolean = true
 * gender = #male
-* birthDate = "2000-01-20"
+* birthDate = "1998-08-01"

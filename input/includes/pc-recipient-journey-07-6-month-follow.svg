@@ -1,0 +1,26 @@
+<svg viewBox="0 0 920 116" xmlns="http://www.w3.org/2000/svg" role="img" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="12">
+<title>6-month follow-up visit (2024-02-15)</title>
+<desc>Resources in the worked-example Bundle, grouped by the visit or phase they belong to, coloured by FHIR resource type. Each chip names the resource, its business identifier and its profile, and records the reference it makes to another entry.</desc>
+<style>a:hover rect{opacity:.82}a rect,a text{cursor:pointer}</style>
+<rect x="0" y="0" width="920" height="116" fill="white"/>
+<a href="Encounter-VisitMonth6Example1.html">
+<rect x="20" y="16" width="210" height="64" rx="4" fill="#fef3c7" stroke="#fcd34d"/>
+<text x="29" y="33" font-size="12" font-weight="700" fill="#92400e">Encounter</text>
+<text x="29" y="48" font-size="11" fill="#111">VIS-1-0004</text>
+<text x="29" y="61" font-size="10" fill="#64748b">visit</text>
+</a>
+<a href="MedicationStatement-ConcomitantMedicationExample1.html">
+<rect x="240" y="16" width="210" height="64" rx="4" fill="#f3e8ff" stroke="#d8b4fe"/>
+<text x="249" y="33" font-size="12" font-weight="700" fill="#6b21a8">MedicationStatement</text>
+<text x="249" y="48" font-size="11" fill="#111">CMD-1-0001</text>
+<text x="249" y="61" font-size="10" fill="#64748b">concomitant-medication</text>
+<text x="249" y="73" font-size="9.5" fill="#94a3b8">context → VIS-1-0004</text>
+</a>
+<a href="Observation-PatientInstrumentalInvestigationExample1.html">
+<rect x="460" y="16" width="210" height="64" rx="4" fill="#dcfce7" stroke="#86efac"/>
+<text x="469" y="33" font-size="12" font-weight="700" fill="#166534">Observation</text>
+<text x="469" y="48" font-size="11" fill="#111">IIV-1-0001</text>
+<text x="469" y="61" font-size="10" fill="#64748b">patient-instrumental-investigat…</text>
+<text x="469" y="73" font-size="9.5" fill="#94a3b8">encounter → VIS-1-0004</text>
+</a>
+</svg>

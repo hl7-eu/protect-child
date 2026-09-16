@@ -35,6 +35,10 @@ Description: "Local codes for laboratory tests that do not have a single unambig
   "Prothrombin activity (%). Distinct from prothrombin time (seconds/INR)."
 * #urine-microscopic-hematuria    "Urine microscopic hematuria"
   "Microscopic hematuria on urine sediment examination."
+* #liver-autoantibodies           "Liver autoantibodies"
+  "Composite liver autoantibody screen (ANA, ASMA, AMA, LKM-1, anti-LC1, anti-SLA/LP, anti-gp210, anti-sp100, pANCA)."
+* #tubular-proteinuria            "Tubular proteinuria"
+  "Low-molecular-weight (tubular) proteinuria."
 
 ValueSet: LabTestNameVS
 Id: lab-test-name-vs
@@ -50,7 +54,13 @@ Description: "Allowed laboratory test names for the PROTECT-CHILD data model. LO
 * $loinc#2324-2   "Gamma glutamyl transferase [Enzymatic activity/volume] in Serum or Plasma"  // GGT
 * $loinc#2532-0   "Lactate dehydrogenase [Enzymatic activity/volume] in Serum or Plasma"       // LDH
 * $loinc#2885-2   "Protein [Mass/volume] in Serum or Plasma"                                    // Total protein
-* $loinc#4536-9   "Haptoglobin [Mass/volume] in Serum or Plasma"
+* $loinc#4542-7   "Haptoglobin [Mass/volume] in Serum or Plasma"
+* $loinc#11154-2  "Cholinesterase [Enzymatic activity/volume] in Blood"
+* $loinc#4485-9   "Complement C3 [Mass/volume] in Serum or Plasma"
+* $loinc#4498-2   "Complement C4 [Mass/volume] in Serum or Plasma"
+* $loinc#2458-8   "IgA [Mass/volume] in Serum or Plasma"
+* $loinc#2465-3   "IgG [Mass/volume] in Serum or Plasma"
+* $loinc#2472-9   "IgM [Mass/volume] in Serum or Plasma"
 
 // ── Bilirubin ──
 * $loinc#1975-2   "Bilirubin.total [Mass/volume] in Serum or Plasma"
@@ -60,15 +70,22 @@ Description: "Allowed laboratory test names for the PROTECT-CHILD data model. LO
 // ── Renal function ──
 * $loinc#2160-0   "Creatinine [Mass/volume] in Serum or Plasma"
 * LabTestLocalCS#creatinine-egfr "Creatinine eGFR"
-* $loinc#33806-1  "Cystatin C [Mass/volume] in Serum or Plasma"
+* $loinc#33863-2  "Cystatin C [Mass/volume] in Serum or Plasma"
 * LabTestLocalCS#cystatinc-egfr "Cystatin C eGFR"
 * $loinc#3094-0   "Urea nitrogen [Mass/volume] in Serum or Plasma"                             // Urea/BUN
 * $loinc#3084-1   "Uric acid [Mass/volume] in Serum or Plasma"
 * $loinc#2161-8   "Creatinine [Mass/volume] in Urine"
 * $loinc#5794-3   "Hemoglobin [Presence] in Urine by Test strip"                               // Urine haemoglobin
-* $loinc#2889-4   "Protein [Mass/volume] in 24 hour Urine"                                     // Quantitative proteinuria
+* $loinc#21482-5  "Protein [Mass/volume] in 24 hour Urine"                                     // Quantitative proteinuria
 * LabTestLocalCS#proteinuria-creatininuria-ratio "Proteinuria/creatininuria ratio"
 * $loinc#2777-1   "Phosphate [Mass/volume] in Serum or Plasma"                                 // Phosphorus
+* $loinc#17862-4  "Calcium [Mass/volume] in Urine"
+* $loinc#2078-4   "Chloride [Moles/volume] in Urine"
+* $loinc#2778-9   "Phosphate [Mass/volume] in Urine"
+* $loinc#2828-2   "Potassium [Moles/volume] in Urine"
+* $loinc#2955-3   "Sodium [Moles/volume] in Urine"
+* $loinc#30391-7  "Erythrocytes [#/volume] in Urine"                                          // Urine red blood cells
+* LabTestLocalCS#tubular-proteinuria "Tubular proteinuria"
 
 // ── Metabolic ──
 * $loinc#2345-7   "Glucose [Mass/volume] in Serum or Plasma"
@@ -77,15 +94,19 @@ Description: "Allowed laboratory test names for the PROTECT-CHILD data model. LO
 * $loinc#2823-3   "Potassium [Moles/volume] in Serum or Plasma"
 * $loinc#2951-2   "Sodium [Moles/volume] in Serum or Plasma"
 * $loinc#1963-8   "Bicarbonate [Moles/volume] in Serum or Plasma"                              // HCO3
-* $loinc#2524-7   "Lactate [Moles/volume] in Venous blood"
-* $loinc#2745-8   "pH of Venous blood"
+* $loinc#32693-4  "Lactate [Moles/volume] in Blood"
+* $loinc#11558-4  "pH of Blood"
 * $loinc#4548-4   "Hemoglobin A1c/Hemoglobin.total in Blood"                                  // HbA1c
-* $loinc#2258-2   "Bile acids [Moles/volume] in Serum or Plasma"
+* $loinc#14628-2  "Bile acid [Moles/volume] in Serum or Plasma"
 * $loinc#1845-7   "Ammonia [Moles/volume] in Plasma"                                           // Ammonium levels
+* $loinc#21377-7  "Magnesium [Mass/volume] in Blood"
+* $loinc#1558-6   "Fasting glucose [Mass/volume] in Serum or Plasma"
+* $loinc#3043-7   "Triglyceride [Mass/volume] in Blood"
+* $loinc#21004-7  "Glucose tolerance [Interpretation] in Serum or Plasma"                     // OGTT
 
 // ── Endocrine ──
-* $loinc#2731-8   "Parathyrin.intact [Units/volume] in Serum or Plasma"                        // PTH
-* $loinc#14635-7  "25-hydroxyvitamin D3 [Mass/volume] in Serum or Plasma"                      // Vitamin D
+* $loinc#2731-8   "Parathyrin.intact [Mass/volume] in Serum or Plasma"                         // PTH
+* $loinc#1989-3   "25-hydroxyvitamin D3 [Mass/volume] in Serum or Plasma"                      // Vitamin D
 
 // ── Haematology ──
 * $loinc#718-7    "Hemoglobin [Mass/volume] in Blood"
@@ -95,11 +116,14 @@ Description: "Allowed laboratory test names for the PROTECT-CHILD data model. LO
 * $loinc#6690-2   "Leukocytes [#/volume] in Blood by Automated count"                         // WBC
 * $loinc#731-0    "Lymphocytes [#/volume] in Blood by Automated count"
 * $loinc#751-8    "Neutrophils [#/volume] in Blood by Automated count"
+* $loinc#38910-6  "Schistocytes [Presence] in Blood by Automated count"
+* $loinc#1007-4   "Direct antiglobulin test.polyspecific reagent [Presence] on Red Blood Cells"  // Coombs
+* LabTestLocalCS#liver-autoantibodies "Liver autoantibodies"
 
 // ── Coagulation ──
 * $loinc#5902-2   "Prothrombin time (PT)"
 * $loinc#6301-6   "INR in Platelet poor plasma by Coagulation assay"                           // INR
-* $loinc#3173-2   "aPTT in Platelet poor plasma by Coagulation assay"
+* $loinc#14979-9  "aPTT in Platelet poor plasma by Coagulation assay"
 * LabTestLocalCS#prothrombin-activity "Prothrombin Activity"
 
 // ── Urine sediment ──
@@ -119,7 +143,7 @@ Description: "Definition of a laboratory test (catalogue entry), aligned with th
 // lab_test_id → ObservationDefinition.identifier
 * identifier 1..1 MS
 * identifier.system 1..1
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/lab-test-id" (exactly)
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id" (exactly)
 * identifier.value 1..1
 * identifier ^short = "lab_test_id — laboratory test catalogue identifier"
 
@@ -144,8 +168,8 @@ Usage: #example
 Title: "Example Lab Test"
 Description: "Example lab test catalogue entry — Albumin, reported in g/dL."
 
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/lab-test-id"
-* identifier.value = "LT0001"
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "LBT-0001"
 * code = $loinc#1751-7 "Albumin [Mass/volume] in Serum or Plasma"
 * quantitativeDetails.unit.coding[0].system = "http://unitsofmeasure.org"
 * quantitativeDetails.unit.coding[0].code = #g/dL

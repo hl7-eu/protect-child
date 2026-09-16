@@ -1,173 +1,34 @@
 // ================================================
-// Identifier NamingSystems for PROTECT-CHILD entity IDs
-// One per DMv1.2 table primary key; referenced as identifier.system in the profiles.
+// Identifier NamingSystem for PROTECT-CHILD entity IDs
+// A single namespace for all business identifiers on PROTECT-CHILD records;
+// the FHIR resource type distinguishes what each identifier refers to.
+// (StudyCentre uses its own centre-code system.)
 // ================================================
 
-Instance: NsBioSampleId
+Instance: NsProtectChildId
 InstanceOf: NamingSystem
 Usage: #definition
-Title: "BioSample identifier namespace"
-Description: "Identifier namespace for BioSample (Specimen) resources in PROTECT-CHILD."
-* name = "ProtectChildBioSampleId"
+Title: "PROTECT-CHILD identifier namespace"
+Description: "Single identifier namespace for PROTECT-CHILD record business identifiers (patient, donor, visit, transplant, and all per-visit clinical/lab/medication/specimen/event records). The resource type distinguishes the kind of record. Identifiers follow one convention: TOKEN-CENTRE-SEQUENCE, for example REC-1-0001 (patient, centre 1, sequence 1) or LBR-1-0006 (lab result); study-wide catalogue entries such as lab tests are not centre-qualified and use TOKEN-SEQUENCE, for example LBT-0001. Identifiers carry no clinical meaning."
+// Identifier convention
+// TOKEN-CENTRE-SEQUENCE, e.g. REC-1-0001, VIS-1-0002, LBR-1-0006:
+//   TOKEN     three letters for the data-model table
+//   CENTRE    center_no (1-4) of the recruiting site — this is what keeps
+//             identifiers unique when each site assigns its own sequences
+//   SEQUENCE  four digits, assigned within that centre
+// Tokens: REC patient, DON donor, VIS visit, TXP transplant, IMD immunological_data,
+//   BIO bio_sample, PRM pre_medication, CLV clinical_variable, VIT vital_sign,
+//   CMD concomitant_medication, MIC microbiology, IIV instrumental investigation performed,
+//   IMP imm_pat, LBR lab_result, CLE clinical_event.
+// Study-wide catalogue entries are not centre-qualified and use TOKEN-SEQUENCE:
+//   LBT lab_test, INS instrumental_investigation type, IMM immunosuppressant,
+//   CET clinical_event_type.
+// Identifiers carry no clinical meaning: the kind of event, the phase of treatment
+// and the analyte live in the resource's own coded elements, not in its identifier.
+* name = "ProtectChildId"
 * status = #draft
 * kind = #identifier
 * date = "2025-01-01"
 * uniqueId[0].type = #uri
-* uniqueId[0].value = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/biosample-id"
-* uniqueId[0].preferred = true
-
-Instance: NsClinicalEventId
-InstanceOf: NamingSystem
-Usage: #definition
-Title: "ClinicalEvent identifier namespace"
-Description: "Identifier namespace for ClinicalEvent (Condition) resources in PROTECT-CHILD."
-* name = "ProtectChildClinicalEventId"
-* status = #draft
-* kind = #identifier
-* date = "2025-01-01"
-* uniqueId[0].type = #uri
-* uniqueId[0].value = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/clinical-event-id"
-* uniqueId[0].preferred = true
-
-Instance: NsClinicalVariableId
-InstanceOf: NamingSystem
-Usage: #definition
-Title: "ClinicalVariable identifier namespace"
-Description: "Identifier namespace for ClinicalVariable (Observation) resources in PROTECT-CHILD."
-* name = "ProtectChildClinicalVariableId"
-* status = #draft
-* kind = #identifier
-* date = "2025-01-01"
-* uniqueId[0].type = #uri
-* uniqueId[0].value = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/clinical-variable-id"
-* uniqueId[0].preferred = true
-
-Instance: NsConcomitantMedicationId
-InstanceOf: NamingSystem
-Usage: #definition
-Title: "ConcomitantMedication identifier namespace"
-Description: "Identifier namespace for ConcomitantMedication (MedicationStatement) resources in PROTECT-CHILD."
-* name = "ProtectChildConcomitantMedicationId"
-* status = #draft
-* kind = #identifier
-* date = "2025-01-01"
-* uniqueId[0].type = #uri
-* uniqueId[0].value = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/concomitant-medication-id"
-* uniqueId[0].preferred = true
-
-Instance: NsImmPatId
-InstanceOf: NamingSystem
-Usage: #definition
-Title: "ImmPat identifier namespace"
-Description: "Identifier namespace for ImmPat (MedicationStatement) resources in PROTECT-CHILD."
-* name = "ProtectChildImmPatId"
-* status = #draft
-* kind = #identifier
-* date = "2025-01-01"
-* uniqueId[0].type = #uri
-* uniqueId[0].value = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/imm-pat-id"
-* uniqueId[0].preferred = true
-
-Instance: NsImmunologicalDataId
-InstanceOf: NamingSystem
-Usage: #definition
-Title: "ImmunologicalData identifier namespace"
-Description: "Identifier namespace for ImmunologicalData (Observation) resources in PROTECT-CHILD."
-* name = "ProtectChildImmunologicalDataId"
-* status = #draft
-* kind = #identifier
-* date = "2025-01-01"
-* uniqueId[0].type = #uri
-* uniqueId[0].value = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/immunological-data-id"
-* uniqueId[0].preferred = true
-
-Instance: NsImmunosuppressantId
-InstanceOf: NamingSystem
-Usage: #definition
-Title: "Immunosuppressant identifier namespace"
-Description: "Identifier namespace for Immunosuppressant (Medication) resources in PROTECT-CHILD."
-* name = "ProtectChildImmunosuppressantId"
-* status = #draft
-* kind = #identifier
-* date = "2025-01-01"
-* uniqueId[0].type = #uri
-* uniqueId[0].value = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/immunosuppressant-id"
-* uniqueId[0].preferred = true
-
-Instance: NsInstrumentalInvestigationId
-InstanceOf: NamingSystem
-Usage: #definition
-Title: "InstrumentalInvestigation identifier namespace"
-Description: "Identifier namespace for PatientInstrumentalInvestigation (Observation) resources in PROTECT-CHILD."
-* name = "ProtectChildInstrumentalInvestigationId"
-* status = #draft
-* kind = #identifier
-* date = "2025-01-01"
-* uniqueId[0].type = #uri
-* uniqueId[0].value = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/instrumental-investigation-id"
-* uniqueId[0].preferred = true
-
-Instance: NsLabResultId
-InstanceOf: NamingSystem
-Usage: #definition
-Title: "LabResult identifier namespace"
-Description: "Identifier namespace for LabResultObservation (Observation) resources in PROTECT-CHILD."
-* name = "ProtectChildLabResultId"
-* status = #draft
-* kind = #identifier
-* date = "2025-01-01"
-* uniqueId[0].type = #uri
-* uniqueId[0].value = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/lab-result-id"
-* uniqueId[0].preferred = true
-
-Instance: NsLabTestId
-InstanceOf: NamingSystem
-Usage: #definition
-Title: "LabTest identifier namespace"
-Description: "Identifier namespace for LabTest (ObservationDefinition) resources in PROTECT-CHILD."
-* name = "ProtectChildLabTestId"
-* status = #draft
-* kind = #identifier
-* date = "2025-01-01"
-* uniqueId[0].type = #uri
-* uniqueId[0].value = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/lab-test-id"
-* uniqueId[0].preferred = true
-
-Instance: NsMicrobiologyId
-InstanceOf: NamingSystem
-Usage: #definition
-Title: "Microbiology identifier namespace"
-Description: "Identifier namespace for Microbiology (Observation) resources in PROTECT-CHILD."
-* name = "ProtectChildMicrobiologyId"
-* status = #draft
-* kind = #identifier
-* date = "2025-01-01"
-* uniqueId[0].type = #uri
-* uniqueId[0].value = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/microbiology-id"
-* uniqueId[0].preferred = true
-
-Instance: NsPreMedicationId
-InstanceOf: NamingSystem
-Usage: #definition
-Title: "PreMedication identifier namespace"
-Description: "Identifier namespace for PreMedication (MedicationStatement) resources in PROTECT-CHILD."
-* name = "ProtectChildPreMedicationId"
-* status = #draft
-* kind = #identifier
-* date = "2025-01-01"
-* uniqueId[0].type = #uri
-* uniqueId[0].value = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/pre-medication-id"
-* uniqueId[0].preferred = true
-
-Instance: NsVitalSignId
-InstanceOf: NamingSystem
-Usage: #definition
-Title: "VitalSign identifier namespace"
-Description: "Identifier namespace for VitalSign (Observation) resources in PROTECT-CHILD."
-* name = "ProtectChildVitalSignId"
-* status = #draft
-* kind = #identifier
-* date = "2025-01-01"
-* uniqueId[0].type = #uri
-* uniqueId[0].value = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/vital-sign-id"
+* uniqueId[0].value = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
 * uniqueId[0].preferred = true

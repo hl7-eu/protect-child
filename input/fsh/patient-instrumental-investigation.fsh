@@ -50,7 +50,7 @@ Description: "Instrumental investigation performed on a transplant patient, alig
 // inst_inv_id → Observation.identifier
 * identifier 1..1 MS
 * identifier.system 1..1
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/instrumental-investigation-id" (exactly)
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id" (exactly)
 * identifier.value 1..1
 * identifier ^short = "inst_inv_id — instrumental investigation record identifier (DMv1.2)"
 
@@ -112,11 +112,30 @@ Usage: #example
 Title: "Example Patient Instrumental Investigation"
 Description: "Example liver doppler ultrasound result for a transplant recipient."
 
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/instrumental-investigation-id"
-* identifier.value = "PII0001"
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "IIV-1-0001"
 * status = #final
-* code = InstrumentalInvestigationNameCS#718078008 "Liver doppler ultrasound"
+* code = InstrumentalInvestigationNameCS#4160708 "Liver doppler ultrasound"
 * subject = Reference(ExamplePatientTransplant1)
-* encounter = Reference(VisitExample1)
-* effectiveDateTime = "2024-03-10"
+* performer = Reference(PCCenter1LaPaz)
+* encounter = Reference(VisitMonth6Example1)
+* effectiveDateTime = "2024-02-15"
 * valueCodeableConcept = PatientInstrumentalInvestigationResultCS#normal "Normal"
+
+
+Instance: LiverHistologyEbvExample1
+InstanceOf: PatientInstrumentalInvestigation
+Usage: #example
+Title: "Example Patient Instrumental Investigation — liver biopsy at the 1-month visit"
+Description: "Liver biopsy taken when EBV DNA was detected. EBV hepatitis is a histological diagnosis — serology and viral load cannot separate it from rejection. Evidence for MicrobiologyDiagnosisExample1."
+
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "IIV-1-0002"
+* status = #final
+* code = InstrumentalInvestigationNameCS#liver-histology "Liver Histology"
+* subject = Reference(ExamplePatientTransplant1)
+* performer = Reference(PCCenter1LaPaz)
+* encounter = Reference(VisitExample1)
+* effectiveDateTime = "2023-09-15"
+* valueCodeableConcept = PatientInstrumentalInvestigationResultCS#abnormal "Abnormal"
+* component[abnormality].valueString = "Portal and lobular mononuclear infiltrate, EBER-positive nuclei; no bile duct damage or endothelialitis — favours EBV hepatitis over rejection."

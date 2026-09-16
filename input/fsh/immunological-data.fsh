@@ -52,9 +52,9 @@ Description: "Mean fluorescence intensity category for DSA."
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #WR  "WR (500–2k)"
-* #MR  "MR (2k–4k)"
-* #SR  "SR (>4k)"
+* #WR  "WR (weak, 500–2k)"
+* #MR  "MR (moderate, 2k–4k)"
+* #SR  "SR (strong, >4k)"
 
 ValueSet: MFICategoryVS
 Id: mfi-category-vs
@@ -146,7 +146,7 @@ Conformance: Systems producing this resource SHALL populate identifier, status, 
 // immunological_data_id → Observation.identifier (M)
 * identifier 1..1 MS
 * identifier.system 1..1
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/immunological-data-id" (exactly)
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id" (exactly)
 * identifier.value 1..1
 * identifier ^short = "immunological_data_id"
 
@@ -351,35 +351,89 @@ Conformance: Systems producing this resource SHALL populate identifier, status, 
 Instance: ImmunologicalDataExample1
 InstanceOf: ImmunologicalData
 Usage: #example
-Title: "Example Immunological Data"
-Description: "Example immunological data panel for a liver transplant recipient at 1-month visit."
+Title: "Example Immunological Data — pre-transplant typing"
+Description: "Pre-transplant immunological typing for recipient REC-1-0001: ABO/Rh group, the full HLA typing (A, B, C, DRB1, DP, DQB1) in IMGT/HLA notation, and the pre-transplant DSA screen. Recorded at the pre-transplant visit."
 
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/immunological-data-id"
-* identifier.value = "IMMDATA-001"
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "IMD-1-0001"
 * status = #final
 * category = $obs-cat#laboratory
 * code = ImmunologicalDataPanelCS#immunological-data-panel "Immunological data panel"
 * subject = Reference(ExamplePatientTransplant1)
-* encounter = Reference(VisitExample1)
+* performer = Reference(PCCenter1LaPaz)
+* encounter = Reference(VisitPreTxExample1)
+* effectiveDateTime = "2023-08-01"
 
-// blood_group — using canonical PatientABOGroupCS from patient-observations.fsh
+// ABO / Rh
 * component[blood_group].code = $loinc#883-9 "ABO group [Type] in Blood"
 * component[blood_group].valueCodeableConcept = PatientABOGroupCS#A "Group A"
-
-// rh_factor — using canonical PatientRhFactorCS from patient-observations.fsh
 * component[rh_factor].code = $loinc#10331-7 "Rh [Type] in Blood"
 * component[rh_factor].valueCodeableConcept = PatientRhFactorCS#positive "Rh positive"
 
-// HLA-A — local discriminating code + LOINC parent as second coding
+// HLA typing — IMGT/HLA notation, two alleles per locus
 * component[hla_a_1].code = ImmDataComponentCS#hla-a-1 "HLA-A allele 1"
 * component[hla_a_1].valueString = "A*02:01"
 * component[hla_a_2].code = ImmDataComponentCS#hla-a-2 "HLA-A allele 2"
 * component[hla_a_2].valueString = "A*24:02"
+* component[hla_b_1].code = ImmDataComponentCS#hla-b-1 "HLA-B allele 1"
+* component[hla_b_1].valueString = "B*07:02"
+* component[hla_b_2].code = ImmDataComponentCS#hla-b-2 "HLA-B allele 2"
+* component[hla_b_2].valueString = "B*44:03"
+* component[hla_c_1].code = ImmDataComponentCS#hla-c-1 "HLA-C allele 1"
+* component[hla_c_1].valueString = "C*07:02"
+* component[hla_c_2].code = ImmDataComponentCS#hla-c-2 "HLA-C allele 2"
+* component[hla_c_2].valueString = "C*16:01"
+* component[hla_drb1_1].code = ImmDataComponentCS#hla-drb1-1 "HLA-DRB1 allele 1"
+* component[hla_drb1_1].valueString = "DRB1*03:01"
+* component[hla_drb1_2].code = ImmDataComponentCS#hla-drb1-2 "HLA-DRB1 allele 2"
+* component[hla_drb1_2].valueString = "DRB1*15:01"
+* component[hla_dp_1].code = ImmDataComponentCS#hla-dp-1 "HLA-DP allele 1"
+* component[hla_dp_1].valueString = "DPB1*04:01"
+* component[hla_dp_2].code = ImmDataComponentCS#hla-dp-2 "HLA-DP allele 2"
+* component[hla_dp_2].valueString = "DPB1*02:01"
+* component[hla_dqb1_1].code = ImmDataComponentCS#hla-dqb1-1 "HLA-DQB1 allele 1"
+* component[hla_dqb1_1].valueString = "DQB1*02:01"
+* component[hla_dqb1_2].code = ImmDataComponentCS#hla-dqb1-2 "HLA-DQB1 allele 2"
+* component[hla_dqb1_2].valueString = "DQB1*06:02"
 
-// post-tx DSA class
+// Pre-transplant DSA screen
+* component[pre_tx_dsa].code = ImmDataComponentCS#pre-tx-dsa "Pre-transplant anti-HLA DSA"
+* component[pre_tx_dsa].valueString = "No donor-specific antibodies detected on pre-transplant screen"
+* component[anti_hla_antibodies].code = ImmDataComponentCS#anti-hla-antibodies "Presence of anti-HLA antibodies"
+* component[anti_hla_antibodies].valueBoolean = false
+
+// -----------------------------------------------------
+
+Instance: ImmunologicalDataExample2
+InstanceOf: ImmunologicalData
+Usage: #example
+Title: "Example Immunological Data — biopsy work-up at the rejection episode"
+Description: "Biopsy work-up at the rejection episode: C4d, DSA class and MFI, antibody type, ANCA. banff_category is left empty on purpose — BanffCategoryCS is the KIDNEY classification; liver rejection uses the Banff RAI, which this model does not carry."
+
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "IMD-1-0002"
+* status = #final
+* category = $obs-cat#laboratory
+* code = ImmunologicalDataPanelCS#immunological-data-panel "Immunological data panel"
+* subject = Reference(ExamplePatientTransplant1)
+* performer = Reference(PCCenter1LaPaz)
+* encounter = Reference(VisitClinicalEventExample1)
+* effectiveDateTime = "2023-11-15"
+
+// Biopsy findings
+* component[ihc_if_c4d].code = ImmDataComponentCS#ihc-if-c4d "IHC/IF C4d result"
+* component[ihc_if_c4d].valueBoolean = true
+* component[c4d].code = ImmDataComponentCS#c4d-result "C4d result detail"
+* component[c4d].valueString = "C4d positive in the portal microvasculature, diffuse portal capillary staining"
+* component[imm_if].code = ImmDataComponentCS#if-result "Immunofluorescence result"
+* component[imm_if].valueString = "Diffuse portal microvascular C4d staining; no immune-complex deposition"
+
+// Donor-specific antibodies
 * component[post_tx_dsa_class].code = ImmDataComponentCS#post-tx-dsa-class "Post-transplant anti-HLA DSA class"
 * component[post_tx_dsa_class].valueCodeableConcept = DSAClassCS#class-i "Class I"
-
-// Banff category
-* component[banff_category].code = ImmDataComponentCS#banff-category "Banff rejection category"
-* component[banff_category].valueCodeableConcept = BanffCategoryCS#2 "Banff 2 – Antibody-mediated changes"
+* component[mfi].code = ImmDataComponentCS#mfi-category "MFI category"
+* component[mfi].valueCodeableConcept = MFICategoryCS#SR "SR (strong, >4k)"
+* component[antibody_type].code = ImmDataComponentCS#antibody-type "Antibody type specification"
+* component[antibody_type].valueString = "Anti-HLA class I donor-specific antibody against B*44:03"
+* component[anca].code = ImmDataComponentCS#anca "ANCA result"
+* component[anca].valueBoolean = false

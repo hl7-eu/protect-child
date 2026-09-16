@@ -15,17 +15,18 @@ Description: "Types of instrumental investigation tests conducted (expanded for 
 * ^caseSensitive = false
 * ^experimental = true
 
-* #718078008   "Liver doppler ultrasound" "Doppler ultrasound assessment of hepatic vasculature."
+* #4160708     "Liver doppler ultrasound" "Doppler ultrasound assessment of hepatic vasculature."
 * #4061009     "Abdominal CT scan" "Computed tomography of the abdomen."
 * #4083230     "Abdominal MRI" "Magnetic resonance imaging of the abdomen."
 * #4194588     "MRCP" "Magnetic resonance cholangiopancreatography (MRCP)."
 * #37311324    "Brain MRI" "Magnetic resonance imaging of the brain."
-* #4169785     "AngioTC" "CT angiography."
+* #4303663     "AngioTC" "CT angiography."
 * #4299523     "Angiography" "Catheter/contrast angiography of blood vessels."
 * #4181917     "EEG" "Electroencephalography (EEG)."
-* #36308175    "ECG" "Electrocardiography (ECG)."
+* #4163951     "ECG" "Electrocardiography (ECG)."
 * #4167052     "Kidney doppler ultrasound" "Doppler ultrasound assessment of renal vasculature."
-* #36713614    "Total body CT scan" "Whole-body computed tomography."
+* #37152490    "DopplerUS" "Doppler ultrasonography, site unspecified."
+* #4060500     "Total body CT scan" "Whole-body computed tomography."
 * #scintigraphy "Scintigraphy" "Radionuclide scintigraphy imaging."
 * #mcug        "Micturating Cystourethrogram (MCUG)" "Micturating cystourethrogram (voiding cystourethrography)."
 * #pet         "PET" "Positron emission tomography (PET)."
@@ -62,7 +63,7 @@ Description: "Catalogue entry for an instrumental investigation test type, align
 // instrumental_investigation_id → ObservationDefinition.identifier
 * identifier 1..1 MS
 * identifier.system 1..1
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/instrumental-investigation-id" (exactly)
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id" (exactly)
 * identifier.value 1..1
 * identifier ^short = "instrumental_investigation_id — investigation type identifier"
 
@@ -82,6 +83,6 @@ Usage: #example
 Title: "Example Instrumental Investigation"
 Description: "Example instrumental investigation catalogue entry — Liver doppler ultrasound."
 
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/instrumental-investigation-id"
-* identifier.value = "INST0001"
-* code = InstrumentalInvestigationNameCS#718078008 "Liver doppler ultrasound"
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "INS-0001"
+* code = InstrumentalInvestigationNameCS#4160708 "Liver doppler ultrasound"

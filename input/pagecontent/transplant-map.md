@@ -3,7 +3,9 @@
 # Transplant — Logical Model → FHIR Map
 
 Primary profile: [Transplant](StructureDefinition-transplant.html) (`Procedure`)  
-Detail panel: [TransplantDetails](StructureDefinition-transplant-details.html) (`Observation`) — one instance per transplant, linked via `Observation.partOf = Reference(Transplant)`
+Detail panel: [TransplantDetails](StructureDefinition-transplant-details.html) (`Observation`) — one instance per transplant, linked via `Observation.partOf = Reference(Transplant)`  
+Complications: [IntraoperativeComplication](StructureDefinition-intraoperative-complication.html) (`Condition`) — one per complication, linked via `Transplant.complicationDetail`  
+Anastomoses: [TransplantAnastomosis](StructureDefinition-transplant-anastomosis.html) (`Procedure`) — one per anastomosis, linked via `Procedure.partOf = Reference(Transplant)`
 
 **Cardinality key** — M = Mandatory (1..1) · R = Recommended (0..1) · O = Optional (0..1)
 
@@ -20,8 +22,8 @@ Detail panel: [TransplantDetails](StructureDefinition-transplant-details.html) (
 | cold_ischemia_time | R | `Observation.component[cold_ischemia_time].valueQuantity` | Quantity (min) |
 | warm_ischemia_time | R | `Observation.component[warm_ischemia_time].valueQuantity` | Quantity (min) |
 | vascular_anomalies | R | `Observation.component[vascular_anomalies].valueString` | Free text |
-| type_surgical_biliary_anastomosis | R | `Observation.component[type_surgical_biliary_anastomosis].valueCodeableConcept` | [BiliaryAnastomosisTypeVS](ValueSet-biliary-anastomosis-type-vs.html); Liver only |
-| intraoperative_complications | R | `Observation.component[intraoperative_complications].valueCodeableConcept` | [IntraoperativeComplicationVS](ValueSet-intraoperative-complication-vs.html); repeat component per complication |
-| intraoperative_complications_other | R | `Observation.component[intraoperative_complications_other].valueString` | Free text; **Liver only** |
-| type_ureteral_graft_anastomosis | O | `Observation.component[type_ureteral_graft_anastomosis].valueCodeableConcept` | [UreteralAnastomosisTypeVS](ValueSet-ureteral-anastomosis-type-vs.html); **Kidney only** *(DM v1.2 marks this field as Both; the IG treats it as Kidney only because ureteral anastomosis is not applicable to liver transplantation. This divergence is intentional and should be resolved in a future DM revision.)* |
-| other_type_ureteral_graft_anastomosis | O | `Observation.component[other_type_ureteral_graft_anastomosis].valueString` | Free text; **Kidney only** *(same rationale as above)* |
+| type_surgical_biliary_anastomosis | R | `Procedure.code` | [TransplantAnastomosis](StructureDefinition-transplant-anastomosis.html) (`Procedure`) linked via `Procedure.partOf`; [BiliaryAnastomosisTypeVS](ValueSet-biliary-anastomosis-type-vs.html); Liver only |
+| intraoperative_complications | R | `Condition.code` | Each complication is an [IntraoperativeComplication](StructureDefinition-intraoperative-complication.html) (`Condition`, encounter-diagnosis) linked from `Transplant.complicationDetail`; [IntraoperativeComplicationVS](ValueSet-intraoperative-complication-vs.html) |
+| intraoperative_complications_other | R | `Condition.note` | Free-text complication carried on the [IntraoperativeComplication](StructureDefinition-intraoperative-complication.html) Condition; **Liver only** |
+| type_ureteral_graft_anastomosis | O | `Procedure.code` | [TransplantAnastomosis](StructureDefinition-transplant-anastomosis.html) (`Procedure`) linked via `Procedure.partOf`; [UreteralAnastomosisTypeVS](ValueSet-ureteral-anastomosis-type-vs.html); **Kidney only** *(DM v1.2 marks this field as Both; the IG treats it as Kidney only because ureteral anastomosis is not applicable to liver transplantation. This divergence should be resolved in a future DM revision.)* |
+| other_type_ureteral_graft_anastomosis | O | `Procedure.code.text` | Free-text anastomosis type on the [TransplantAnastomosis](StructureDefinition-transplant-anastomosis.html) Procedure; **Kidney only** *(same rationale as above)* |

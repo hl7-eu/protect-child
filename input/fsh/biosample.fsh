@@ -53,7 +53,7 @@ Description: "Biological sample linked to a transplant visit, aligned with the D
 * identifier 1..1 MS
 * identifier ^short = "bio_sample_id – primary identifier for the biological sample"
 * identifier.system 1..1
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/biosample-id" (exactly)
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id" (exactly)
 * identifier.value 1..1
 
 // patient_id → Specimen.subject (M)
@@ -97,17 +97,17 @@ Description: "Example biological sample aligned with DMv1.2. genomic_sample=true
 * id = "biosample-example-1"
 
 // bio_sample_id
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/biosample-id"
-* identifier.value = "BS0001"
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "BIO-1-0001"
 
 // visit_id
 * extension[visit_id].valueReference = Reference(VisitExample1)
 
 // collection_date
-* collection.collectedDateTime = "2025-01-15"
+* collection.collectedDateTime = "2023-09-15"
 
 // send_ingemm_date → receivedTime
-* receivedTime = "2025-01-20"
+* receivedTime = "2023-09-20"
 
 // specimen material type (free-text or coded — no fixed binding)
 * subject = Reference(ExamplePatientTransplant1)
@@ -170,3 +170,4 @@ Description: "ServiceRequest representing genomic_sample = true for BioSampleExa
 * subject = Reference(ExamplePatientTransplant1)
 * specimen = Reference(BioSampleExample1)
 * encounter = Reference(VisitExample1)
+* authoredOn = "2023-09-15"

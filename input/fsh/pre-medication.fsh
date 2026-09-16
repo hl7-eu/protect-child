@@ -23,6 +23,9 @@ Description: "Antihypertensive drugs used as pre-transplant medication."
 * #1309068 "Minoxidil"
 * #1398937 "Clonidine"
 * #1363053 "Doxazosin"
+// DM values recorded as a drug class, not a named agent — kept as classes.
+* #aceis    "ACE inhibitors (class)" "ACEi recorded as a drug class rather than a named agent (DMv1.2 value 'ACEi')."
+* #beta-blockers "Beta-blockers (class)" "Beta-blockers recorded as a drug class rather than a named agent (DMv1.2 value 'Ꞵ-blockers')."
 
 ValueSet: PreMedicationAntihypertensiveDrugVS
 Id: pre-medication-antihypertensive-drug-vs
@@ -77,7 +80,7 @@ Description: "Pre-transplant medication record aligned with the pre_medication t
 // pre_medication_id → MedicationStatement.identifier
 * identifier 1..1 MS
 * identifier.system 1..1
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/pre-medication-id" (exactly)
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id" (exactly)
 * identifier.value 1..1
 
 // patient_id → MedicationStatement.subject
@@ -153,14 +156,28 @@ Instance: PreMedicationExample1
 InstanceOf: PreMedication
 Usage: #example
 Title: "Example Pre-medication"
-Description: "Example record of pre-transplant medications for a liver transplant recipient."
+Description: "Pre-transplant antihypertensive field, recorded as #not-taken: none was needed, as children with cirrhosis are typically hypotensive. Her hypertension appears after transplant — see ConcomitantDiseaseExample1."
 
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/pre-medication-id"
-* identifier.value = "PM0001"
-* status = #completed
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "PRM-1-0001"
+* status = #not-taken
 * subject = Reference(ExamplePatientTransplant1)
-* context = Reference(VisitExample1)
+* context = Reference(VisitPreTxExample1)
+* effectiveDateTime = "2023-08-14"
 * medicationCodeableConcept = PreMedicationAntihypertensiveDrugCS#1332418 "Amlodipine"
-* note[0].text = "Low-dose aspirin"
+* note[0].text = "No antihypertensive required before transplantation; blood pressure was low-normal throughout the pre-transplant work-up."
 // rituximab and antiviral prophylaxis are separate MedicationStatement resources
 // with status = #completed or #not-taken, linked via context = Reference(VisitExample1)
+
+Instance: PreMedicationChildExample1
+InstanceOf: PreMedicationChild
+Usage: #example
+Title: "Example Pre-medication — Rituximab desensitisation (child record)"
+Description: "Rituximab, linked to the parent PreMedication via partOf. effectiveDateTime is the last dose (date_last_rituximab). Waiting-list desensitisation of a sensitised candidate (peak PRA 80%), not directed at a particular donor — the graft came from a deceased donor."
+
+* partOf = Reference(PreMedicationExample1)
+* subject = Reference(ExamplePatientTransplant1)
+* status = #completed
+* context = Reference(VisitPreTxExample1)
+* medicationCodeableConcept = http://www.nlm.nih.gov/research/umls/rxnorm#121191 "rituximab"
+* effectiveDateTime = "2023-07-25"

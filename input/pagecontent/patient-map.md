@@ -8,7 +8,8 @@ Primary profile: [PatientTransplant](StructureDefinition-patient-transplant.html
 
 Demographics panel: [PatientDemographicsObservation](StructureDefinition-patient-demographics-observation.html) (`Observation`, category `survey`) — age at transplant  
 Immunology panel: [PatientImmunologyObservation](StructureDefinition-patient-immunology-observation.html) (`Observation`, category `laboratory`) — PRA and histological date  
-Diagnoses: [PatientLiverDiseaseDiagnosis](StructureDefinition-patient-liver-disease-diagnosis.html) · [PatientRenalDiseaseDiagnosis](StructureDefinition-patient-renal-disease-diagnosis.html) (`Condition`)
+Diagnosis: [PatientPrimaryDiseaseDiagnosis](StructureDefinition-patient-primary-disease-diagnosis.html) (`Condition`) — a single profile for liver or renal primary disease; the organ is carried in `Condition.bodySite`
+
 
 | DM field | Card. | FHIR path | Notes |
 |---|---|---|---|
@@ -19,8 +20,6 @@ Diagnoses: [PatientLiverDiseaseDiagnosis](StructureDefinition-patient-liver-dise
 | max_pra | R | `Observation.component[max_pra].valueInteger` | `PatientPRATypeCS#max`; in [PatientImmunologyObservation](StructureDefinition-patient-immunology-observation.html) |
 | last_pra | R | `Observation.component[last_pra].valueInteger` | `PatientPRATypeCS#last`; in [PatientImmunologyObservation](StructureDefinition-patient-immunology-observation.html) |
 | date_histological_diag | M | `Observation.component[date_histological_diag].valueDateTime` | LOINC 77975-1; in [PatientImmunologyObservation](StructureDefinition-patient-immunology-observation.html) |
-| diag_primary_disease | M | `Condition.code` | Shared across both Condition profiles below; the free-text diagnosis name |
-| date_diag_primary_disease | M | `Condition.onsetDateTime` | Shared across both Condition profiles below |
-| date_diag_primary_disease + diag_liver_disease | M | `Condition.onsetDateTime` (date); `Condition.code` (diagnosis) | [PatientLiverDiseaseDiagnosis](StructureDefinition-patient-liver-disease-diagnosis.html); bodySite = SNOMED 10200004; **Liver only** |
-| date_diag_primary_disease + diag_renal_disease | M | `Condition.onsetDateTime` (date); `Condition.code` (diagnosis) | [PatientRenalDiseaseDiagnosis](StructureDefinition-patient-renal-disease-diagnosis.html); bodySite = SNOMED 64033007; **Kidney only** |
+| diag_primary_disease | M | `Condition.code` | [PatientPrimaryDiseaseDiagnosis](StructureDefinition-patient-primary-disease-diagnosis.html). The organ is carried in `Condition.bodySite` — SNOMED 10200004 (Liver) or 64033007 (Kidney) — not by a separate field per organ. |
+| date_diag_primary_disease | M | `Condition.onsetDateTime` | On the same Condition |
 | center_no | M | `Patient.managingOrganization` | [Reference(StudyCentre)](StructureDefinition-study-centre.html); `identifier.value` = 1–4 |

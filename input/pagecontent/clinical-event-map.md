@@ -3,7 +3,7 @@
 # Clinical Event — Logical Model → FHIR Map
 
 Primary profile: [ClinicalEvent](StructureDefinition-clinical-event.html) (`Condition`)  
-Flag observations: [ClinicalEventFlagObservation](StructureDefinition-clinical-event-flag-observation.html) (`Observation`) — one per true boolean flag; `focus = Reference(ClinicalEvent)`
+Flag observations: [ClinicalEventFlagObservation](StructureDefinition-clinical-event-flag-observation.html) (`Observation`) — one per true *non-diagnosis* boolean flag (concomitant_medications, treatment_adherence); `focus = Reference(ClinicalEvent)`
 
 **Cardinality key** — M = Mandatory (1..1) · R = Recommended (0..1) · O = Optional (0..1)
 
@@ -21,23 +21,23 @@ Event lifecycle (start vs. end) is captured via native `Condition` status and on
 | visit_id | M | `Condition.encounter` | |
 | event_phase = START | R | `Condition.onsetDateTime` | Sets `clinicalStatus = #active` |
 | event_phase = END | R | `Condition.abatementDateTime` | Sets `clinicalStatus = #resolved` |
-| event_number | R | *(calculated; not stored)* | Auto-incremental per patient — not persisted in FHIR |
-| cause_death | O | `Condition.note[cause_death].text` | `authorString = "cause_death"` |
-| specify_kidney_rejection_episode | O | `Condition.note[specify_kidney_rejection_episode].text` | `authorString = "specify_kidney_rejection_episode"`; **Kidney only** |
-| previous_urological_intervention | O | `Condition.note[previous_urological_intervention].text` | `authorString = "previous_urological_intervention"`; **Kidney only** |
-| underlying_prothrombotic_disorders | O | `Condition.note[underlying_prothrombotic_disorders].text` | `authorString = "underlying_prothrombotic_disorders"` |
-| kidney_biopsy | O | `Condition.note[kidney_biopsy].text` | `authorString = "kidney_biopsy"`; **Kidney only** |
+| event_number | R | *(calculated; not stored)* |  |
+| cause_death | O | `Condition.note[cause_death].text` |  |
+| specify_kidney_rejection_episode | O | `Condition.note[specify_kidney_rejection_episode].text` |  **Kidney only** |
+| previous_urological_intervention | O | `Condition.note[previous_urological_intervention].text` |  **Kidney only** |
+| underlying_prothrombotic_disorders | O | `Condition.note[underlying_prothrombotic_disorders].text` |  |
+| kidney_biopsy | O | `Condition.note[kidney_biopsy].text` |  **Kidney only** |
 | vascular_complication_type | O | `Condition.evidence.code` | [VascularComplicationTypeVS](ValueSet-vascular-complication-type-vs.html) — coded value on the ClinicalEvent itself |
-| dgf | O | `ClinicalEventFlagObservation.code` | `ClinicalEventEvidenceCS#dgf`; presence = true, absence = false; **Kidney only** |
-| episodes_aki_after_ltx | O | `ClinicalEventFlagObservation.code` | `ClinicalEventEvidenceCS#episodes-aki-after-ltx`; **Liver only** |
-| histologic_evidence_cni_toxicity | O | `ClinicalEventFlagObservation.code` | `ClinicalEventEvidenceCS#histologic-evidence-cni-tox` |
-| hypoxic_ischemic_event_pltx | O | `ClinicalEventFlagObservation.code` | `ClinicalEventEvidenceCS#hypoxic-ischemic-pltx`; **Liver only** |
+| dgf | O | `Condition.code` | First-class [ClinicalEvent](StructureDefinition-clinical-event.html); `ClinicalEventTypeCS#delayed-kidney-graft-function`; **Kidney only** |
+| episodes_aki_after_ltx | O | `Condition.code` | First-class [ClinicalEvent](StructureDefinition-clinical-event.html); `ClinicalEventTypeCS#episodes-aki-after-ltx`; **Liver only** |
+| histologic_evidence_cni_toxicity | O | `Condition.code` | First-class [ClinicalEvent](StructureDefinition-clinical-event.html); `ClinicalEventTypeCS#histologic-evidence-cni-toxicity` |
+| hypoxic_ischemic_event_pltx | O | `Condition.code` | First-class [ClinicalEvent](StructureDefinition-clinical-event.html); `ClinicalEventTypeCS#hypoxic-ischemic-event-pltx`; **Liver only** |
 | concomitant_medications | O | `ClinicalEventFlagObservation.code` | `ClinicalEventEvidenceCS#concomitant-medications` |
 | treatment_adherence | O | `ClinicalEventFlagObservation.code` | `ClinicalEventEvidenceCS#treatment-adherence` |
 
-### Linked Procedures
+## Linked Procedures
 
-Sub-events that carry a coded type and a date are represented as [ClinicalEventProcedure](StructureDefinition-clinical-event-procedure.html) (`Procedure`) resources linked to the parent `ClinicalEvent` via `Procedure.reasonReference`. Query: `Procedure?reason-reference={clinical-event-id}&code={type}`.
+Sub-events that carry a coded type and a date are represented as [ClinicalEventProcedure](StructureDefinition-clinical-event-procedure.html) (`Procedure`) resources linked to the parent `ClinicalEvent` via `Procedure.reasonReference`.
 
 | DM field | Card. | FHIR path | Notes |
 |---|---|---|---|

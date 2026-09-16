@@ -32,9 +32,9 @@ This entity links a specific immunosuppressant drug to a recipient at a given vi
 | start_date | R | `MedicationStatement.effectivePeriod.start` | |
 | end_date | R | `MedicationStatement.effectivePeriod.end` | |
 
-### Pharmacokinetic Monitoring
+## Pharmacokinetic Monitoring
 
-PK monitoring values are represented as [ImmPatPKObservation](StructureDefinition-imm-pat-pk-observation.html) (`Observation`) resources linked to the parent `ImmPat` via `Observation.partOf`. Query pattern: `Observation?part-of={imm-pat-id}`.
+PK monitoring values are represented as [ImmPatPKObservation](StructureDefinition-imm-pat-pk-observation.html) (`Observation`) resources linked to the parent `ImmPat` via `Observation.partOf`. 
 
 | DM field | Card. | FHIR path | Notes |
 |---|---|---|---|

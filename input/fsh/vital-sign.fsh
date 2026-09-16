@@ -44,7 +44,7 @@ Description: "Vital signs panel for a transplant patient at a visit, aligned wit
 // vital_sign_id → Observation.identifier (M)
 * identifier 1..1 MS
 * identifier.system 1..1
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/vital-sign-id" (exactly)
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id" (exactly)
 * identifier.value 1..1
 * identifier ^short = "vital_sign_id"
 
@@ -233,12 +233,13 @@ Usage: #example
 Title: "Example Vital Sign"
 Description: "Example vital signs panel for a transplant recipient at 1-month visit."
 
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/vital-sign-id"
-* identifier.value = "VS-001"
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "VIT-1-0001"
 * status = #final
 * category = $obs-cat#vital-signs
 * code = VitalSignLocalCS#vital-signs-panel "Vital signs panel"
 * subject = Reference(ExamplePatientTransplant1)
+* performer = Reference(PCCenter1LaPaz)
 * encounter = Reference(VisitExample1)
 * effectiveDateTime = "2023-09-15"
 
@@ -262,7 +263,97 @@ Description: "Example vital signs panel for a transplant recipient at 1-month vi
 * component[temperature].valueQuantity.code = #Cel
 * component[temperature].valueQuantity.unit = "°C"
 
-* component[bmi].valueQuantity.value = 17.4
+* component[bmi].valueQuantity.value = 19.8
 * component[bmi].valueQuantity.system = $ucum
 * component[bmi].valueQuantity.code = #kg/m2
 * component[bmi].valueQuantity.unit = "kg/m²"
+
+Instance: VitalSignExample2
+InstanceOf: VitalSign
+Usage: #example
+Title: "Example Vital Sign — 12-month visit"
+Description: "The same vital-signs panel repeated at the 12-month follow-up visit, showing how a panel recurs across the visit timeline."
+
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "VIT-1-0002"
+* status = #final
+* category = $obs-cat#vital-signs
+* code = VitalSignLocalCS#vital-signs-panel "Vital signs panel"
+* subject = Reference(ExamplePatientTransplant1)
+* performer = Reference(PCCenter1LaPaz)
+* encounter = Reference(VisitMonth12Example1)
+* effectiveDateTime = "2024-08-15"
+
+* component[systolic_bp].valueQuantity.value = 112
+* component[systolic_bp].valueQuantity.system = $ucum
+* component[systolic_bp].valueQuantity.code = #mm[Hg]
+* component[systolic_bp].valueQuantity.unit = "mmHg"
+
+* component[diastolic_bp].valueQuantity.value = 70
+* component[diastolic_bp].valueQuantity.system = $ucum
+* component[diastolic_bp].valueQuantity.code = #mm[Hg]
+* component[diastolic_bp].valueQuantity.unit = "mmHg"
+
+* component[heart_rate].valueQuantity.value = 80
+* component[heart_rate].valueQuantity.system = $ucum
+* component[heart_rate].valueQuantity.code = #/min
+* component[heart_rate].valueQuantity.unit = "bpm"
+
+* component[oxygen_saturation].valueQuantity.value = 98
+* component[oxygen_saturation].valueQuantity.system = $ucum
+* component[oxygen_saturation].valueQuantity.code = #%
+* component[oxygen_saturation].valueQuantity.unit = "%"
+
+* component[sbp_percentile].valueInteger = 82
+* component[dbp_percentile].valueInteger = 74
+
+// 24-hour ambulatory blood-pressure monitoring recorded at the 12-month visit
+* component[mean_sbp_24].valueQuantity.value = 114
+* component[mean_sbp_24].valueQuantity.system = $ucum
+* component[mean_sbp_24].valueQuantity.code = #mm[Hg]
+* component[mean_sbp_24].valueQuantity.unit = "mmHg"
+
+* component[mean_dbp_24].valueQuantity.value = 68
+* component[mean_dbp_24].valueQuantity.system = $ucum
+* component[mean_dbp_24].valueQuantity.code = #mm[Hg]
+* component[mean_dbp_24].valueQuantity.unit = "mmHg"
+
+* component[mean_sbp_day].valueQuantity.value = 119
+* component[mean_sbp_day].valueQuantity.system = $ucum
+* component[mean_sbp_day].valueQuantity.code = #mm[Hg]
+* component[mean_sbp_day].valueQuantity.unit = "mmHg"
+
+* component[mean_dbp_day].valueQuantity.value = 72
+* component[mean_dbp_day].valueQuantity.system = $ucum
+* component[mean_dbp_day].valueQuantity.code = #mm[Hg]
+* component[mean_dbp_day].valueQuantity.unit = "mmHg"
+
+* component[mean_sbp_night].valueQuantity.value = 104
+* component[mean_sbp_night].valueQuantity.system = $ucum
+* component[mean_sbp_night].valueQuantity.code = #mm[Hg]
+* component[mean_sbp_night].valueQuantity.unit = "mmHg"
+
+* component[mean_dbp_night].valueQuantity.value = 60
+* component[mean_dbp_night].valueQuantity.system = $ucum
+* component[mean_dbp_night].valueQuantity.code = #mm[Hg]
+* component[mean_dbp_night].valueQuantity.unit = "mmHg"
+
+* component[sbp_load].valueQuantity.value = 22
+* component[sbp_load].valueQuantity.system = $ucum
+* component[sbp_load].valueQuantity.code = #%
+* component[sbp_load].valueQuantity.unit = "%"
+
+* component[dbp_load].valueQuantity.value = 15
+* component[dbp_load].valueQuantity.system = $ucum
+* component[dbp_load].valueQuantity.code = #%
+* component[dbp_load].valueQuantity.unit = "%"
+
+* component[sbp_dip].valueQuantity.value = 12.6
+* component[sbp_dip].valueQuantity.system = $ucum
+* component[sbp_dip].valueQuantity.code = #%
+* component[sbp_dip].valueQuantity.unit = "%"
+
+* component[dbp_dip].valueQuantity.value = 16.7
+* component[dbp_dip].valueQuantity.system = $ucum
+* component[dbp_dip].valueQuantity.code = #%
+* component[dbp_dip].valueQuantity.unit = "%"

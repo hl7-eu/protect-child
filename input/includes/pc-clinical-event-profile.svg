@@ -113,7 +113,7 @@
   <rect x="1" y="406" width="238" height="22" fill="#f8fafc"/>
   <line x1="1" y1="428" x2="239" y2="428" stroke="#f0f4f8" stroke-width="1"/>
   <circle cx="12" cy="418" r="3" fill="#718096" opacity="0.85"/>
-  <a href="ValueSet-dialysis-type-vs.html">
+  <a href="ValueSet-clinical-event-procedure-type-vs.html">
     <text x="21" y="423" fill="#374151" font-size="13">Dialysis Type</text>
     <text x="234" y="423" fill="#718096" font-size="11" font-weight="700" text-anchor="end">O</text>
   </a>

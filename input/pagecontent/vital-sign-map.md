@@ -8,7 +8,7 @@ Primary profile: [VitalSign](StructureDefinition-vital-sign.html) (`Observation`
 
 All measurement fields map to `Observation.component` slices.
 
-| DM field | Card. | FHIR path | LOINC | Unit |
+| DM field | Card. | FHIR path | Component code (LOINC unless noted) | Unit |
 |---|---|---|---|---|
 | vital_sign_id | M | `Observation.identifier.value` | | |
 | visit_id | M | `Observation.encounter` | | |
@@ -31,5 +31,3 @@ All measurement fields map to `Observation.component` slices.
 | dbp_load | R | `Observation.component[dbp_load].valueQuantity` | `VitalSignLocalCS#dbp-load` | % |
 | sbp_dip | R | `Observation.component[sbp_dip].valueQuantity` | `VitalSignLocalCS#sbp-dip` | % |
 | dbp_dip | R | `Observation.component[dbp_dip].valueQuantity` | `VitalSignLocalCS#dbp-dip` | % |
-
-> ABPM fields (`mean_sbp_24`, `mean_dbp_24`, `mean_sbp_day`, `mean_dbp_day`, `mean_sbp_night`, `mean_dbp_night`, `sbp_load`, `dbp_load`, `sbp_dip`, `dbp_dip`) are only populated when a 24-hour ambulatory blood pressure monitor was used.

@@ -24,7 +24,7 @@ Each row in the `lab_result` DM table maps to one `Observation` resource. The an
 | DM field | Card. | FHIR path | Notes |
 |---|---|---|---|
 | lab_result_id | M | `Observation.identifier.value` | |
-| lab_test_id | M | `Observation.code` | [LabTestNameVS](ValueSet-lab-test-name-vs.html). Link to the [LabTest (ObservationDefinition)](StructureDefinition-lab-test.html) is implicit — match on `Observation.code` = `ObservationDefinition.code`. R4 `Observation.basedOn` does not allow `Reference(ObservationDefinition)`; this is supported in R5 via `Observation.instantiates[x]`. |
+| lab_test_id | M | `Observation.code` | [LabTestNameVS](ValueSet-lab-test-name-vs.html). Link to the [LabTest (ObservationDefinition)](StructureDefinition-lab-test.html) is implicit. |
 | visit_id | M | `Observation.encounter` | [Reference(Visit)](StructureDefinition-visit.html) |
 | date | M | `Observation.effectiveDateTime` | |
 | unit | M | `Observation.valueQuantity.code` | [LabResultUnitVS](ValueSet-lab-result-unit-vs.html); present whenever value is present |

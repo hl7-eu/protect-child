@@ -44,6 +44,11 @@ Description: "Types of clinical events in the PROTECT-CHILD study (DMv1.2), repl
 * #renal-cni-toxicity                       "Renal CNI Toxicity" "Calcineurin-inhibitor-induced renal toxicity."
 * #urological-complications                 "Urological Complications" "Post-transplant complications of the urinary tract (e.g. obstruction, leak, reflux)."
 * #vascular-complications                   "Vascular Complications" "Post-transplant vascular complications (e.g. thrombosis, stenosis)."
+// Diagnosis-type clinical events also recorded per DMv1.2 clinical_event flags.
+// dgf uses the #delayed-kidney-graft-function code above.
+* #episodes-aki-after-ltx                   "Episodes of AKI after liver transplant" "One or more episodes of acute kidney injury after liver transplantation (Liver/combined)."
+* #histologic-evidence-cni-toxicity         "Histological evidence of CNI nephrotoxicity" "Histological findings consistent with calcineurin-inhibitor nephrotoxicity."
+* #hypoxic-ischemic-event-pltx              "Hypoxic-ischemic event post liver transplant" "Hypoxic-ischaemic event occurring after paediatric liver transplantation (Liver/combined)."
 
 ValueSet: ClinicalEventTypeVS
 Id: clinical-event-type-vs
@@ -79,29 +84,28 @@ Description: "Types of vascular complication occurring after solid-organ transpl
 * VascularComplicationTypeCS#unknown
 
 // ------------------------------------------------
-// Terminology — evidence codes (Condition.evidence.code)
-// Presence = true, absence = false.
-// Covers all DM boolean flags that have no native Condition element.
+// Terminology — non-diagnosis flag codes (ClinicalEventFlagObservation.code)
+// Presence of a flag Observation = true, absence = false.
+// Covers the boolean clinical_event flags that are NOT clinical diagnoses.
+// The diagnosis flags (dgf, episodes-aki-after-ltx, histologic-evidence-cni-toxicity,
+// hypoxic-ischemic-event-pltx) are ClinicalEvent (Condition) types in
+// ClinicalEventTypeCS above.
 // ------------------------------------------------
 
 CodeSystem: ClinicalEventEvidenceCS
 Id: clinical-event-evidence-cs
 Title: "Clinical Event Evidence CodeSystem"
-Description: "Coded findings used in Condition.evidence.code to represent boolean DM fields. Presence of a code means the flag is true; absence means false."
+Description: "Coded non-diagnosis flags used in ClinicalEventFlagObservation.code to represent boolean DM fields on the clinical_event table. Presence of a flag Observation means the flag is true; absence means false."
 * ^content = #complete
 * ^caseSensitive = false
 * ^experimental = true
-* #dgf                          "Delayed graft function" "Delayed graft function: dialysis requirement or failure of graft function to improve in the first post-transplant week."
-* #episodes-aki-after-ltx       "Episodes of AKI after liver transplant" "One or more episodes of acute kidney injury after liver transplantation."
-* #histologic-evidence-cni-tox  "Histological evidence of CNI nephrotoxicity" "Histological findings consistent with calcineurin-inhibitor nephrotoxicity."
-* #hypoxic-ischemic-pltx        "Hypoxic-ischemic event post liver transplant" "Hypoxic-ischaemic event occurring after paediatric liver transplantation."
 * #concomitant-medications      "Concomitant medications present" "Indicates that concomitant medications were recorded for the event."
 * #treatment-adherence          "Treatment adherence confirmed" "Indicates that adherence to prescribed treatment was confirmed."
 
 ValueSet: ClinicalEventEvidenceVS
 Id: clinical-event-evidence-vs
 Title: "Clinical Event Flag ValueSet"
-Description: "Codes for ClinicalEventFlagObservation.code — one per boolean DM flag on the clinical_event table. Presence of an Observation with this code means the flag is true."
+Description: "Codes for ClinicalEventFlagObservation.code — one per non-diagnosis boolean DM flag on the clinical_event table. Presence of an Observation with this code means the flag is true."
 * ^experimental = true
 * include codes from system ClinicalEventEvidenceCS
 
@@ -139,12 +143,12 @@ Profile: ClinicalEvent
 Parent: Condition
 Id: clinical-event
 Title: "Clinical Event"
-Description: "A clinical event for a transplant patient, aligned with the DMv1.2 clinical_event table. Event phase (START/END) is represented via native Condition lifecycle. Boolean DM fields are in Condition.evidence.code (presence = true). Free-text fields are in Condition.note. Dialysis episodes, retransplantation, and transplant-list entry are linked ClinicalEventProcedure resources via Procedure.reasonReference."
+Description: "A clinical event for a transplant patient, aligned with the DMv1.2 clinical_event table. Event phase (START/END) is represented via native Condition lifecycle. The diagnosis-type events dgf, episodes-aki-after-ltx, histologic-evidence-cni-toxicity and hypoxic-ischemic-event-pltx are ClinicalEvent types (Condition.code from ClinicalEventTypeVS). The coded value vascular_complication_type is in Condition.evidence.code. Non-diagnosis boolean flags (concomitant-medications, treatment-adherence) are ClinicalEventFlagObservation resources. Free-text fields are in Condition.note. Dialysis episodes, retransplantation, and transplant-list entry are linked ClinicalEventProcedure resources via Procedure.reasonReference."
 
 // clinical_event_id → Condition.identifier (M)
 * identifier 1..1 MS
 * identifier.system 1..1
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/clinical-event-id" (exactly)
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id" (exactly)
 * identifier.value 1..1
 * identifier ^short = "clinical_event_id"
 
@@ -212,39 +216,15 @@ Description: "A clinical event for a transplant patient, aligned with the DMv1.2
 * note[kidney_biopsy] ^short = "kidney_biopsy — kidney biopsy findings (free text)"
 
 // vascular_complication_type → Condition.evidence.code (coded value, not a boolean flag)
-// Boolean flags (dgf, episodes_aki_after_ltx, etc.) are now represented as
-// ClinicalEventFlagObservation resources with focus = Reference(ClinicalEvent).
 * evidence 0..1 MS
 * evidence.code 0..1 MS
 * evidence.code from VascularComplicationTypeVS (required)
 * evidence ^short = "vascular_complication_type — coded vascular complication (if present)"
 
 // ================================================
-// Organ-specific invariants for ClinicalEventFlagObservation
-//
-// Kidney-only flags: dgf (delayed graft function)
-// Liver-only flags:  episodes-aki-after-ltx (AKI after LTx),
-//                    hypoxic-ischemic-pltx (hypoxic event post liver transplant)
-// ================================================
-
-Invariant: pc-flag-1
-Description: "Delayed graft function (DGF) is a kidney-specific flag; only applicable for kidney or combined transplants."
-Severity: #error
-Expression: "code.coding.where(code = 'dgf').exists() implies extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').value.ofType(CodeableConcept).coding.where(code = 'kidney' or code = 'combined').exists()"
-
-Invariant: pc-flag-2
-Description: "Episodes of AKI after LTx is a liver-specific flag; only applicable for liver or combined transplants."
-Severity: #error
-Expression: "code.coding.where(code = 'episodes-aki-after-ltx').exists() implies extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').value.ofType(CodeableConcept).coding.where(code = 'liver' or code = 'combined').exists()"
-
-Invariant: pc-flag-3
-Description: "Hypoxic-ischaemic event post liver transplant is a liver-specific flag; only applicable for liver or combined transplants."
-Severity: #error
-Expression: "code.coding.where(code = 'hypoxic-ischemic-pltx').exists() implies extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').value.ofType(CodeableConcept).coding.where(code = 'liver' or code = 'combined').exists()"
-
-// ================================================
 // Profile: ClinicalEventFlagObservation — Observation
-// Represents boolean DM flags on the clinical_event table.
+// Represents the non-diagnosis boolean flags on the clinical_event table
+// (concomitant-medications, treatment-adherence).
 // One Observation per flag that is true; absence of an Observation means false.
 // Link to the parent ClinicalEvent via Observation.focus.
 // Query: Observation?focus={clinical-event-id}&code={flag-code}
@@ -254,16 +234,7 @@ Profile: ClinicalEventFlagObservation
 Parent: Observation
 Id: clinical-event-flag-observation
 Title: "Clinical Event Flag Observation"
-Description: "Boolean flag associated with a clinical event (DMv1.2 clinical_event table). Each instance represents one true flag. Absence of an instance for a given code means the flag is false. Linked to the parent ClinicalEvent via Observation.focus. The transplant type extension enables organ-specific invariants pc-flag-1 through pc-flag-3."
-
-// Apply organ-specific invariants
-* obeys pc-flag-1
-* obeys pc-flag-2
-* obeys pc-flag-3
-
-// tx_type context — required for organ-specific flags
-* extension contains TransplantTypeExt named tx_type 0..1 MS
-* extension[tx_type] ^short = "Transplant type context — required when code is an organ-specific flag (dgf, episodes-aki-after-ltx, hypoxic-ischemic-pltx)"
+Description: "Non-diagnosis boolean flag associated with a clinical event (DMv1.2 clinical_event table): concomitant-medications or treatment-adherence. Each instance represents one true flag; absence of an instance for a given code means the flag is false. Linked to the parent ClinicalEvent via Observation.focus. Diagnosis-type flags (dgf, episodes-aki-after-ltx, histologic-evidence-cni-toxicity, hypoxic-ischemic-event-pltx) are ClinicalEvent Conditions."
 
 * status 1..1 MS
 * status = #final (exactly)
@@ -271,10 +242,10 @@ Description: "Boolean flag associated with a clinical event (DMv1.2 clinical_eve
 * category 1..1 MS
 * category = $obs-cat#exam
 
-// Flag type — which DM boolean field this Observation represents
+// Flag type — which non-diagnosis DM boolean field this Observation represents
 * code 1..1 MS
 * code from ClinicalEventEvidenceVS (required)
-* code ^short = "Flag type — one of: dgf (kidney/combined), episodes-aki-after-ltx (liver/combined), histologic-evidence-cni-tox, hypoxic-ischemic-pltx (liver/combined), concomitant-medications, treatment-adherence"
+* code ^short = "Flag type — one of: concomitant-medications, treatment-adherence"
 
 // Link to parent ClinicalEvent (M)
 * focus 1..1 MS
@@ -338,18 +309,30 @@ Description: "A procedure sub-event associated with a clinical event (DMv1.2 dia
 Instance: ClinicalEventExample1
 InstanceOf: ClinicalEvent
 Usage: #example
-Title: "Example Clinical Event — Kidney Rejection START"
-Description: "Example clinical event recording the start of a kidney rejection episode at a 3-month visit."
+Title: "Example Clinical Event — Liver Rejection START"
+Description: "Example clinical event recording the start of a liver rejection episode at an unscheduled clinical-event visit."
 
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/clinical-event-id"
-* identifier.value = "CE-001"
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "CLE-1-0002"
 * clinicalStatus = $clin-st#active
-* code = ClinicalEventTypeCS#kidney-rejection-episode "Kidney Rejection Episode"
+* code = ClinicalEventTypeCS#liver-rejection-episode "Liver Rejection Episode"
 * subject = Reference(ExamplePatientTransplant1)
-* encounter = Reference(VisitExample1)
+* encounter = Reference(VisitClinicalEventExample1)
 * onsetDateTime = "2023-11-15"
-* note[specify_kidney_rejection_episode].authorString = "specify_kidney_rejection_episode"
-* note[specify_kidney_rejection_episode].text = "Acute T-cell mediated rejection, Banff 2"
+
+Instance: ClinicalEventAkiExample1
+InstanceOf: ClinicalEvent
+Usage: #example
+Title: "Example Clinical Event — acute kidney injury after liver transplant"
+Description: "Acute kidney injury in the first week after liver transplantation, requiring temporary renal replacement therapy. Recorded against the transplant admission."
+
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "CLE-1-0001"
+* clinicalStatus = $clin-st#active
+* code = ClinicalEventTypeCS#episodes-aki-after-ltx "Episodes of AKI after liver transplant"
+* subject = Reference(ExamplePatientTransplant1)
+* encounter = Reference(VisitPreTxExample1)
+* onsetDateTime = "2023-08-20"
 
 Instance: ClinicalEventDialysisProcedureExample1
 InstanceOf: ClinicalEventProcedure
@@ -360,9 +343,9 @@ Description: "Hemodialysis episode linked to a clinical event via reasonReferenc
 * status = #completed
 * code = ClinicalEventProcedureTypeCS#hemodialysis "Hemodialysis"
 * subject = Reference(ExamplePatientTransplant1)
-* reasonReference = Reference(ClinicalEventExample1)
-* performedPeriod.start = "2023-12-01"
-* performedPeriod.end = "2024-03-15"
+* reasonReference = Reference(ClinicalEventAkiExample1)
+* performedPeriod.start = "2023-08-20"
+* performedPeriod.end = "2023-09-05"
 
 Instance: ClinicalEventRetransplantationExample1
 InstanceOf: ClinicalEventProcedure
@@ -387,3 +370,19 @@ Description: "Date patient was listed for retransplantation, linked to the trigg
 * subject = Reference(ExamplePatientTransplant1)
 * reasonReference = Reference(ClinicalEventExample1)
 * performedDateTime = "2024-04-20"
+
+Instance: ClinicalEventFlagObservationExample1
+InstanceOf: ClinicalEventFlagObservation
+Usage: #example
+Title: "Example Clinical Event Flag — Treatment adherence confirmed"
+Description: "Non-diagnosis boolean flag associated with the clinical event: treatment adherence was confirmed. The presence of this Observation means the flag is true; it links to its parent ClinicalEvent via Observation.focus."
+
+* status = #final
+* category = $obs-cat#exam
+* code = ClinicalEventEvidenceCS#treatment-adherence "Treatment adherence confirmed"
+* focus = Reference(ClinicalEventExample1)
+* subject = Reference(ExamplePatientTransplant1)
+* performer = Reference(PCCenter1LaPaz)
+* encounter = Reference(VisitClinicalEventExample1)
+* effectiveDateTime = "2023-11-15"
+* valueBoolean = true

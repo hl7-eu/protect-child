@@ -6,7 +6,7 @@ Primary profile: [ClinicalVariable](StructureDefinition-clinical-variable.html) 
 
 **Cardinality key** — M = Mandatory (1..1) · R = Recommended (0..1) · O = Optional (0..1)
 
-The ClinicalVariable entity consolidates per-visit anthropometrics, concomitant disease flags, and symptom notes. Multiple `component` slices are used — one per concomitant disease where applicable.
+The ClinicalVariable entity consolidates per-visit anthropometrics and symptom notes. Concomitant diseases are represented separately as [ConcomitantDisease](StructureDefinition-concomitant-disease.html) (`Condition`) resources — one per disease.
 
 | DM field | Card. | FHIR path | Notes |
 |---|---|---|---|
@@ -14,7 +14,7 @@ The ClinicalVariable entity consolidates per-visit anthropometrics, concomitant 
 | visit_id | M | `Observation.encounter` | [Reference(Visit)](StructureDefinition-visit.html) |
 | weight | R | `Observation.component[weight].valueQuantity` | LOINC 29463-7; kg |
 | height | R | `Observation.component[height].valueQuantity` | LOINC 8302-2; cm |
-| concomitant_disease | M | `Observation.component[concomitant_disease].valueCodeableConcept` | [ConcomitantDiseaseCategoryVS](ValueSet-concomitant-disease-category-vs.html); repeat slice per disease |
+| concomitant_disease | M | `Condition.code` | Each disease is a [ConcomitantDisease](StructureDefinition-concomitant-disease.html) (`Condition`, problem-list-item); [ConcomitantDiseaseCategoryVS](ValueSet-concomitant-disease-category-vs.html); one Condition per disease |
 | description | R | `Observation.note` | Free text |
 | diuresis_value | R | `Observation.component[diuresis_value].valueQuantity` | LOINC 9192-6; mL/d |
 | other_symptoms | R | `Observation.note` | Free text |

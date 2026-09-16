@@ -3,6 +3,8 @@
 // Observation with components
 // ================================================
 
+Alias: $cond-cat = http://terminology.hl7.org/CodeSystem/condition-category
+
 // ================================================
 // Reusable extension — transplant type context
 // Added to Microbiology, ClinicalEventFlagObservation, and DonorLiverTypeObservation
@@ -27,7 +29,9 @@ Description: "Records the transplant type (liver / kidney / combined) on resourc
 //
 // Kidney-only components: bkv-dna-kidney-biopsy, bkv-fish-kidney-biopsy,
 //                         blood-colture, urine-colture, other-positivity
-// Liver-only components:  ebv-hepatitis-liver
+//
+// The infection diagnoses ebv_hepatitis_liver and evidence_bkvan are the
+// MicrobiologyDiagnosis (Condition) profile, not components of this panel.
 // ================================================
 
 Invariant: pc-micro-1
@@ -39,16 +43,6 @@ Invariant: pc-micro-2
 Description: "Blood culture and urine culture are only applicable for kidney or combined transplants."
 Severity: #error
 Expression: "(component.where(code.coding.code = 'blood-colture' and value.ofType(boolean) = true).exists() or component.where(code.coding.code = 'urine-colture' and value.ofType(boolean) = true).exists()) implies extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').value.ofType(CodeableConcept).coding.where(code = 'kidney' or code = 'combined').exists()"
-
-Invariant: pc-micro-3
-Description: "EBV hepatitis on liver is only applicable for liver or combined transplants."
-Severity: #error
-Expression: "component.where(code.coding.code = 'ebv-hepatitis-liver' and value.ofType(boolean) = true).exists() implies extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').value.ofType(CodeableConcept).coding.where(code = 'liver' or code = 'combined').exists()"
-
-Invariant: pc-micro-4
-Description: "Evidence of BKVAN is only applicable for kidney or combined transplants."
-Severity: #error
-Expression: "component.where(code.coding.code = 'evidence-bkvan').exists() implies extension.where(url = 'https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/StructureDefinition/transplant-type-ext').value.ofType(CodeableConcept).coding.where(code = 'kidney' or code = 'combined').exists()"
 
 
 // ================================================
@@ -106,13 +100,11 @@ Profile: Microbiology
 Parent: Observation
 Id: microbiology
 Title: "Microbiology"
-Description: "Microbiology panel for transplant recipients and/or donors. Component slices cover virology (EBV, CMV, Parvovirus B19, HSV, Adenovirus, VZV, BKV) plus organ-specific findings. The transplant type (extension[tx-type]) is required when organ-specific components are populated; invariants pc-micro-1 through pc-micro-4 enforce applicability."
+Description: "Microbiology panel for transplant recipients and/or donors. Component slices cover virology (EBV, CMV, Parvovirus B19, HSV, Adenovirus, VZV, BKV) plus organ-specific findings. The transplant type (extension[tx-type]) is required when organ-specific components are populated; invariants pc-micro-1 and pc-micro-2 enforce applicability. Infection diagnoses (EBV hepatitis, BKVAN) are separate MicrobiologyDiagnosis (Condition) resources."
 
 // Apply organ-specific invariants
 * obeys pc-micro-1
 * obeys pc-micro-2
-* obeys pc-micro-3
-* obeys pc-micro-4
 
 // tx_type context — required when organ-specific components are populated
 * extension contains TransplantTypeExt named tx_type 0..1 MS
@@ -121,7 +113,7 @@ Description: "Microbiology panel for transplant recipients and/or donors. Compon
 // microbiology_id → Observation.identifier
 * identifier 1..1 MS
 * identifier.system 1..1
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/microbiology-id" (exactly)
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id" (exactly)
 * identifier.value 1..1
 * identifier ^short = "microbiology_id"
 
@@ -187,9 +179,7 @@ Description: "Microbiology panel for transplant recipients and/or donors. Compon
     bkvFishKidneyBiopsy    0..1 MS and
     bloodColture           0..1 MS and
     urineColture           0..1 MS and
-    otherPositivity        0..1 MS and
-    ebvHepatitisLiver      0..1 MS and
-    evidenceBkvan          0..1 MS
+    otherPositivity        0..1 MS
 
 // EBV-DNA — Positive/Negative (boolean)
 * component[ebvDna].code = MicrobiologyCS#ebv-dna
@@ -305,11 +295,11 @@ Description: "Microbiology panel for transplant recipients and/or donors. Compon
 
 * component[bkvDnaKidneyBiopsy].code = MicrobiologyCS#bkv-dna-kidney-biopsy
 * component[bkvDnaKidneyBiopsy].value[x] only boolean
-* component[bkvDnaKidneyBiopsy] ^short = "bkv_dna_kidney_biopsy — BKV-DNA on kidney biopsy"
+* component[bkvDnaKidneyBiopsy] ^short = "bkv_dna_kidney_biopsy — BKV-DNA on kidney biopsy (Kidney)"
 
 * component[bkvFishKidneyBiopsy].code = MicrobiologyCS#bkv-fish-kidney-biopsy
 * component[bkvFishKidneyBiopsy].value[x] only boolean
-* component[bkvFishKidneyBiopsy] ^short = "bkv_fish_kidney_biopsy — BKV FISH on kidney biopsy"
+* component[bkvFishKidneyBiopsy] ^short = "bkv_fish_kidney_biopsy — BKV FISH on kidney biopsy (Kidney)"
 
 * component[bloodColture].code = MicrobiologyCS#blood-colture
 * component[bloodColture].value[x] only boolean
@@ -323,13 +313,55 @@ Description: "Microbiology panel for transplant recipients and/or donors. Compon
 * component[otherPositivity].value[x] only string
 * component[otherPositivity] ^short = "other_positivity — other microbiological finding (free text; Kidney)"
 
-* component[ebvHepatitisLiver].code = MicrobiologyCS#ebv-hepatitis-liver
-* component[ebvHepatitisLiver].value[x] only boolean
-* component[ebvHepatitisLiver] ^short = "ebv_hepatitis_liver — EBV hepatitis on liver biopsy (Liver)"
 
-* component[evidenceBkvan].code = MicrobiologyCS#evidence-bkvan
-* component[evidenceBkvan].value[x] only CodeableConcept
-* component[evidenceBkvan] ^short = "evidence_bkvan — histological evidence of BKVAN (No/Yes/Unknown)"
+// ================================================
+// MicrobiologyDiagnosis profile — Condition
+// microbiology.ebv_hepatitis_liver, evidence_bkvan
+// ================================================
+
+ValueSet: MicrobiologyDiagnosisVS
+Id: microbiology-diagnosis-vs
+Title: "Microbiology Diagnosis ValueSet"
+Description: "Infection-related diagnoses captured in the microbiology table: EBV hepatitis on the liver allograft, and histological evidence of BK virus-associated nephropathy (BKVAN)."
+* ^experimental = true
+* MicrobiologyCS#ebv-hepatitis-liver
+* MicrobiologyCS#evidence-bkvan
+
+Profile: MicrobiologyDiagnosis
+Parent: Condition
+Id: microbiology-diagnosis
+Title: "Microbiology Diagnosis"
+Description: "An infection-related diagnosis identified through microbiology/histology in a transplant recipient (DMv1.2 microbiology.ebv_hepatitis_liver, evidence_bkvan). Represented as a Condition. EBV hepatitis applies to liver/combined transplants; BK virus-associated nephropathy (BKVAN) to kidney/combined."
+
+* category 1..* MS
+* category = $cond-cat#encounter-diagnosis
+
+* code 1..1 MS
+* code from MicrobiologyDiagnosisVS (required)
+* code ^short = "ebv_hepatitis_liver / evidence_bkvan — infection diagnosis"
+
+* subject 1..1 MS
+* subject only Reference(PatientTransplant)
+* subject ^short = "patient_id — transplant recipient"
+
+* encounter 1..1 MS
+* encounter only Reference(Visit)
+* encounter ^short = "visit_id — visit at which the diagnosis was recorded"
+
+* onset[x] 0..1 MS
+* onsetDateTime 0..1 MS
+
+Instance: MicrobiologyDiagnosisExample1
+InstanceOf: MicrobiologyDiagnosis
+Usage: #example
+Title: "Example Microbiology Diagnosis"
+Description: "Example microbiology diagnosis — EBV-associated hepatitis of the liver allograft."
+
+* category = $cond-cat#encounter-diagnosis
+* code = MicrobiologyCS#ebv-hepatitis-liver "EBV Hepatitis on liver"
+* subject = Reference(ExamplePatientTransplant1)
+* encounter = Reference(VisitExample1)
+* onsetDateTime = "2023-09-15"
 
 
 // ================================================
@@ -343,12 +375,14 @@ Title: "Example Microbiology record"
 Description: "Example microbiology panel for a liver transplant recipient."
 
 * id = "microbiology-example-1"
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/microbiology-id"
-* identifier.value = "M0001"
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "MIC-1-0001"
 * status = #final
 * code = MicrobiologyCS#microbiology-panel "Microbiology studies panel"
 * subject = Reference(ExamplePatientTransplant1)
+* performer = Reference(PCCenter1LaPaz)
 * encounter = Reference(VisitExample1)
+* effectiveDateTime = "2023-09-15"
 // Donor serology example (uncomment if recording pre-transplant donor results):
 // * focus = Reference(ExampleDonor1)
 
@@ -421,8 +455,4 @@ Description: "Example microbiology panel for a liver transplant recipient."
 * component[urineBkvDna].code = MicrobiologyCS#urine-bkv-dna
 * component[urineBkvDna].valueBoolean = false
 
-* component[bkvDnaKidneyBiopsy].code = MicrobiologyCS#bkv-dna-kidney-biopsy
-* component[bkvDnaKidneyBiopsy].valueBoolean = false
 
-* component[bkvFishKidneyBiopsy].code = MicrobiologyCS#bkv-fish-kidney-biopsy
-* component[bkvFishKidneyBiopsy].valueBoolean = false

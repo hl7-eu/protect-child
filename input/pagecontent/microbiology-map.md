@@ -2,11 +2,11 @@
 
 # Microbiology — Logical Model → FHIR Map
 
-Primary profile: [Microbiology](StructureDefinition-microbiology.html) (`Observation` panel)
+Primary profile: [Microbiology](StructureDefinition-microbiology.html) (`Observation` panel)  
+Infection diagnoses: [MicrobiologyDiagnosis](StructureDefinition-microbiology-diagnosis.html) (`Condition`) — EBV hepatitis and BKVAN, one per diagnosis
 
 **Cardinality key** — M = Mandatory (1..1) · R = Recommended (0..1) · O = Optional (0..1)
 
-All result fields map to `Observation.component` slices coded by [MicrobiologyCS](CodeSystem-microbiology-cs.html). Boolean components use `valueBoolean` (true = Positive / detected); quantitative (viral load) components use `valueQuantity` (UCUM `{copies}/mL`); coded components use `valueCodeableConcept`; free-text fields use `valueString`.
 
 | DM field | Card. | FHIR path | Notes |
 |---|---|---|---|
@@ -43,5 +43,5 @@ All result fields map to `Observation.component` slices coded by [MicrobiologyCS
 | blood_colture | R | `Observation.component[bloodColture].valueBoolean` | `MicrobiologyCS#blood-colture`; Kidney only |
 | urine_colture | R | `Observation.component[urineColture].valueBoolean` | `MicrobiologyCS#urine-colture`; Kidney only |
 | other_positivity | R | `Observation.component[otherPositivity].valueString` | `MicrobiologyCS#other-positivity`; free text; Kidney only |
-| ebv_hepatitis_liver | R | `Observation.component[ebvHepatitisLiver].valueBoolean` | `MicrobiologyCS#ebv-hepatitis-liver`; Liver only |
-| evidence_bkvan | R | `Observation.component[evidenceBkvan].valueCodeableConcept` | `MicrobiologyCS#evidence-bkvan`; No / Yes / Unknown |
+| ebv_hepatitis_liver | R | `Condition.code` | [MicrobiologyDiagnosis](StructureDefinition-microbiology-diagnosis.html) (`Condition`, encounter-diagnosis); `MicrobiologyCS#ebv-hepatitis-liver`; presence = diagnosed; Liver only |
+| evidence_bkvan | R | `Condition.code` | [MicrobiologyDiagnosis](StructureDefinition-microbiology-diagnosis.html) (`Condition`, encounter-diagnosis); `MicrobiologyCS#evidence-bkvan`; presence = BKVAN evidence; Kidney only |

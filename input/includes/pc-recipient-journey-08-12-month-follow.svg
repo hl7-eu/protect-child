@@ -1,0 +1,40 @@
+<svg viewBox="0 0 920 190" xmlns="http://www.w3.org/2000/svg" role="img" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="12">
+<title>12-month follow-up visit (2024-08-15)</title>
+<desc>Resources in the worked-example Bundle, grouped by the visit or phase they belong to, coloured by FHIR resource type. Each chip names the resource, its business identifier and its profile, and records the reference it makes to another entry.</desc>
+<style>a:hover rect{opacity:.82}a rect,a text{cursor:pointer}</style>
+<rect x="0" y="0" width="920" height="190" fill="white"/>
+<a href="Encounter-VisitMonth12Example1.html">
+<rect x="20" y="16" width="210" height="64" rx="4" fill="#fef3c7" stroke="#fcd34d"/>
+<text x="29" y="33" font-size="12" font-weight="700" fill="#92400e">Encounter</text>
+<text x="29" y="48" font-size="11" fill="#111">VIS-1-0005</text>
+<text x="29" y="61" font-size="10" fill="#64748b">visit</text>
+</a>
+<a href="Observation-VitalSignExample2.html">
+<rect x="240" y="16" width="210" height="64" rx="4" fill="#dcfce7" stroke="#86efac"/>
+<text x="249" y="33" font-size="12" font-weight="700" fill="#166534">Observation</text>
+<text x="249" y="48" font-size="11" fill="#111">VIT-1-0002</text>
+<text x="249" y="61" font-size="10" fill="#64748b">vital-sign</text>
+<text x="249" y="73" font-size="9.5" fill="#94a3b8">encounter → VIS-1-0005</text>
+</a>
+<a href="Observation-lab-result-observation-example-2.html">
+<rect x="460" y="16" width="210" height="64" rx="4" fill="#dcfce7" stroke="#86efac"/>
+<text x="469" y="33" font-size="12" font-weight="700" fill="#166534">Observation</text>
+<text x="469" y="48" font-size="11" fill="#111">LBR-1-0004</text>
+<text x="469" y="61" font-size="10" fill="#64748b">lab-result-observation</text>
+<text x="469" y="73" font-size="9.5" fill="#94a3b8">encounter → VIS-1-0005</text>
+</a>
+<a href="Observation-lab-result-albumin-month-12.html">
+<rect x="680" y="16" width="210" height="64" rx="4" fill="#dcfce7" stroke="#86efac"/>
+<text x="689" y="33" font-size="12" font-weight="700" fill="#166534">Observation</text>
+<text x="689" y="48" font-size="11" fill="#111">LBR-1-0005</text>
+<text x="689" y="61" font-size="10" fill="#64748b">lab-result-observation</text>
+<text x="689" y="73" font-size="9.5" fill="#94a3b8">encounter → VIS-1-0005</text>
+</a>
+<a href="Observation-lab-result-alt-month-12.html">
+<rect x="20" y="90" width="210" height="64" rx="4" fill="#dcfce7" stroke="#86efac"/>
+<text x="29" y="107" font-size="12" font-weight="700" fill="#166534">Observation</text>
+<text x="29" y="122" font-size="11" fill="#111">LBR-1-0006</text>
+<text x="29" y="135" font-size="10" fill="#64748b">lab-result-observation</text>
+<text x="29" y="147" font-size="9.5" fill="#94a3b8">encounter → VIS-1-0005</text>
+</a>
+</svg>

@@ -16,7 +16,7 @@ Description: "Concomitant medication record for a transplant patient at a visit,
 // concomitant_medication_id → MedicationStatement.identifier
 * identifier 1..1 MS
 * identifier.system 1..1
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/concomitant-medication-id" (exactly)
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id" (exactly)
 * identifier.value 1..1
 * identifier ^short = "concomitant_medication_id"
 
@@ -66,13 +66,13 @@ Usage: #example
 Title: "Example Concomitant Medication"
 Description: "Example ongoing concomitant antihypertensive medication (DMv1.2)."
 
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/concomitant-medication-id"
-* identifier.value = "CM0001"
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "CMD-1-0001"
 * status = #active
 * subject = Reference(ExamplePatientTransplant1)
-* context = Reference(VisitExample1)
+* context = Reference(VisitMonth6Example1)
 * medicationCodeableConcept.text = "Amlodipine"
-* effectivePeriod.start = "2024-01-10"
+* effectivePeriod.start = "2023-09-15"
 * dosage.doseAndRate.doseQuantity.value = 5.0
 * dosage.doseAndRate.doseQuantity.system = "http://unitsofmeasure.org"
 * dosage.doseAndRate.doseQuantity.code = #mg

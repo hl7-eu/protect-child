@@ -95,12 +95,89 @@ Usage: #example
 Title: "Example visit"
 Description: "Example visit. Clinical resources (ClinicalVariable, Microbiology, PreMedication, etc.) carry the back-reference to this Visit via their own .encounter / .context element or extension."
 
-* identifier[0].system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/identifiers/visit"
-* identifier[0].value = "V000001"
+* identifier[0].system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier[0].value = "VIS-1-0002"
 * subject = Reference(ExamplePatientTransplant1)
 * status = #finished
 * class = http://terminology.hl7.org/CodeSystem/v3-ActCode#AMB "ambulatory"
 * period.start = "2023-09-15"
+* period.end = "2023-09-15"
 * type[0].coding[0].system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/visit-type-cs"
 * type[0].coding[0].code = #month-1
 * type[0].coding[0].display = "1 month visit"
+
+// -----------------------------------------------------
+
+Instance: VisitPreTxExample1
+InstanceOf: Visit
+Usage: #example
+Title: "Example pre-transplant visit and transplant admission"
+Description: "Pre-transplant (baseline) episode for recipient REC-1-0001, running from the desensitisation work-up through the transplant admission and early post-operative period. The PRA and HLA typing, the rituximab desensitisation and pre-transplant medication, the transplant procedure with its anastomosis and intra-operative complication, and the induction immunosuppression all carry their back-reference to this visit. The data model has no separate visit type for a transplant admission, so the baseline visit covers it; the surgery keeps its own date in Procedure.performed."
+
+* identifier[0].system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier[0].value = "VIS-1-0001"
+* subject = Reference(ExamplePatientTransplant1)
+* status = #finished
+* class = http://terminology.hl7.org/CodeSystem/v3-ActCode#IMP "inpatient encounter"
+* period.start = "2023-07-25"
+* period.end = "2023-08-28"
+* type[0].coding[0].system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/visit-type-cs"
+* type[0].coding[0].code = #pre-transplant
+* type[0].coding[0].display = "Pre-transplant visit"
+
+// -----------------------------------------------------
+
+Instance: VisitMonth12Example1
+InstanceOf: Visit
+Usage: #example
+Title: "Example 12-month follow-up visit"
+Description: "12-month post-transplant follow-up visit for recipient REC-1-0001. The vital-sign panel and the creatinine result recorded at the 1-month visit repeat here — the shape follow-up data takes across the study timeline."
+
+* identifier[0].system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier[0].value = "VIS-1-0005"
+* subject = Reference(ExamplePatientTransplant1)
+* status = #finished
+* class = http://terminology.hl7.org/CodeSystem/v3-ActCode#AMB "ambulatory"
+* period.start = "2024-08-15"
+* period.end = "2024-08-15"
+* type[0].coding[0].system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/visit-type-cs"
+* type[0].coding[0].code = #month-12
+* type[0].coding[0].display = "12 month visit"
+
+// -----------------------------------------------------
+
+Instance: VisitClinicalEventExample1
+InstanceOf: Visit
+Usage: #example
+Title: "Example clinical-event visit"
+Description: "Unscheduled visit prompted by the acute rejection episode. The rejection Condition, its treatment-adherence flag and the biopsy immunology panel are all recorded against this visit."
+
+* identifier[0].system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier[0].value = "VIS-1-0003"
+* subject = Reference(ExamplePatientTransplant1)
+* status = #finished
+* class = http://terminology.hl7.org/CodeSystem/v3-ActCode#AMB "ambulatory"
+* period.start = "2023-11-15"
+* period.end = "2023-11-15"
+* type[0].coding[0].system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/visit-type-cs"
+* type[0].coding[0].code = #clinical-event
+* type[0].coding[0].display = "Clinical Event visit"
+
+// -----------------------------------------------------
+
+Instance: VisitMonth6Example1
+InstanceOf: Visit
+Usage: #example
+Title: "Example 6-month follow-up visit"
+Description: "6-month post-transplant follow-up visit. The concomitant medication in progress since January and the abdominal imaging performed for the follow-up are recorded against this visit."
+
+* identifier[0].system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier[0].value = "VIS-1-0004"
+* subject = Reference(ExamplePatientTransplant1)
+* status = #finished
+* class = http://terminology.hl7.org/CodeSystem/v3-ActCode#AMB "ambulatory"
+* period.start = "2024-02-15"
+* period.end = "2024-02-15"
+* type[0].coding[0].system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/CodeSystem/visit-type-cs"
+* type[0].coding[0].code = #month-6
+* type[0].coding[0].display = "6 month visit"

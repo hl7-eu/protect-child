@@ -80,7 +80,7 @@ Description: "Immunosuppressive treatment record for a transplant patient (induc
 // imm_pat_id → MedicationStatement.identifier (M)
 * identifier 1..1 MS
 * identifier.system 1..1
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/imm-pat-id" (exactly)
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id" (exactly)
 * identifier.value 1..1
 * identifier ^short = "imm_pat_id — treatment record identifier"
 
@@ -191,16 +191,16 @@ Usage: #example
 Title: "Example Immunosuppressant to Patient — Induction"
 Description: "Example induction immunosuppressant record (methylprednisolone) at time of transplant."
 
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/imm-pat-id"
-* identifier.value = "IMMPAT-IND-001"
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "IMP-1-0001"
 * status = #completed
 * subject = Reference(ExamplePatientTransplant1)
 * medicationReference = Reference(ImmunosuppressantExample1)
-* context = Reference(VisitExample1)
+* context = Reference(VisitPreTxExample1)
 * category = ImmPatPhaseCS#induction "Induction"
 * effectivePeriod.start = "2023-08-15"
 * effectivePeriod.end = "2023-08-15"
-* dosage.doseAndRate.doseQuantity.value = 0.15
+* dosage.doseAndRate.doseQuantity.value = 10
 * dosage.doseAndRate.doseQuantity.system = "http://unitsofmeasure.org"
 * dosage.doseAndRate.doseQuantity.code = #mg.kg-1
 * dosage.doseAndRate.doseQuantity.unit = "mg/kg"
@@ -211,14 +211,15 @@ Usage: #example
 Title: "Example Immunosuppressant to Patient — Maintenance"
 Description: "Example maintenance immunosuppressant record (tacrolimus) at 1-month visit. PK monitoring values are separate ImmPatPKObservation resources linked via Observation.partOf."
 
-* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/imm-pat-id"
-* identifier.value = "IMMPAT-MAIN-001"
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "IMP-1-0002"
 * status = #active
 * subject = Reference(ExamplePatientTransplant1)
-* medicationReference = Reference(ImmunosuppressantExample1)
+* medicationReference = Reference(ImmunosuppressantTacrolimus1)
 * context = Reference(VisitExample1)
 * category = ImmPatPhaseCS#maintenance "Maintenance"
 * effectivePeriod.start = "2023-09-15"
+* effectivePeriod.end = "2023-09-20"
 * dosage.doseAndRate.doseQuantity.value = 0.1
 * dosage.doseAndRate.doseQuantity.system = "http://unitsofmeasure.org"
 * dosage.doseAndRate.doseQuantity.code = #mg.kg-1
@@ -235,8 +236,53 @@ Description: "Tacrolimus trough level (C0) linked to the maintenance ImmPat reco
 * category = $obs-cat#laboratory
 * code = ImmPatPKTypeCS#pre-dose-level "Pre-dose drug level (trough / C0)"
 * subject = Reference(ExamplePatientTransplant1)
+* performer = Reference(PCCenter1LaPaz)
 * effectiveDateTime = "2023-09-15"
 * valueQuantity.value = 8.5
 * valueQuantity.system = "http://unitsofmeasure.org"
 * valueQuantity.code = #ng.mL-1
 * valueQuantity.unit = "ng/mL"
+
+
+// Reduction after EBV reactivation, then the pulse for the rejection episode.
+
+Instance: ImmPatEbvReducedExample1
+InstanceOf: ImmPat
+Usage: #example
+Title: "Example ImmPat — maintenance reduced after EBV reactivation"
+Description: "Tacrolimus reduced from 0.1 to 0.06 mg/kg after EBV reactivation — the first-line response, and what leaves the graft exposed to the rejection two months later."
+
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "IMP-1-0003"
+* status = #active
+* subject = Reference(ExamplePatientTransplant1)
+* medicationReference = Reference(ImmunosuppressantTacrolimus1)
+* context = Reference(VisitExample1)
+* category = ImmPatPhaseCS#maintenance "Maintenance"
+* effectivePeriod.start = "2023-09-20"
+* dosage.text = "Reduced from 0.1 mg/kg for EBV viraemia. Divided twice daily."
+* dosage.doseAndRate.doseQuantity.value = 0.06
+* dosage.doseAndRate.doseQuantity.system = "http://unitsofmeasure.org"
+* dosage.doseAndRate.doseQuantity.code = #mg.kg-1
+* dosage.doseAndRate.doseQuantity.unit = "mg/kg"
+
+Instance: ImmPatRejectionTreatmentExample1
+InstanceOf: ImmPat
+Usage: #example
+Title: "Example ImmPat — steroid pulse for the rejection episode"
+Description: "Methylprednisolone pulse, 10 mg/kg/day × 3 days, for the November rejection episode. Recorded as #maintenance — the DM has no rejection-treatment phase."
+
+* identifier.system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier.value = "IMP-1-0004"
+* status = #completed
+* subject = Reference(ExamplePatientTransplant1)
+* medicationReference = Reference(ImmunosuppressantExample1)
+* context = Reference(VisitClinicalEventExample1)
+* category = ImmPatPhaseCS#maintenance "Maintenance"
+* effectivePeriod.start = "2023-11-15"
+* effectivePeriod.end = "2023-11-17"
+* dosage.text = "Rejection treatment, not maintenance: IV methylprednisolone pulse once daily for three days."
+* dosage.doseAndRate.doseQuantity.value = 10
+* dosage.doseAndRate.doseQuantity.system = "http://unitsofmeasure.org"
+* dosage.doseAndRate.doseQuantity.code = #mg.kg-1
+* dosage.doseAndRate.doseQuantity.unit = "mg/kg"

@@ -3,7 +3,7 @@
 // age_years / age_months → PatientDemographicsObservation (patient-observations.fsh)
 // max_pra / last_pra / date_histological_diag → PatientImmunologyObservation (patient-observations.fsh)
 // blood group, Rh, HLA → ImmunologicalData (immunological-data.fsh)
-// primary disease diagnosis → PatientLiverDiseaseDiagnosis / PatientRenalDiseaseDiagnosis (Condition)
+// primary disease diagnosis → PatientPrimaryDiseaseDiagnosis (Condition)
 
 // -------------------------------------------------------
 // NamingSystem — study centre identifier namespace
@@ -99,7 +99,7 @@ Profile: PatientTransplant
 Parent: Patient
 Id: patient-transplant
 Title: "Transplant Recipient"
-Description: "Transplant recipient profile based on the FHIR Patient resource, aligned with the DMv1.2 patient table. Blood group, Rh, and HLA data are in ImmunologicalData. Age at transplant is in PatientDemographicsObservation; PRA and histological date are in PatientImmunologyObservation. Patient.birthDate SHOULD also be populated when known. Primary disease diagnoses are PatientLiverDiseaseDiagnosis / PatientRenalDiseaseDiagnosis (Condition)."
+Description: "Transplant recipient profile based on the FHIR Patient resource, aligned with the DMv1.2 patient table. Blood group, Rh, and HLA data are in ImmunologicalData. Age at transplant is in PatientDemographicsObservation; PRA and histological date are in PatientImmunologyObservation. Patient.birthDate SHOULD also be populated when known. Primary disease diagnoses are PatientPrimaryDiseaseDiagnosis (Condition)."
 
 // patient_id → Patient.identifier (Mandatory)
 * identifier 1..* MS
@@ -135,7 +135,7 @@ Usage: #example
 Title: "Example transplant recipient"
 Description: "Example Patient instance conforming to DMv1.2 PatientTransplant."
 
-* identifier[0].system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/ids/recipient"
-* identifier[0].value = "REC-001"
+* identifier[0].system = "https://hl7.eu/fhir/ig/hl7.eu.fhir.protect-child/NamingSystem/protect-child-id"
+* identifier[0].value = "REC-1-0001"
 * gender = #female
 * managingOrganization = Reference(PCCenter1LaPaz)

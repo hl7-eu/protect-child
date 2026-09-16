@@ -10,7 +10,7 @@ Pre-medication records capture antihypertensive treatment, rituximab desensitisa
 
 ## Antihypertensive Treatment (`PreMedication`)
 
-Primary record: one [PreMedication](StructureDefinition-pre-medication.html) (`MedicationStatement`) per visit.
+Primary record: one [PreMedication](StructureDefinition-pre-medication.html) (`MedicationStatement`) per antihypertensive drug. A visit may carry several.
 
 | DM field | Card. | FHIR path | Notes |
 |---|---|---|---|

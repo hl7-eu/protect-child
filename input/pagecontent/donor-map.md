@@ -11,6 +11,6 @@ Age panel: [PatientDemographicsObservation](StructureDefinition-patient-demograp
 |---|---|---|---|
 | donor_id | M | `Patient.identifier.value` | |
 | age_years | M | `Observation.component[age_years].valueQuantity` | UCUM `a`; in [PatientDemographicsObservation](StructureDefinition-patient-demographics-observation.html) with `subject = Reference(Donor)` |
-| age_months | M | `Observation.component[age_months].valueQuantity` | UCUM `mo` |
+| age_months | M | `Observation.component[age_months].valueQuantity` | UCUM `mo`; in [PatientDemographicsObservation](StructureDefinition-patient-demographics-observation.html) with `subject = Reference(Donor)` |
 | type | M | `Patient.deceasedBoolean` | `true` = deceased donor; `false` / absent = living donor |
 | liver_type | R | `Observation.valueCodeableConcept` | [DonorLiverTypeObservation](StructureDefinition-donor-liver-type-observation.html); LOINC 74836-8; Liver only |

@@ -1,0 +1,30 @@
+<svg viewBox="0 0 920 116" xmlns="http://www.w3.org/2000/svg" role="img" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="12">
+<title>Catalogue entries (study-wide, no date of their own)</title>
+<desc>Resources in the worked-example Bundle, grouped by the visit or phase they belong to, coloured by FHIR resource type. Each chip names the resource, its business identifier and its profile, and records the reference it makes to another entry.</desc>
+<style>a:hover rect{opacity:.82}a rect,a text{cursor:pointer}</style>
+<rect x="0" y="0" width="920" height="116" fill="white"/>
+<a href="Medication-ImmunosuppressantExample1.html">
+<rect x="20" y="16" width="210" height="64" rx="4" fill="#faf5ff" stroke="#e9d5ff"/>
+<text x="29" y="33" font-size="12" font-weight="700" fill="#7e22ce">Medication</text>
+<text x="29" y="48" font-size="11" fill="#111">IMM-0001</text>
+<text x="29" y="61" font-size="10" fill="#64748b">immunosuppressant</text>
+</a>
+<a href="Medication-ImmunosuppressantTacrolimus1.html">
+<rect x="240" y="16" width="210" height="64" rx="4" fill="#faf5ff" stroke="#e9d5ff"/>
+<text x="249" y="33" font-size="12" font-weight="700" fill="#7e22ce">Medication</text>
+<text x="249" y="48" font-size="11" fill="#111">IMM-0002</text>
+<text x="249" y="61" font-size="10" fill="#64748b">immunosuppressant</text>
+</a>
+<a href="ObservationDefinition-LabTestExample1.html">
+<rect x="460" y="16" width="210" height="64" rx="4" fill="#f8fafc" stroke="#cbd5e1"/>
+<text x="469" y="33" font-size="12" font-weight="700" fill="#334155">ObservationDefinition</text>
+<text x="469" y="48" font-size="11" fill="#111">LBT-0001</text>
+<text x="469" y="61" font-size="10" fill="#64748b">lab-test</text>
+</a>
+<a href="ObservationDefinition-InstrumentalInvestigationExample1.html">
+<rect x="680" y="16" width="210" height="64" rx="4" fill="#f8fafc" stroke="#cbd5e1"/>
+<text x="689" y="33" font-size="12" font-weight="700" fill="#334155">ObservationDefinition</text>
+<text x="689" y="48" font-size="11" fill="#111">INS-0001</text>
+<text x="689" y="61" font-size="10" fill="#64748b">instrumental-investigation</text>
+</a>
+</svg>
